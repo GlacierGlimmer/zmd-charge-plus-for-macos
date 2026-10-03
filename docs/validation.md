@@ -1,6 +1,8 @@
 # macOS 验证范围
 
-2026-10-03，首版使用 GitHub 托管 macOS 15.7.9 环境分别执行 ARM64 与 Intel x64 原生构建。两端均通过 209 个断言及 DMG 挂载启动、单实例检查；[首次完整通过的工作流](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/actions/runs/37122763257)。后续界面修正及发布标签仍会完整重跑相同检查。
+2026-10-03，使用 GitHub 托管 macOS 15.7.9 环境分别执行 ARM64 与 Intel x64 原生构建。两端均通过 260 个断言，包括逐一读取 143 个本地变量、全部网络探测变量、8 个内置方案，以及 DMG 挂载启动、单实例检查；[v0.1.0 发布标签的完整检查](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/actions/runs/37123306061)。每个后续发布标签均完整重跑相同检查。
+
+v0.1.1 将更新请求超时从 10 秒调整为 30 秒。真实 GitHub 接口曾耗时约 12 秒返回 HTTP 200；调整后，应用自身的版本查询及 ARM64/x64 Release 选择均通过真实请求验证。
 
 检查内容：
 

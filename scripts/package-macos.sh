@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 rid="${1:?Usage: package-macos.sh osx-arm64|osx-x64 [version]}"
-version="${2:-0.1.0}"
+version="${2:-$(python3 -c 'import xml.etree.ElementTree as ET; print(ET.parse("EndfieldChargePlus.csproj").findtext(".//Version"))')}"
 case "$rid" in osx-arm64) arch=arm64 ;; osx-x64) arch=x86_64 ;; *) exit 2 ;; esac
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Invalid version'; exit 2; }
 name='Endfield Charge Plus For MacOS'

@@ -515,7 +515,7 @@ public partial class SettingsWindow : Window
     {
         var client = new HttpClient
         {
-            Timeout = TimeSpan.FromSeconds(10),
+            Timeout = TimeSpan.FromSeconds(30),
         };
         client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("EndfieldChargePlus", GetCurrentVersionText()));
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));

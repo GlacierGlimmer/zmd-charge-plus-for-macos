@@ -10,8 +10,8 @@
 
 | 安装包 | 适用设备 |
 | --- | --- |
-| **EndfieldChargePlusForMacOS-v0.1.0-osx-arm64.dmg** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
-| EndfieldChargePlusForMacOS-v0.1.0-osx-x64.dmg | Intel Mac |
+| **EndfieldChargePlusForMacOS-v0.1.1-osx-arm64.dmg** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
+| EndfieldChargePlusForMacOS-v0.1.1-osx-x64.dmg | Intel Mac |
 
 打开 DMG，把 **Endfield Charge Plus For MacOS.app** 拖到 **Applications** 后启动。包内自带 .NET 运行时。应用在菜单栏驻留，关闭设置窗口后继续运行，通过菜单栏退出。
 
@@ -44,7 +44,7 @@ bash scripts/package-macos.sh osx-arm64
 bash scripts/verify-dmg.sh osx-arm64
 ```
 
-GitHub Actions 分别在 `macos-15`（ARM64）和 `macos-15-intel` 验证原生采集、逐个本地变量、内置方案、GUI、DMG 签名结构、挂载运行和单实例。检查报告和截图保存在工作流 artifacts。它们不等于所有机型、系统版本、刘海屏、混合缩放多显示器及电池状态的完整实机认证。
+GitHub Actions 分别在 `macos-15`（ARM64）和 `macos-15-intel` 验证原生采集、逐个本地变量、内置方案、GUI、DMG 签名结构、挂载运行和单实例。检查报告和截图保存在工作流 artifacts；参阅[验证范围](docs/validation.md)。它们不等于所有机型、系统版本、刘海屏、混合缩放多显示器及电池状态的完整实机认证。
 
 开发者可设置 `MACOS_SIGNING_IDENTITY` 和已配置的 `MACOS_NOTARY_PROFILE`，让打包脚本使用 Developer ID 签名并公证。没有这两项时，发布说明明确标注 ad-hoc 状态。
 

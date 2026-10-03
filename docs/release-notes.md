@@ -1,4 +1,6 @@
-Endfield Charge Plus For MacOS 首个独立版本。
+Endfield Charge Plus For MacOS v0.1.1。
+
+更新检查的网络超时由 10 秒放宽至 30 秒，适应已实测超过 10 秒才返回成功响应的 GitHub 连接。保留真实超时状态提示。
 
 - **主版本：osx-arm64.dmg**，适用于 M1 / M2 / M3 / M4 / M5 等 Apple Silicon Mac。
 - **Intel 版本：osx-x64.dmg**。两种安装包均自包含 .NET，无需另装运行时。
