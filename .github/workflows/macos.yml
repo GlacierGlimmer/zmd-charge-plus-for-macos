@@ -26,6 +26,13 @@ jobs:
           dotnet-version: 8.0.x
       - name: Build native collectors
         run: bash scripts/build-native.sh '${{ matrix.rid }}'
+      - name: Prepare isolated CI Keychain
+        run: |
+          password=$(openssl rand -hex 24)
+          security create-keychain -p "$password" "$RUNNER_TEMP/ecp-test.keychain-db"
+          security default-keychain -d user -s "$RUNNER_TEMP/ecp-test.keychain-db"
+          security unlock-keychain -p "$password" "$RUNNER_TEMP/ecp-test.keychain-db"
+          security set-keychain-settings -lut 21600 "$RUNNER_TEMP/ecp-test.keychain-db"
       - name: Test collectors, every local variable, profiles and native UI
         run: dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
       - name: Build DMG

@@ -61,10 +61,10 @@ public sealed class VariableHub : IDisposable
             vars["app.preset_name"] = settings.Profiles.FirstOrDefault(p => p.Id == settings.ActiveProfileId)?.Name ?? "";
         }
         await Task.Run(() => _mac.Collect(vars, requested, gpuAdapterId), ct).ConfigureAwait(false);
-        if ((NeedsPrefix(requested, "cpu.") && !vars.ContainsKey("cpu.usage")) ||
-            (NeedsPrefix(requested, "network.") && !vars.ContainsKey("network.download_bps")))
+        for (int attempt=0; attempt<6 && ((NeedsPrefix(requested, "cpu.") && !vars.ContainsKey("cpu.usage")) ||
+            (NeedsPrefix(requested, "network.") && !vars.ContainsKey("network.download_bps"))); attempt++)
         {
-            await Task.Delay(100, ct).ConfigureAwait(false);
+            await Task.Delay(200, ct).ConfigureAwait(false);
             await Task.Run(() => _mac.Collect(vars, requested, gpuAdapterId), ct).ConfigureAwait(false);
         }
         if (NeedsPrefix(requested, "display.") || NeedsPrefix(requested, "clipboard."))

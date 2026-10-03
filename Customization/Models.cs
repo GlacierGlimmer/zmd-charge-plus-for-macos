@@ -28,8 +28,8 @@ public sealed record HudProfile
 
     public string TaglineTemplate { get; init; } = "/// SYSTEM MONITOR";
     public string TitleTemplate { get; init; } = "系统状态";
-    public string PrimaryTemplate { get; init; } = "{cpu.frequency_ghz|0.00}";
-    public string SecondaryTemplate { get; init; } = " GHz";
+    public string PrimaryTemplate { get; init; } = "{cpu.logical_processors}";
+    public string SecondaryTemplate { get; init; } = " CPU";
     public string RightTemplate { get; init; } = "{cpu.usage|0}";
     public string RightSuffix { get; init; } = "%";
 
@@ -151,8 +151,8 @@ public sealed record CustomHudSettings
             AnimationMode = "Full",
             TaglineTemplate = "/// CPU",
             TitleTemplate = "CPU",
-            PrimaryTemplate = "{cpu.frequency_ghz|0.00}",
-            SecondaryTemplate = " GHz",
+            PrimaryTemplate = "{cpu.logical_processors}",
+            SecondaryTemplate = " CPU",
             RightTemplate = "{cpu.usage|0}",
             RightSuffix = "%",
             ProgressVariable = "cpu.usage",

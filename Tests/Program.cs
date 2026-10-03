@@ -84,6 +84,21 @@ internal static class Tests
         Check(Convert.ToDouble(v["cpu.usage"]) is >=0 and <=100,"CPU percent within bounds");
         Check(Convert.ToDouble(v["disk.system.used_bytes"])+Convert.ToDouble(v["disk.system.free_bytes"])==Convert.ToDouble(v["disk.system.total_bytes"]),"APFS capacity invariant");
         Check(!v.ContainsKey("gpu.usage"),"No synthetic GPU utilization");
+        string testKey="ecp-ci-"+Guid.NewGuid().ToString("N");
+        string protectedKey=SecretStore.Protect(testKey);
+        Check(!protectedKey.Contains(testKey) && SecretStore.Unprotect(protectedKey)==testKey,"Native login Keychain secret round trip");
+        using var http=new HttpClient(new FixtureHttp());
+        using var integrations=new VariableHub(http);
+        var configured=CustomHudSettings.CreateDefault() with
+        {
+            DeepSeekApiKeyProtected=protectedKey,
+            HttpSources=new(){new(){Name="audit",Url="https://fixture.invalid/data",Enabled=true,
+                Fields=new(){new(){Variable="value",JsonPath="metrics[0].value"}}}}
+        };
+        var onlineKeys=VariableCatalog.AllBuiltIns.Where(d=>d.Key.StartsWith("deepseek.") || d.Key.StartsWith("network.public_")).Select(d=>d.Key).Append("custom.audit.value").ToList();
+        var online=await integrations.SnapshotAsync(configured,onlineKeys);
+        foreach(var key in onlineKeys) Check(online.TryGetValue(key,out var value) && value is not null,"Online integration collector (fixture): "+key);
+        Check(Convert.ToDouble(online["deepseek.balance"])==12.5 && Convert.ToDouble(online["custom.audit.value"])==42,"HTTP/JSON and DeepSeek values are parsed from responses");
         // Loopback probe is independent of Internet connectivity.
         var listener=new TcpListener(IPAddress.Loopback,0); listener.Start();
         try
@@ -139,9 +154,11 @@ internal sealed class AuditApp : Application
         }
         foreach(var language in new[]{AppLanguage.SimplifiedChinese,AppLanguage.English})
         {
-            LocalizationManager.Initialize(language.ToString());
+            LocalizationManager.Initialize(LocalizationManager.PreferenceFor(language));
+            settings=settings with { UiLanguage=LocalizationManager.PreferenceFor(language) };
             window.Close(); window=new SettingsWindow(settings,hud,runtime); desktop.MainWindow=window; window.Show();
             await Task.Delay(400);
+            Tests.Check(LocalizationManager.Current==language,"Settings language: "+language);
             using var bitmap=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
             bitmap.Render(window); bitmap.Save($"artifacts/audit/settings-{language}.png");
         }
@@ -153,5 +170,21 @@ internal sealed class AuditApp : Application
         Tests.Check(MacNative.ecp_hud_flags(handle!.Handle)==3,"Application applies click-through and all-Spaces flags");
         Tests.Check(MacSystemProbe.TryGetCursorPosition(out _),"Global mouse position available without Accessibility permission");
         window.Close(); hud.Close();
+    }
+}
+
+internal sealed class FixtureHttp : HttpMessageHandler
+{
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,CancellationToken ct)
+    {
+        string content=request.RequestUri!.Host switch
+        {
+            "api.deepseek.com" => """{"is_available":true,"balance_infos":[{"currency":"CNY","total_balance":"12.5","granted_balance":"2.5","topped_up_balance":"10"}]}""",
+            "api.ipify.org" => "203.0.113.1",
+            "api6.ipify.org" => "2001:db8::1",
+            "fixture.invalid" => """{"metrics":[{"value":42}]}""",
+            _ => throw new InvalidOperationException("Unexpected test endpoint")
+        };
+        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK){Content=new StringContent(content)});
     }
 }

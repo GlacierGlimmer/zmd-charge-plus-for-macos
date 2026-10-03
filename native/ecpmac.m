@@ -43,12 +43,16 @@ static void cpu(NSMutableDictionary *v) {
     NSNumber *cores = number("hw.physicalcpu"), *logical = number("hw.logicalcpu");
     if (cores) v[@"cpu.physical_cores"] = cores;
     if (logical) v[@"cpu.logical_processors"] = logical;
-    host_cpu_load_info_data_t ticks;
-    mach_msg_type_number_t count = HOST_CPU_LOAD_INFO_COUNT;
+    processor_info_array_t ticks = NULL;
+    mach_msg_type_number_t count = 0; natural_t processors = 0;
     mach_port_t host = mach_host_self();
-    if (host_statistics(host, HOST_CPU_LOAD_INFO, (host_info_t)&ticks, &count) == KERN_SUCCESS) {
-        v[@"__cpu_ticks"] = @[@(ticks.cpu_ticks[CPU_STATE_USER]), @(ticks.cpu_ticks[CPU_STATE_SYSTEM]),
-                              @(ticks.cpu_ticks[CPU_STATE_IDLE]), @(ticks.cpu_ticks[CPU_STATE_NICE])];
+    if (host_processor_info(host, PROCESSOR_CPU_LOAD_INFO, &processors, &ticks, &count) == KERN_SUCCESS) {
+        uint32_t totals[CPU_STATE_MAX] = {0};
+        for (natural_t i=0; i<processors; i++)
+            for (int state=0; state<CPU_STATE_MAX; state++) totals[state] += (uint32_t)ticks[i*CPU_STATE_MAX+state];
+        v[@"__cpu_ticks"] = @[@(totals[CPU_STATE_USER]), @(totals[CPU_STATE_SYSTEM]),
+                              @(totals[CPU_STATE_IDLE]), @(totals[CPU_STATE_NICE])];
+        vm_deallocate(mach_task_self(), (vm_address_t)ticks, count*sizeof(integer_t));
     }
     mach_port_deallocate(mach_task_self(), host);
     // hw.cpufrequency is nominal on some Macs; it is deliberately NOT labeled current GHz.

@@ -28,8 +28,11 @@ internal static class MacVariableCatalog
         {
             var provider = new MacVariableProvider();
             provider.Collect(values, null, null);
-            Thread.Sleep(120);
-            provider.Collect(values, null, null);
+            for (int attempt=0; attempt<6 && !values.ContainsKey("cpu.usage"); attempt++)
+            {
+                Thread.Sleep(200);
+                provider.Collect(values, null, null);
+            }
         }
         lock (Gate) _detected = values.Where(p => p.Value is not null).Select(p => p.Key).ToHashSet(StringComparer.OrdinalIgnoreCase);
     }
