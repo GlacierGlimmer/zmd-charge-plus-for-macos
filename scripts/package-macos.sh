@@ -40,7 +40,7 @@ plutil -lint "$app/Contents/Info.plist"
 # Sign inner code first. A Developer ID can be supplied without changing the build.
 # Ad-hoc signatures enable ARM execution but are not Developer ID / notarization.
 identity="${MACOS_SIGNING_IDENTITY:--}"
-options=()
+options=(--timestamp=none)
 if [[ "$identity" != '-' ]]; then options=(--options runtime --timestamp); fi
 while IFS= read -r -d '' file; do
   if file -b "$file" | grep -q 'Mach-O'; then

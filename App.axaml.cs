@@ -38,6 +38,11 @@ public partial class App : Application
             if (!Program.IsAutoStart) desktop.MainWindow = CreateSettings(settings);
             SetupMenu();
             LocalizationManager.LanguageChanged += SetupMenu;
+            if (this.TryGetFeature<IActivatableLifetime>() is { } activatable)
+                activatable.Activated += (_, e) =>
+                {
+                    if (e.Kind == ActivationKind.Reopen) Dispatcher.UIThread.Post(OpenSettings);
+                };
             StartActivationListener();
             _ = CheckUpdatesAsync();
             desktop.Exit += (_, _) =>

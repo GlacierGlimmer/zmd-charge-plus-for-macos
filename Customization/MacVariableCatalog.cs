@@ -7,8 +7,8 @@ internal static class MacVariableCatalog
     private static readonly object Gate = new();
     private static HashSet<string>? _detected;
     private static readonly HashSet<string> UiKeys = new((
-        "display.primary_width_px display.primary_height_px display.virtual_x_px display.virtual_y_px " +
-        "display.virtual_width_px display.virtual_height_px display.monitor_count display.system_dpi display.scale_percent " +
+        "display.primary_width_px display.primary_height_px display.virtual_x_points display.virtual_y_points " +
+        "display.virtual_width_points display.virtual_height_points display.monitor_count display.system_dpi display.scale_percent " +
         "clipboard.has_text clipboard.text_length clipboard.preview clipboard.has_image clipboard.last_updated " +
         "app.theme app.preset_name app.active_profile " +
         "time.world.nyc time.world.london time.world.tokyo time.world.beijing " +
@@ -60,8 +60,12 @@ internal static class MacVariableCatalog
             ("gpu.recommended_working_set_bytes", "Metal 建议工作集上限", "GPU", "Byte", "数值", "Metal recommendedMaxWorkingSetSize；是预算，不是显存容量或 GPU 已用内存。"),
             ("gpu.low_power", "低功耗 GPU", "GPU", "", "布尔", "Metal isLowPower。"),
             ("gpu.removable", "可移除 GPU", "GPU", "", "布尔", "Metal isRemovable。"),
+            ("display.virtual_x_points", "桌面左边界", "显示器", "pt", "数值", "CoreGraphics 全局桌面坐标，单位为逻辑点。"),
+            ("display.virtual_y_points", "桌面上边界", "显示器", "pt", "数值", "CoreGraphics 全局桌面坐标，单位为逻辑点。"),
+            ("display.virtual_width_points", "桌面总宽度", "显示器", "pt", "数值", "CoreGraphics 所有活动屏幕的边界合并，单位为逻辑点。"),
+            ("display.virtual_height_points", "桌面总高度", "显示器", "pt", "数值", "CoreGraphics 所有活动屏幕的边界合并，单位为逻辑点。"),
         })
-            if (Detected.Contains(key) && result.All(d => d.Key != key))
+            if ((Detected.Contains(key) || UiKeys.Contains(key)) && result.All(d => d.Key != key))
                 result.Add(new(key,name,category,description,type,unit,"左侧信息",unit=="Byte" ? "gb:1 / auto:1" : "0"));
         return result.GroupBy(d => d.Key, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).ToList();
     }
@@ -75,7 +79,7 @@ internal static class MacVariableCatalog
             "battery" => "IOPowerSources；无内置电池时移除，仅在系统提供数据时列出",
             "gpu" => "Metal 设备信息；不提供系统未公开的全局 GPU 使用率、温度和显存占用",
             "network" => "macOS en* 物理接口 64 位计数器差分（排除 VPN/loopback 重复流量），或已实现的公网查询/方案计算",
-            "display" => "Avalonia macOS 屏幕接口；DPI 为 96 × 界面缩放比例",
+            "display" => "CoreGraphics 原生像素分辨率 / AppKit Retina backingScaleFactor；桌面坐标使用逻辑点，DPI 为 96 × 缩放比例",
             "clipboard" => "macOS 剪贴板；更新时间为 ECP 最近观察到内容变化的时刻",
             _ => "macOS / .NET 或本方案实际配置与查询结果",
         };

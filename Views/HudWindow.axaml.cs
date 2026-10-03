@@ -649,7 +649,7 @@ public partial class HudWindow : Window
     private void EnsureInputHitTest()
     {
         var handle = this.TryGetPlatformHandle();
-        if (handle?.HandleDescriptor == "NSWindow") MacNative.SetHudWindow(handle.Handle, Topmost);
+        if (handle?.HandleDescriptor is "NSWindow" or "NSView") MacNative.SetHudWindow(handle.Handle, Topmost);
     }
 
     private bool IsPointInsideVisibleHud(PixelPoint screenPoint)

@@ -20,20 +20,8 @@ internal static class MacUiVariables
             if (window is null) return v;
             if (display)
             {
-                var screens = window.Screens.All;
-                var primary = window.Screens.Primary ?? screens.FirstOrDefault();
-                if (primary is not null)
-                {
-                    v["display.primary_width_px"] = primary.Bounds.Width;
-                    v["display.primary_height_px"] = primary.Bounds.Height;
-                    v["display.virtual_x_px"] = screens.Min(s => s.Bounds.X);
-                    v["display.virtual_y_px"] = screens.Min(s => s.Bounds.Y);
-                    v["display.virtual_width_px"] = screens.Max(s => s.Bounds.Right) - screens.Min(s => s.Bounds.X);
-                    v["display.virtual_height_px"] = screens.Max(s => s.Bounds.Bottom) - screens.Min(s => s.Bounds.Y);
-                    v["display.monitor_count"] = screens.Count;
-                    v["display.system_dpi"] = 96 * primary.Scaling;
-                    v["display.scale_percent"] = 100 * primary.Scaling;
-                }
+                using var native = Interop.MacNative.Display();
+                foreach (var item in native.RootElement.EnumerateObject()) v[item.Name] = item.Value.GetDouble();
             }
             if (clipboard && window.Clipboard is { } cb)
             {

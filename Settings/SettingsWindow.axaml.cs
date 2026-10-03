@@ -335,10 +335,28 @@ public partial class SettingsWindow : Window
 
     private async void OnSave(object? sender, RoutedEventArgs e)
     {
-        _settings = CollectSettingsFromUi();
-
-        SettingsManager.Save(_settings);
-        StartupManager.Apply(_settings.StartWithWindows);
+        try
+        {
+            var updated = CollectSettingsFromUi();
+            StartupManager.Apply(updated.StartWithWindows);
+            SettingsManager.Save(updated);
+            _settings = updated;
+        }
+        catch (Exception ex)
+        {
+            AppLog.Error("Could not save settings or register launch at login.", ex);
+            var ok = new Button { Content = LocalizationManager.Text("确定", "OK"), HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right };
+            var dialog = new Window
+            {
+                Title = LocalizationManager.Text("保存失败", "Save failed"), Width = 500, SizeToContent = SizeToContent.Height,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Content = new StackPanel { Margin = new Avalonia.Thickness(24), Spacing = 20,
+                    Children = { new TextBlock { Text = ex.Message, TextWrapping = Avalonia.Media.TextWrapping.Wrap }, ok } }
+            };
+            ok.Click += (_, _) => dialog.Close();
+            await dialog.ShowDialog(this);
+            return;
+        }
 
         SaveBtn.IsEnabled = false;
         SaveBtn.Content = LocalizationManager.Text("应用中…", "Applying…");

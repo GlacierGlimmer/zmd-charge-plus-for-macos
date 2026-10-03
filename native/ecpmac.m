@@ -211,9 +211,51 @@ API int ecp_hud_window(void *handle, int topmost) {
         return window.ignoresMouseEvents ? 1 : 0;
     }
 }
+API int ecp_hud_flags(void *handle) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread || !handle) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if (!window) return 0;
+        return (window.ignoresMouseEvents ? 1 : 0) | ((window.collectionBehavior & NSWindowCollectionBehaviorCanJoinAllSpaces) ? 2 : 0);
+    }
+}
 API int ecp_pointer(double *x, double *y) {
     CGEventRef event=CGEventCreate(NULL); if (!event) return 0;
     CGPoint p=CGEventGetLocation(event); CFRelease(event); *x=p.x; *y=p.y; return 1;
+}
+API char *ecp_display(void) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread) return NULL;
+        NSMutableDictionary *v=[NSMutableDictionary new];
+        uint32_t count=0;
+        if (CGGetActiveDisplayList(0,NULL,&count)!=kCGErrorSuccess || !count) return json(v);
+        CGDirectDisplayID *ids=calloc(count,sizeof(CGDirectDisplayID));
+        if (!ids) return NULL;
+        CGRect desktop=CGRectNull;
+        if (CGGetActiveDisplayList(count,ids,&count)==kCGErrorSuccess) {
+            v[@"display.monitor_count"]=@(count);
+            for (uint32_t i=0;i<count;i++) desktop=CGRectUnion(desktop,CGDisplayBounds(ids[i]));
+            v[@"display.virtual_x_points"]=@(desktop.origin.x); v[@"display.virtual_y_points"]=@(desktop.origin.y);
+            v[@"display.virtual_width_points"]=@(desktop.size.width); v[@"display.virtual_height_points"]=@(desktop.size.height);
+        }
+        free(ids);
+        CGDirectDisplayID primary=CGMainDisplayID();
+        CGDisplayModeRef mode=CGDisplayCopyDisplayMode(primary);
+        if (mode) {
+            v[@"display.primary_width_px"]=@(CGDisplayModeGetPixelWidth(mode));
+            v[@"display.primary_height_px"]=@(CGDisplayModeGetPixelHeight(mode));
+            CGDisplayModeRelease(mode);
+        }
+        for (NSScreen *screen in NSScreen.screens) {
+            if ([screen.deviceDescription[@"NSScreenNumber"] unsignedIntValue]==primary) {
+                v[@"display.scale_percent"]=@(100*screen.backingScaleFactor);
+                v[@"display.system_dpi"]=@(96*screen.backingScaleFactor);
+                break;
+            }
+        }
+        return json(v);
+    }
 }
 API int ecp_keychain_set(const char *account, const char *secret) {
     @autoreleasepool {

@@ -607,7 +607,7 @@ public sealed class VariableHub : IDisposable
         DateTime beijing;
         try
         {
-            beijing = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("China Standard Time")).DateTime;
+            beijing = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai")).DateTime;
         }
         catch
         {

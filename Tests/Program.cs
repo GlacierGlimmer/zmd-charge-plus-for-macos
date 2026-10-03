@@ -148,7 +148,9 @@ internal sealed class AuditApp : Application
         hud.Show(); await Task.Delay(300);
         var handle=hud.TryGetPlatformHandle();
         Tests.Check(handle is not null,"HUD exposes a native handle");
-        Tests.Check(MacNative.SetHudWindow(handle!.Handle,true),"NSWindow click-through is applied and read back");
+        // Exercise the application's actual window configuration path, then only read native state.
+        hud.ApplySettings(settings);
+        Tests.Check(MacNative.ecp_hud_flags(handle!.Handle)==3,"Application applies click-through and all-Spaces flags");
         Tests.Check(MacSystemProbe.TryGetCursorPosition(out _),"Global mouse position available without Accessibility permission");
         window.Close(); hud.Close();
     }
