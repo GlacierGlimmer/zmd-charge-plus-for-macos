@@ -52,7 +52,7 @@ public partial class SettingsWindow : Window
 
         public string StatusText => Status switch
         {
-            UpdateStatusKind.NoRemoteVersion => LocalizationManager.Text("状态：未获取到 Release / 标签，仓库可能尚未公开", "Status: no release/tag found; the repository may not be public yet"),
+            UpdateStatusKind.NoRemoteVersion => LocalizationManager.Text("状态：暂无适用于当前架构的正式 DMG", "Status: no stable DMG found for this architecture"),
             UpdateStatusKind.Uncomparable => LocalizationManager.Text("状态：已获取线上版本，但版本号格式无法比较", "Status: remote version found, but its format cannot be compared"),
             UpdateStatusKind.UpdateAvailable => LocalizationManager.Text("状态：发现新版本", "Status: update available"),
             UpdateStatusKind.UpToDate => LocalizationManager.Text("状态：当前已是最新版本", "Status: up to date"),
@@ -108,6 +108,7 @@ public partial class SettingsWindow : Window
         CheckUpdateBtn.Click += OnCheckUpdate;
 
         AboutArchitectureText.Text = $"{"macOS"} · {GetCurrentProcessArchitectureText()}";
+        AboutRepositoryText.Text = ProductInfo.Repository.Replace("https://", "", StringComparison.Ordinal);
 
         string currentVersion = GetCurrentVersionText();
         AboutVersionText.Text = $"v{currentVersion}";
@@ -249,7 +250,7 @@ public partial class SettingsWindow : Window
             var s = screens[i];
             var area = s.WorkingArea;
             string primary = ReferenceEquals(s, Screens.Primary) ? LocalizationManager.Text(" · 主", " · Primary") : "";
-            MonitorCombo.Items.Add(LocalizationManager.Text($"显示器 {i + 1} · {area.Width}×{area.Height}{primary}", $"Display {i + 1} · {area.Width}×{area.Height}{primary}"));
+            MonitorCombo.Items.Add(LocalizationManager.Text($"显示器 {i + 1} · {area.Width}×{area.Height} pt{primary}", $"Display {i + 1} · {area.Width}×{area.Height} pt{primary}"));
         }
 
         int wanted = _settings.MonitorIndex < 0 ? 0 : _settings.MonitorIndex + 1;

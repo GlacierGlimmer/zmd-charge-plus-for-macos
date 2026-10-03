@@ -70,7 +70,7 @@ public partial class HudWindow : Window
         // 临时 HUD 保持原行为：始终置顶。
         // 常驻 HUD 可以选择置顶，或作为普通非置顶窗口留在桌面层。
         Topmost = !persistent || _settings.PersistentLayer == PersistentHudLayer.Topmost;
-        // Avalonia can update HWND styles after a layer change. Keep the HUD
+        // Avalonia can update native window styles after a layer change. Keep the HUD
         // mouse-through in both persistent (topmost/normal) and transient modes.
         if (IsVisible)
         {

@@ -150,11 +150,11 @@
                         <ComboBox x:Name="PositionCombo" Height="34"/>
                       </StackPanel>
                       <StackPanel Grid.Column="1" Spacing="4" Margin="8,0">
-                        <TextBlock Text="X 微调 / px" FontSize="11" Foreground="#85858B"/>
+                        <TextBlock Text="X 微调 / pt" FontSize="11" Foreground="#85858B"/>
                         <NumericUpDown x:Name="OffsetXBox" Minimum="-10000" Maximum="10000" Increment="1"/>
                       </StackPanel>
                       <StackPanel Grid.Column="2" Spacing="4" Margin="8,0,0,0">
-                        <TextBlock Text="Y 微调 / px" FontSize="11" Foreground="#85858B"/>
+                        <TextBlock Text="Y 微调 / pt" FontSize="11" Foreground="#85858B"/>
                         <NumericUpDown x:Name="OffsetYBox" Minimum="-10000" Maximum="10000" Increment="1"/>
                       </StackPanel>
                     </Grid>
@@ -165,11 +165,11 @@
                 <Border x:Name="CustomPositionPanel" Background="#1E1E20" CornerRadius="8" Padding="14">
                   <Grid ColumnDefinitions="*,*">
                     <StackPanel Spacing="4" Margin="0,0,6,0">
-                      <TextBlock Text="X 坐标 / px" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="X 坐标 / pt" FontSize="11" Foreground="#85858B"/>
                       <NumericUpDown x:Name="CustomXBox" Minimum="-10000" Maximum="20000" Increment="1"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                      <TextBlock Text="Y 坐标 / px" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="Y 坐标 / pt" FontSize="11" Foreground="#85858B"/>
                       <NumericUpDown x:Name="CustomYBox" Minimum="-10000" Maximum="20000" Increment="1"/>
                     </StackPanel>
                   </Grid>
@@ -227,21 +227,20 @@
                 </Border>
 
                 <StackPanel Grid.Column="1" Spacing="5" Margin="18,0,24,0">
-                  <TextBlock Text="Endfield Charge Plus" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                  <TextBlock Text="Endfield Charge Plus" FontSize="24" FontWeight="Bold" Foreground="White" TextWrapping="Wrap"/>
                   <TextBlock Text="终末地风格状态栏 HUD" FontSize="14" Foreground="#D2D2D6"/>
                   <TextBlock x:Name="AboutArchitectureText" Text="macOS" FontSize="12" Foreground="#8E8E94" Margin="0,1,0,0"/>
                   <StackPanel Orientation="Horizontal" Spacing="18" Margin="0,7,0,0">
                     <TextBlock x:Name="AboutVersionText" Text="v0.1.0" FontSize="13" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-                    <TextBlock Text="构建日期  2026.09.23" FontSize="13" Foreground="#D2D2D6"/>
                   </StackPanel>
                 </StackPanel>
 
                 <Border Grid.Column="2" Background="#1E1E20" BorderBrush="#343438" BorderThickness="1" CornerRadius="8" Padding="14,12">
-                  <Grid ColumnDefinitions="96,*" VerticalAlignment="Center">
+                  <Grid ColumnDefinitions="144,*" VerticalAlignment="Center">
                     <Button x:Name="CheckUpdateBtn"
                             Grid.Column="0"
                             Content="检查更新"
-                            Width="84"
+                            Width="132"
                             Height="36"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -268,7 +267,7 @@
                   <TextBlock Grid.Column="1" Text="MIT" FontSize="13" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,10"/>
 
                   <TextBlock Grid.Row="1" Text="本项目 GitHub" FontSize="12" Foreground="#8E8E94" VerticalAlignment="Center" Margin="0,0,0,10"/>
-                  <TextBlock Grid.Row="1" Grid.Column="1" Text="github.com/GlacierGlimmer/zmd-charge-plus" FontSize="13" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,10"/>
+                  <TextBlock x:Name="AboutRepositoryText" Grid.Row="1" Grid.Column="1" FontSize="13" Foreground="White" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,10"/>
                   <Button x:Name="OpenProjectGithubBtn" Grid.Row="1" Grid.Column="2" Content="打开" Height="30" MinWidth="66" Padding="10,4" Margin="8,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
                   <TextBlock Grid.Row="2" Text="原项目 GitHub" FontSize="12" Foreground="#8E8E94" VerticalAlignment="Center" Margin="0,0,0,10"/>
