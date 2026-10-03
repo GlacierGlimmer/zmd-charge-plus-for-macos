@@ -11,6 +11,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Avalonia.Themes.Fluent;
 using Avalonia.Threading;
+using Avalonia.LogicalTree;
 using EndfieldChargePlus;
 using EndfieldChargePlus.Customization;
 using EndfieldChargePlus.Interop;
@@ -142,6 +143,7 @@ internal sealed class AuditApp : Application
         // Conditional online integrations are audited separately, never mistaken for hardware support.
         var local=catalog.Where(d => !d.Key.StartsWith("deepseek.") && !d.Key.StartsWith("probe.") && !d.Key.StartsWith("ping.") && !d.Key.StartsWith("network.public_")).ToList();
         var values=await hub.SnapshotAsync(settings.CustomHud,local.Select(d=>d.Key));
+        Tests.Check(Convert.ToInt32(values["clipboard.text_length"])==23 && (string?)values["clipboard.preview"]=="ECP macOS variable audit","Clipboard values reflect actual macOS pasteboard text");
         var allProfile=new HudProfile { PrimaryTemplate=string.Join(" ",local.Select(d=>d.TemplateToken)) };
         var effective=HudProfileRenderer.BuildEffectiveVariables(allProfile,values);
         foreach(var d in local) Tests.Check(effective.TryGetValue(d.Key,out var value) && value is not null,"Advertised variable has a value: "+d.Key);
@@ -161,6 +163,24 @@ internal sealed class AuditApp : Application
             Tests.Check(LocalizationManager.Current==language,"Settings language: "+language);
             using var bitmap=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
             bitmap.Render(window); bitmap.Save($"artifacts/audit/settings-{language}.png");
+            var tabs=window.GetLogicalDescendants().OfType<TabControl>().First();
+            tabs.SelectedIndex=2;
+            await Task.Delay(250);
+            using var about=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
+            about.Render(window); about.Save($"artifacts/audit/about-{language}.png");
+            tabs.SelectedIndex=1;
+            await Task.Delay(250);
+            var library=window.FindControl<HudCustomizerView>("Customizer")!;
+            library.GetLogicalDescendants().OfType<TabControl>().First().SelectedIndex=1;
+            await Task.Delay(250);
+            using var variables=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
+            variables.Render(window); variables.Save($"artifacts/audit/library-{language}.png");
+            var memory=settings.CustomHud.Profiles.First(p=>p.BuiltInKey=="system.memory");
+            var measurement=await hub.SnapshotAsync(settings.CustomHud,HudProfileRenderer.GetRequiredVariables(memory));
+            await hud.ShowPersistentAsync(HudProfileRenderer.Render(memory,measurement));
+            using var hudImage=new RenderTargetBitmap(new PixelSize((int)hud.Width,(int)hud.Height),new Vector(96,96));
+            hudImage.Render(hud); hudImage.Save($"artifacts/audit/hud-{language}.png");
+            await hud.HidePersistentAsync();
         }
         hud.Show(); await Task.Delay(300);
         var handle=hud.TryGetPlatformHandle();

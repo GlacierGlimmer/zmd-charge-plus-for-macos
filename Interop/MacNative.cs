@@ -9,6 +9,7 @@ internal static class MacNative
     [DllImport(Library)] private static extern IntPtr ecp_snapshot(int mask);
     [DllImport(Library)] private static extern IntPtr ecp_gpus();
     [DllImport(Library)] private static extern IntPtr ecp_display();
+    [DllImport(Library)] private static extern IntPtr ecp_clipboard();
     [DllImport(Library)] private static extern void ecp_free(IntPtr pointer);
     [DllImport(Library)] private static extern int ecp_hud_window(IntPtr handle, int topmost);
     [DllImport(Library)] internal static extern int ecp_hud_flags(IntPtr handle);
@@ -24,6 +25,7 @@ internal static class MacNative
     internal static JsonDocument Snapshot(int mask) => JsonDocument.Parse(Consume(ecp_snapshot(mask)) ?? "{}");
     internal static JsonDocument Gpus() => JsonDocument.Parse(Consume(ecp_gpus()) ?? "[]");
     internal static JsonDocument Display() => JsonDocument.Parse(Consume(ecp_display()) ?? "{}");
+    internal static JsonDocument Clipboard() => JsonDocument.Parse(Consume(ecp_clipboard()) ?? "{}");
     internal static string? ReadKeychain(string account) => Consume(ecp_keychain_get(account));
     internal static bool SetHudWindow(IntPtr handle, bool topmost) => ecp_hud_window(handle, topmost ? 1 : 0) == 1;
 }

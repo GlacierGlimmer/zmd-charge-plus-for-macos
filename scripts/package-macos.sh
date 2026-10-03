@@ -6,13 +6,15 @@ version="${2:-0.1.0}"
 case "$rid" in osx-arm64) arch=arm64 ;; osx-x64) arch=x86_64 ;; *) exit 2 ;; esac
 [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo 'Invalid version'; exit 2; }
 name='Endfield Charge Plus For MacOS'
-stage="$PWD/artifacts/$rid/stage"
+mkdir -p "$PWD/artifacts/$rid"
+stage=$(mktemp -d "$PWD/artifacts/$rid/stage.XXXXXX")
 app="$stage/$name.app"
 out="$PWD/artifacts/packages"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$out"
 bash scripts/build-native.sh "$rid"
 dotnet publish EndfieldChargePlus.csproj -c Release -r "$rid" --self-contained true \
-  -p:Version="$version" -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=false -p:PublishTrimmed=false -o "$app/Contents/MacOS"
+  -p:Version="$version" -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=false \
+  -p:DebugType=embedded -p:DebugSymbols=false -p:PublishTrimmed=false -o "$app/Contents/MacOS"
 cp native/libecpmac.dylib "$app/Contents/MacOS/"
 chmod 755 "$app/Contents/MacOS/EndfieldChargePlus"
 python3 - "$app" "$version" "$arch" <<'PY'

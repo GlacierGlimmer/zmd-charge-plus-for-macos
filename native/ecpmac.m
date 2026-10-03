@@ -261,6 +261,15 @@ API char *ecp_display(void) {
         return json(v);
     }
 }
+API char *ecp_clipboard(void) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread) return NULL;
+        NSPasteboard *board=NSPasteboard.generalPasteboard;
+        NSString *text=[board stringForType:NSPasteboardTypeString] ?: @"";
+        BOOL image=[board canReadObjectForClasses:@[NSImage.class] options:@{}];
+        return json(@{@"text":text,@"hasImage":@(image),@"sequence":@(board.changeCount)});
+    }
+}
 API int ecp_keychain_set(const char *account, const char *secret) {
     @autoreleasepool {
         NSDictionary *query=@{(__bridge id)kSecClass:(__bridge id)kSecClassGenericPassword,

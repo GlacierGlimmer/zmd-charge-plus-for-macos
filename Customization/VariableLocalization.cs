@@ -75,6 +75,12 @@ public static class VariableLocalization
                                      .Replace(" 等", " etc.", StringComparison.Ordinal);
 
         string description = BuildDescription(item.Key, name, type, unit);
+        if (item.Key == "gpu.recommended_working_set_bytes")
+            description = "Metal's recommended maximum working-set budget. This is neither VRAM capacity nor current GPU memory usage.";
+        if (item.Key is "memory.used_bytes" or "memory.available_bytes" or "memory.usage")
+            description = "Mach VM: used = active + wired + compressed; available = total - used. This is not Activity Monitor memory pressure.";
+        if (item.Key.StartsWith("display.virtual_"))
+            description = "Global CoreGraphics desktop coordinates in logical points; supports mixed Retina display scaling.";
         if (OperatingSystem.IsMacOS() && item.Key.StartsWith("disk.mount_", StringComparison.Ordinal))
         {
             string mount = item.Name.Split(" · ", 2)[0];
