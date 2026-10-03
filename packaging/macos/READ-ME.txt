@@ -1,0 +1,18 @@
+Endfield Charge Plus For MacOS
+
+把 .app 拖到 Applications，再从 Applications 启动。应用在菜单栏驻留。
+Apple Silicon（M1 / M2 / M3 / M4 / M5 等）选择 osx-arm64；Intel Mac 选择 osx-x64。
+要求 macOS 13 或更高版本，已包含 .NET 运行时。
+
+此构建默认使用 ad-hoc 本地签名，未经 Apple Developer ID 签名或公证。
+确认从本项目官方仓库下载并核对 SHA-256 后，如系统阻止打开：
+前往 系统设置 → 隐私与安全性，使用该应用对应的“仍要打开”。
+不要关闭 Gatekeeper，不需要关闭 SIP，也不需要管理员权限运行 ECP。
+
+Drag the .app into Applications, then launch it from Applications.
+Use osx-arm64 for Apple Silicon and osx-x64 for Intel. Requires macOS 13+.
+This default build is ad-hoc signed, not Apple Developer ID signed/notarized.
+If blocked, verify the official download and SHA-256, then use the app-specific
+Open Anyway control in System Settings > Privacy & Security.
+
+Source and updates: https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos
