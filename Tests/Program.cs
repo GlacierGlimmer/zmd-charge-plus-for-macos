@@ -101,16 +101,33 @@ internal static class Tests
         foreach(var key in onlineKeys) Check(online.TryGetValue(key,out var value) && value is not null,"Online integration collector (fixture): "+key);
         Check(Convert.ToDouble(online["deepseek.balance"])==12.5 && Convert.ToDouble(online["custom.audit.value"])==42,"HTTP/JSON and DeepSeek values are parsed from responses");
         // Loopback probe is independent of Internet connectivity.
+        var probeKeys=VariableCatalog.AllBuiltIns.Where(d=>d.Key.StartsWith("probe.") || d.Key.StartsWith("ping.")).Select(d=>d.Key).ToList();
         var listener=new TcpListener(IPAddress.Loopback,0); listener.Start();
+        int port=((IPEndPoint)listener.LocalEndpoint).Port;
         try
         {
-            int port=((IPEndPoint)listener.LocalEndpoint).Port;
             var pending=listener.AcceptTcpClientAsync();
-            v=await hub.SnapshotAsync(CustomHudSettings.CreateDefault(),new[]{"probe.online","probe.latency_ms"},pingTarget:"127.0.0.1",probeProtocol:"TCP",probePort:port);
+            v=await hub.SnapshotAsync(CustomHudSettings.CreateDefault(),probeKeys,pingTarget:"127.0.0.1",probeProtocol:"TCP",probePort:port);
             using var connection=await pending.WaitAsync(TimeSpan.FromSeconds(5));
             Check(v["probe.online"] is true && Convert.ToDouble(v["probe.latency_ms"])>=0,"TCP probe actually connects on macOS");
+            foreach(var key in probeKeys) Check(v.TryGetValue(key,out var value) && value is not null,"Probe variable from local connection: "+key);
         }
         finally { listener.Stop(); }
+        using var failureHub=new VariableHub();
+        v=await failureHub.SnapshotAsync(CustomHudSettings.CreateDefault(),probeKeys,pingTarget:"127.0.0.1",probeProtocol:"TCP",probePort:port);
+        Check(v["probe.online"] is false && v["probe.latency_ms"] is string && v["probe.avg_latency_ms"] is string,"Failed connection reports status without a fabricated latency");
+        v=await hub.SnapshotAsync(CustomHudSettings.CreateDefault(),probeKeys,pingTarget:"127.0.0.1",probeProtocol:"ICMP");
+        Check(v["probe.online"] is true && Convert.ToDouble(v["probe.latency_ms"])>=0,"ICMP loopback works without root on macOS");
+        using var udp=new UdpClient(new IPEndPoint(IPAddress.Loopback,0));
+        async Task Echo()
+        {
+            var packet=await udp.ReceiveAsync().WaitAsync(TimeSpan.FromSeconds(5));
+            await udp.SendAsync(packet.Buffer,packet.Buffer.Length,packet.RemoteEndPoint);
+        }
+        var echo=Echo();
+        v=await hub.SnapshotAsync(CustomHudSettings.CreateDefault(),probeKeys,pingTarget:"127.0.0.1",probeProtocol:"UDP",probePort:((IPEndPoint)udp.Client.LocalEndPoint!).Port);
+        await echo;
+        Check(v["probe.online"] is true && Convert.ToDouble(v["probe.latency_ms"])>=0,"UDP loopback measures an actual response");
     }
 }
 
