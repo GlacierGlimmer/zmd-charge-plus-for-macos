@@ -36,7 +36,12 @@ jobs:
       - name: Test collectors, every local variable, profiles and native UI
         run: dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
       - name: Build DMG
-        run: bash scripts/package-macos.sh '${{ matrix.rid }}'
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            bash scripts/package-macos.sh '${{ matrix.rid }}' "${GITHUB_REF_NAME#v}"
+          else
+            bash scripts/package-macos.sh '${{ matrix.rid }}'
+          fi
       - name: Verify DMG and run packaged app
         run: bash scripts/verify-dmg.sh '${{ matrix.rid }}'
       - uses: actions/upload-artifact@v4

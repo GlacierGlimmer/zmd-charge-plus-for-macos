@@ -39,7 +39,7 @@ internal static class Tests
                 AppBuilder.Configure<AuditApp>().UsePlatformDetect().WithInterFont()
                     .With(new MacOSPlatformOptions { ShowInDock=false }).StartWithClassicDesktopLifetime(args);
             }
-            Console.WriteLine($"Passed {Count} assertions on {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture}.");
+            Console.WriteLine($"{(Environment.ExitCode == 0 ? "Passed" : "FAILED after")} {Count} assertions on {RuntimeInformation.OSDescription} / {RuntimeInformation.ProcessArchitecture}.");
             return Environment.ExitCode;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
