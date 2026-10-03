@@ -8,6 +8,7 @@
         Title="Endfield Charge Plus"
         SystemDecorations="None"
         Background="Transparent"
+        TransparencyLevelHint="Transparent"
         Topmost="True"
         ShowInTaskbar="False"
         ShowActivated="False"

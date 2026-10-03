@@ -143,7 +143,7 @@ internal sealed class AuditApp : Application
         // Conditional online integrations are audited separately, never mistaken for hardware support.
         var local=catalog.Where(d => !d.Key.StartsWith("deepseek.") && !d.Key.StartsWith("probe.") && !d.Key.StartsWith("ping.") && !d.Key.StartsWith("network.public_")).ToList();
         var values=await hub.SnapshotAsync(settings.CustomHud,local.Select(d=>d.Key));
-        Tests.Check(Convert.ToInt32(values["clipboard.text_length"])==23 && (string?)values["clipboard.preview"]=="ECP macOS variable audit","Clipboard values reflect actual macOS pasteboard text");
+        Tests.Check(Convert.ToInt32(values["clipboard.text_length"])=="ECP macOS variable audit".Length && (string?)values["clipboard.preview"]=="ECP macOS variable audit","Clipboard values reflect actual macOS pasteboard text");
         var allProfile=new HudProfile { PrimaryTemplate=string.Join(" ",local.Select(d=>d.TemplateToken)) };
         var effective=HudProfileRenderer.BuildEffectiveVariables(allProfile,values);
         foreach(var d in local) Tests.Check(effective.TryGetValue(d.Key,out var value) && value is not null,"Advertised variable has a value: "+d.Key);
@@ -187,7 +187,7 @@ internal sealed class AuditApp : Application
         Tests.Check(handle is not null,"HUD exposes a native handle");
         // Exercise the application's actual window configuration path, then only read native state.
         hud.ApplySettings(settings);
-        Tests.Check(MacNative.ecp_hud_flags(handle!.Handle)==3,"Application applies click-through and all-Spaces flags");
+        Tests.Check(MacNative.ecp_hud_flags(handle!.Handle)==7,"Application applies click-through, all-Spaces and native transparency");
         Tests.Check(MacSystemProbe.TryGetCursorPosition(out _),"Global mouse position available without Accessibility permission");
         window.Close(); hud.Close();
     }

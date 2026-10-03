@@ -106,7 +106,7 @@
                 <Grid ColumnDefinitions="*,150,260" RowDefinitions="Auto,Auto">
                   <StackPanel Grid.RowSpan="2" Spacing="2" Margin="0,0,18,0" VerticalAlignment="Center">
                     <TextBlock Text="一直显示" FontSize="12" Foreground="#E7E7E9"/>
-                    <TextBlock Text="开启：HUD 持续显示。&#10;关闭：电源插拔显示电池；鼠标移到目标屏幕顶部中央可唤出当前方案。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap" LineHeight="19" Margin="0,3,0,0"/>
+                    <TextBlock Text="开启：HUD 持续显示。&#10;关闭：电源插拔显示电池；鼠标移到目标屏幕顶部中央（菜单栏下方）可唤出当前方案。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap" LineHeight="19" Margin="0,3,0,0"/>
                   </StackPanel>
                   <TextBlock Grid.Column="1" Text="常驻状态" FontSize="11" Foreground="#85858B" Margin="0,0,18,4"/>
                   <TextBlock Grid.Column="2" Text="显示层级" FontSize="11" Foreground="#85858B" Margin="0,0,0,4"/>

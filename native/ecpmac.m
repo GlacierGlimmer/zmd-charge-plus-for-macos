@@ -210,6 +210,7 @@ API int ecp_hud_window(void *handle, int topmost) {
         NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
         if (!window) return 0;
         window.ignoresMouseEvents=YES; window.hidesOnDeactivate=NO;
+        window.opaque=NO; window.backgroundColor=NSColor.clearColor; window.hasShadow=NO;
         window.collectionBehavior=NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary | NSWindowCollectionBehaviorIgnoresCycle;
         window.level=topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;
         return window.ignoresMouseEvents ? 1 : 0;
@@ -221,7 +222,8 @@ API int ecp_hud_flags(void *handle) {
         id object=(__bridge id)handle;
         NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
         if (!window) return 0;
-        return (window.ignoresMouseEvents ? 1 : 0) | ((window.collectionBehavior & NSWindowCollectionBehaviorCanJoinAllSpaces) ? 2 : 0);
+        return (window.ignoresMouseEvents ? 1 : 0) | ((window.collectionBehavior & NSWindowCollectionBehaviorCanJoinAllSpaces) ? 2 : 0)
+            | (!window.opaque && window.backgroundColor.alphaComponent==0 ? 4 : 0);
     }
 }
 API int ecp_pointer(double *x, double *y) {

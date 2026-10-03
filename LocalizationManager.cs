@@ -35,7 +35,7 @@ public static class LocalizationManager
         ["登录系统后自动启动 Endfield Charge Plus。"] = "Start Endfield Charge Plus after sign-in.",
         ["显示方式"] = "Display Mode",
         ["一直显示"] = "Always Visible",
-        ["开启：HUD 持续显示。\n关闭：电源插拔显示电池；鼠标移到目标屏幕顶部中央可唤出当前方案。"] = "On: keep the HUD visible.\nOff: power changes show Battery; move the pointer to the top-center of the target display to summon the active profile.",
+        ["开启：HUD 持续显示。\n关闭：电源插拔显示电池；鼠标移到目标屏幕顶部中央（菜单栏下方）可唤出当前方案。"] = "On: keep the HUD visible.\nOff: power changes show Battery; move the pointer to the top-center of the desktop below the menu bar to summon the active profile.",
         ["常驻状态"] = "Persistent",
         ["显示层级"] = "Layer",
         ["HUD 不透明度"] = "HUD Opacity",

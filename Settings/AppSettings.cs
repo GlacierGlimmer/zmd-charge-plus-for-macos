@@ -14,7 +14,7 @@ public sealed record AppSettings
     // turned off temporarily during the current session from the settings window.
     public bool HudEnabled { get; init; } = true;
     public bool StartWithWindows { get; init; } = false;
-    // Auto | zh-CN | en-US. Auto follows Windows UI culture; all zh-* cultures use Simplified Chinese.
+    // Auto | zh-CN | en-US. Auto follows macOS UI culture; all zh-* cultures use Simplified Chinese.
     public string UiLanguage { get; init; } = "Auto";
 
     public double GlobalScale { get; init; } = DefaultGlobalScale;

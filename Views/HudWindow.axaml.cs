@@ -635,7 +635,8 @@ public partial class HudWindow : Window
         var screen = ResolveScreen(_settings.MonitorIndex);
         if (screen is null) return false;
 
-        var bounds = screen.Bounds;
+        // The menu bar/notch is outside the usable desktop on MacBook displays.
+        var bounds = screen.WorkingArea;
         int centerX = bounds.X + bounds.Width / 2;
         int halfWidth = Math.Max(40, width / 2);
         int hotHeight = Math.Max(2, height);
