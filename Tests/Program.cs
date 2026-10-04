@@ -21,6 +21,7 @@ using EndfieldChargePlus.Views;
 internal static class Tests
 {
     internal static int Count;
+    internal static bool SettingsSaveOnly;
     internal static void Check(bool condition, string message)
     {
         if (!condition) throw new Exception(message);
@@ -31,13 +32,16 @@ internal static class Tests
     {
         try
         {
+            SettingsSaveOnly=args.Contains("--settings-save-only");
+            if(SettingsSaveOnly && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
+                throw new InvalidOperationException("The save audit requires an isolated ECP_TEST_HOME.");
             if(Environment.GetEnvironmentVariable("ECP_TEST_HOME") is { Length: >0 } isolatedHome)
                 Check(OperatingSystem.IsMacOS() && Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))==Path.GetFullPath(isolatedHome),"GUI save audit uses the isolated macOS home");
-            UnitTests();
+            if(!SettingsSaveOnly) UnitTests();
             if (OperatingSystem.IsMacOS())
             {
                 MacVariableCatalog.Refresh();
-                NativeTests().GetAwaiter().GetResult();
+                if(!SettingsSaveOnly) NativeTests().GetAwaiter().GetResult();
                 AppBuilder.Configure<AuditApp>().UsePlatformDetect().WithInterFont()
                     .With(new MacOSPlatformOptions { ShowInDock=false }).StartWithClassicDesktopLifetime(args);
             }
@@ -187,6 +191,7 @@ internal sealed class AuditApp : Application
         await Task.Delay(600);
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
             await VerifyFreshHomeSave(window,hud,runtime,settings);
+        if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }
         await window.Clipboard!.SetTextAsync("ECP macOS variable audit");
         using var hub=new VariableHub();
         var catalog=VariableCatalog.AllBuiltIns;
