@@ -15,7 +15,7 @@ public static class StartupManager
     public static void Apply(bool enabled)
     {
         if (!OperatingSystem.IsMacOS()) return;
-        if (!enabled) { File.Delete(AutostartPath); return; }
+        if (!enabled) { RemoveRegistration(AutostartPath); return; }
         string executable = Environment.ProcessPath ?? throw new InvalidOperationException("Application executable path is unavailable.");
         if (executable.StartsWith("/Volumes/", StringComparison.Ordinal) || executable.Contains("/AppTranslocation/", StringComparison.Ordinal))
             throw new InvalidOperationException(LocalizationManager.Text("请先把应用拖到 Applications 文件夹，再开启登录启动。", "Move the app into Applications before enabling launch at login."));
@@ -25,5 +25,15 @@ public static class StartupManager
         File.WriteAllText(AutostartPath + ".tmp", BuildPlist(executable));
         File.SetUnixFileMode(AutostartPath + ".tmp", UnixFileMode.UserRead | UnixFileMode.UserWrite);
         File.Move(AutostartPath + ".tmp", AutostartPath, overwrite:true);
+    }
+
+    internal static void RemoveRegistration(string path)
+    {
+        try { File.Delete(path); }
+        catch (DirectoryNotFoundException)
+        {
+            // A fresh macOS account may not have ~/Library/LaunchAgents yet.
+            // No parent directory means there is no registration left to remove.
+        }
     }
 }

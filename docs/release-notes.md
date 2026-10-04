@@ -1,6 +1,8 @@
-Endfield Charge Plus For MacOS v0.1.1。
+Endfield Charge Plus For MacOS v0.1.2。
 
-更新检查的网络超时由 10 秒放宽至 30 秒，适应已实测超过 10 秒才返回成功响应的 GitHub 连接。保留真实超时状态提示。
+修复首次使用时“保存并应用”失败：当登录启动关闭且 `~/Library/LaunchAgents` 尚不存在时，按未注册登录启动处理，不再因删除不存在的 plist 而中断保存。无需手动创建目录。已存在的 ECP 启动项仍可正常移除；权限错误等真实异常仍会提示。
+
+新增隔离用户目录下实际点击“保存并应用”、配置落盘、HUD 应用、重复保存和备份的回归检查，ARM64 与 Intel x64 均执行。
 
 - **主版本：osx-arm64.dmg**，适用于 M1 / M2 / M3 / M4 / M5 等 Apple Silicon Mac。
 - **Intel 版本：osx-x64.dmg**。两种安装包均自包含 .NET，无需另装运行时。

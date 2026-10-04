@@ -34,7 +34,10 @@ jobs:
           security unlock-keychain -p "$password" "$RUNNER_TEMP/ecp-test.keychain-db"
           security set-keychain-settings -lut 21600 "$RUNNER_TEMP/ecp-test.keychain-db"
       - name: Test collectors, every local variable, profiles and native UI
-        run: dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
+        run: |
+          dotnet build Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
+          test_home=$(mktemp -d "$RUNNER_TEMP/ecp-test-home.XXXXXX")
+          HOME="$test_home" ECP_TEST_HOME="$test_home" dotnet Tests/bin/Release/net8.0/EndfieldChargePlus.PlatformTests.dll
       - name: Build DMG
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then

@@ -10,8 +10,8 @@
 
 | 安装包 | 适用设备 |
 | --- | --- |
-| **EndfieldChargePlusForMacOS-v0.1.1-osx-arm64.dmg** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
-| EndfieldChargePlusForMacOS-v0.1.1-osx-x64.dmg | Intel Mac |
+| **EndfieldChargePlusForMacOS-v0.1.2-osx-arm64.dmg** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
+| EndfieldChargePlusForMacOS-v0.1.2-osx-x64.dmg | Intel Mac |
 
 打开 DMG，把 **Endfield Charge Plus For MacOS.app** 拖到 **Applications** 后启动。包内自带 .NET 运行时。应用在菜单栏驻留，关闭设置窗口后继续运行，通过菜单栏退出。
 

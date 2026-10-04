@@ -31,6 +31,8 @@ internal static class Tests
     {
         try
         {
+            if(Environment.GetEnvironmentVariable("ECP_TEST_HOME") is { Length: >0 } isolatedHome)
+                Check(OperatingSystem.IsMacOS() && Path.GetFullPath(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))==Path.GetFullPath(isolatedHome),"GUI save audit uses the isolated macOS home");
             UnitTests();
             if (OperatingSystem.IsMacOS())
             {
@@ -46,6 +48,7 @@ internal static class Tests
     }
     private static void UnitTests()
     {
+        StartupRemovalTests();
         var p=new MacVariableProvider(); var values=new Dictionary<string,object?>();
         using var first=JsonDocument.Parse("""{"__cpu_ticks":[4294967290,50,100,0],"__network_samples":{"en0":[1000,500]}}""");
         p.Consume(first.RootElement,values,100);
@@ -74,6 +77,34 @@ internal static class Tests
         var imported = MacVariableCatalog.RemoveUnsupportedReferences(new HudProfile { PrimaryTemplate="{gpu.usage|0} {system.time}", ProgressVariable="gpu.usage", ColorRules=new(){new(){Variable="gpu.usage"}} });
         Check(imported.PrimaryTemplate==" {system.time}" && imported.ProgressVariable=="" && imported.ColorRules.Count==0,"Unsupported imported expressions and color rules are removed");
         Check(SecretStore.Unprotect("windows-dpapi-blob")=="","Foreign encrypted key is not treated as plaintext");
+    }
+
+    private static void StartupRemovalTests()
+    {
+        string directory=Path.Combine(Path.GetTempPath(),"ecp-launch-agent-"+Guid.NewGuid().ToString("N"));
+        if(!Path.GetFullPath(directory).StartsWith(Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.GetTempPath()))+Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Test cleanup must stay inside the temporary directory.");
+        string registration=Path.Combine(directory,"Library","LaunchAgents",StartupManager.Label+".plist");
+        try
+        {
+            StartupManager.RemoveRegistration(registration);
+            Check(!Directory.Exists(directory),"Disabling launch at login tolerates a missing parent directory without creating it");
+            Directory.CreateDirectory(Path.GetDirectoryName(registration)!);
+            StartupManager.RemoveRegistration(registration);
+            Check(!File.Exists(registration),"Disabling launch at login tolerates an absent plist");
+            string unrelated=Path.Combine(Path.GetDirectoryName(registration)!,"other-app.plist");
+            File.WriteAllText(unrelated,"preserve");
+            File.WriteAllText(registration,StartupManager.BuildPlist("/Applications/ECP.app/Contents/MacOS/EndfieldChargePlus"));
+            StartupManager.RemoveRegistration(registration);
+            StartupManager.RemoveRegistration(registration);
+            Check(!File.Exists(registration) && File.ReadAllText(unrelated)=="preserve","Disabling twice removes only ECP's registration");
+            Directory.CreateDirectory(registration);
+            bool rejected=false;
+            try { StartupManager.RemoveRegistration(registration); }
+            catch(Exception ex) when(ex is IOException or UnauthorizedAccessException) { rejected=true; }
+            Check(rejected && Directory.Exists(registration),"Invalid registration target is still reported, not silently ignored");
+        }
+        finally { if(Directory.Exists(directory)) Directory.Delete(directory,true); }
     }
     private static async Task NativeTests()
     {
@@ -154,6 +185,8 @@ internal sealed class AuditApp : Application
         using var runtime=new CustomHudRuntime(hud); runtime.ApplySettings(settings);
         var window=new SettingsWindow(settings,hud,runtime); desktop.MainWindow=window; window.Show();
         await Task.Delay(600);
+        if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
+            await VerifyFreshHomeSave(window,hud,runtime,settings);
         await window.Clipboard!.SetTextAsync("ECP macOS variable audit");
         using var hub=new VariableHub();
         var catalog=VariableCatalog.AllBuiltIns;
@@ -207,6 +240,38 @@ internal sealed class AuditApp : Application
         Tests.Check(MacNative.ecp_hud_flags(handle!.Handle)==7,"Application applies click-through, all-Spaces and native transparency");
         Tests.Check(MacSystemProbe.TryGetCursorPosition(out _),"Global mouse position available without Accessibility permission");
         window.Close(); hud.Close();
+    }
+
+    private static async Task VerifyFreshHomeSave(SettingsWindow window,HudWindow hud,CustomHudRuntime runtime,AppSettings defaults)
+    {
+        string launchDirectory=Path.GetDirectoryName(StartupManager.AutostartPath)!;
+        Tests.Check(!Directory.Exists(launchDirectory) && !File.Exists(SettingsManager.SettingsPath),"Fresh macOS account has no LaunchAgents directory or saved settings");
+        var startup=window.FindControl<ToggleSwitch>("StartupSwitch")!;
+        var persistent=window.FindControl<ToggleSwitch>("AlwaysVisibleSwitch")!;
+        var offset=window.FindControl<NumericUpDown>("OffsetXBox")!;
+        var save=window.FindControl<Button>("SaveBtn")!;
+        startup.IsChecked=false;
+        persistent.IsChecked=true;
+        offset.Value=17;
+        async Task ClickSave()
+        {
+            save.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            var timer=Stopwatch.StartNew();
+            while(timer.Elapsed<TimeSpan.FromSeconds(12) && save.Content?.ToString()!=LocalizationManager.Text("已保存","Saved"))
+                await Task.Delay(50);
+            Tests.Check(save.IsEnabled && save.Content?.ToString()==LocalizationManager.Text("已保存","Saved"),"Save & Apply button completes without an error dialog");
+        }
+        await ClickSave();
+        var saved=SettingsManager.Load();
+        Tests.Check(!saved.StartWithWindows && saved.AlwaysVisible && saved.HudOffsetX==17 && hud.IsVisible,"Fresh-home Save & Apply persists and applies the selected settings");
+        Tests.Check(!Directory.Exists(launchDirectory),"Saving with login startup off does not create LaunchAgents");
+        offset.Value=23;
+        await ClickSave();
+        Tests.Check(SettingsManager.Load().HudOffsetX==23 && File.Exists(Path.Combine(SettingsManager.BackupsDirectory,"settings.previous.json")),"Repeated Save & Apply persists changes and keeps the previous-settings backup");
+        using var screenshot=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
+        screenshot.Render(window); screenshot.Save("artifacts/audit/save-fresh-home.png");
+        await hud.HidePersistentAsync();
+        runtime.ApplySettings(defaults); hud.ApplySettings(defaults);
     }
 }
 
