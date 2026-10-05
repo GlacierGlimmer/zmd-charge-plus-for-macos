@@ -4,6 +4,20 @@
 
 An Endfield-inspired menu bar and floating desktop HUD with customizable profiles, animations, system metrics, clocks, network probes, DeepSeek and HTTP/JSON sources.
 
+## Other platform downloads
+
+Each platform is maintained and released in its own repository. Open its Releases page for available versions, packages and checksums.
+
+| Platform | Repository | Releases |
+| --- | --- | --- |
+| Windows | [Repository](https://github.com/GlacierGlimmer/zmd-charge-plus) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus/releases) |
+| Linux | [Repository](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux/releases) |
+| Android | [Repository](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android/releases) |
+
+The Android repository has been created; available builds are listed on its Releases page.
+
+## Download and use
+
 Download from [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases). **osx-arm64.dmg is the primary build** for M1 / M2 / M3 / M4 / M5 and other Apple Silicon Macs. Choose osx-x64.dmg for Intel Macs. Drag the app into Applications and launch it there. No separate .NET installation is required.
 
 Default builds are **ad-hoc signed, not Apple Developer ID signed or notarized**. Verify the official source and the accompanying SHA-256, then use this app's Open Anyway button under System Settings > Privacy & Security if Gatekeeper blocks it. Do not disable Gatekeeper or SIP.

@@ -4,6 +4,18 @@
 
 终末地风格菜单栏与桌面悬浮 HUD。保留 ECP 的自定义方案、动画、时间、系统监控、网络探测、DeepSeek API 和 HTTP/JSON 数据源，使用 macOS 原生接口采集数据。
 
+## 其他平台下载
+
+各平台由独立仓库维护和发布。请前往对应的 Releases 页面查看可用版本、安装包和校验文件。
+
+| 平台 | 仓库 | 发布页面 |
+| --- | --- | --- |
+| Windows | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus/releases) |
+| Linux | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux/releases) |
+| Android | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android/releases) |
+
+Android 仓库已建立；可下载版本以其 Releases 页面为准。
+
 ## 下载
 
 从[本仓库 Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases)下载：
