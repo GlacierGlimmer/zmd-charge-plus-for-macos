@@ -14,6 +14,7 @@
 #include <net/if_dl.h>
 #include <ifaddrs.h>
 #include <arpa/inet.h>
+#include <math.h>
 
 #define API __attribute__((visibility("default")))
 static NSNumber *number(const char *key) {
@@ -203,6 +204,18 @@ API char *ecp_gpus(void) {
     }
 }
 // AppKit methods must only be called on Avalonia's UI thread.
+API int ecp_hud_vertical_offset(void *handle, double offset) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread || !handle || !isfinite(offset)) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if (!window || !window.screen) return 0;
+        NSPoint origin=window.frame.origin;
+        origin.y=NSMaxY(window.screen.visibleFrame)-offset-window.frame.size.height;
+        [window setFrameOrigin:origin];
+        return 1;
+    }
+}
 API int ecp_hud_window(void *handle, int topmost) {
     @autoreleasepool {
         if (!NSThread.isMainThread || !handle) return 0;

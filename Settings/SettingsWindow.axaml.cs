@@ -338,6 +338,8 @@ public partial class SettingsWindow : Window
     {
         try
         {
+        try
+        {
             var updated = CollectSettingsFromUi();
             StartupManager.Apply(updated.StartWithWindows);
             SettingsManager.Save(updated);
@@ -378,6 +380,14 @@ public partial class SettingsWindow : Window
             timer.Stop();
         };
         timer.Start();
+        }
+        catch (Exception ex)
+        {
+            SaveBtn.IsEnabled = true;
+            SaveBtn.Content = LocalizationManager.Text("保存失败", "Save failed");
+            MaintenanceStatusText.Text = ex.Message;
+            EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to apply settings.", ex);
+        }
     }
 
     private async void OnExportSettings(object? sender, RoutedEventArgs e)

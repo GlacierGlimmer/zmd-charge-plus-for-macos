@@ -569,7 +569,7 @@ public partial class HudWindow : Window
         double hudHeightPx = 60d * _settings.GlobalScale * scaling; // 最终可见胶囊高度
         double paddingX = Math.Max(0d, (windowWidthPx - hudWidthPx) / 2d);
         double paddingY = Math.Max(0d, (windowHeightPx - hudHeightPx) / 2d);
-        const double margin = 16d;
+        const double margin = 0d;
 
         double hudLeft;
         double hudTop;
@@ -602,6 +602,11 @@ public partial class HudWindow : Window
         int windowX = (int)Math.Round(hudLeft - paddingX);
         int windowY = (int)Math.Round(hudTop - paddingY);
         Position = new PixelPoint(windowX, windowY);
+        // The transparent animation host extends above the visible pill. Set the native
+        // origin explicitly so window-manager clamping does not add that padding as a gap.
+        var handle = this.TryGetPlatformHandle();
+        if (OperatingSystem.IsMacOS() && handle?.HandleDescriptor is "NSWindow" or "NSView")
+            MacNative.SetHudVerticalOffset(handle.Handle, (hudTop - area.Y - paddingY) / scaling);
     }
 
     private Avalonia.Platform.Screen? ResolveScreen(int monitorIndex)
@@ -630,13 +635,13 @@ public partial class HudWindow : Window
         }, DispatcherPriority.Loaded);
     }
 
-    public bool IsPointInTopCenterHotZone(PixelPoint screenPoint, int width = 240, int height = 5)
+    public bool IsPointInTopCenterHotZone(PixelPoint screenPoint, int width = 240, int height = 40)
     {
         var screen = ResolveScreen(_settings.MonitorIndex);
         if (screen is null) return false;
 
         // The menu bar/notch is outside the usable desktop on MacBook displays.
-        var bounds = screen.WorkingArea;
+        var bounds = screen.Bounds;
         int centerX = bounds.X + bounds.Width / 2;
         int halfWidth = Math.Max(40, width / 2);
         int hotHeight = Math.Max(2, height);

@@ -12,6 +12,7 @@ internal static class MacNative
     [DllImport(Library)] private static extern IntPtr ecp_clipboard();
     [DllImport(Library)] private static extern void ecp_free(IntPtr pointer);
     [DllImport(Library)] private static extern int ecp_hud_window(IntPtr handle, int topmost);
+    [DllImport(Library)] private static extern int ecp_hud_vertical_offset(IntPtr handle, double offset);
     [DllImport(Library)] internal static extern int ecp_hud_flags(IntPtr handle);
     [DllImport(Library)] internal static extern int ecp_pointer(out double x, out double y);
     [DllImport(Library)] internal static extern int ecp_keychain_set([MarshalAs(UnmanagedType.LPUTF8Str)] string account, [MarshalAs(UnmanagedType.LPUTF8Str)] string secret);
@@ -28,4 +29,5 @@ internal static class MacNative
     internal static JsonDocument Clipboard() => JsonDocument.Parse(Consume(ecp_clipboard()) ?? "{}");
     internal static string? ReadKeychain(string account) => Consume(ecp_keychain_get(account));
     internal static bool SetHudWindow(IntPtr handle, bool topmost) => ecp_hud_window(handle, topmost ? 1 : 0) == 1;
+    internal static void SetHudVerticalOffset(IntPtr handle, double offset) => ecp_hud_vertical_offset(handle, offset);
 }

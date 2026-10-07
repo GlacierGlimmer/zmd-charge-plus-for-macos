@@ -19,6 +19,7 @@ namespace EndfieldChargePlus.Customization;
 
 public sealed class VariableHub : IDisposable
 {
+    private readonly SemaphoreSlim _snapshotGate = new(1, 1);
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
     private readonly HttpClient _http;
     private readonly Dictionary<string, HttpCacheEntry> _httpCache = new(StringComparer.OrdinalIgnoreCase);
@@ -44,6 +45,9 @@ public sealed class VariableHub : IDisposable
         string? pingTarget = null, string? probeProtocol = null, int probePort = 443,
         CancellationToken ct = default)
     {
+        await _snapshotGate.WaitAsync(ct).ConfigureAwait(false);
+        try
+        {
         if (_lastLanguage != LocalizationManager.Current)
         {
             _lastLanguage = LocalizationManager.Current;
@@ -77,6 +81,8 @@ public sealed class VariableHub : IDisposable
             await AddDeepSeekBalanceAsync(vars, settings, ct).ConfigureAwait(false);
         if (NeedsPrefix(requested, "custom.")) await AddCustomHttpAsync(vars, settings, ct, requested).ConfigureAwait(false);
         return vars;
+        }
+        finally { _snapshotGate.Release(); }
     }
     public static IReadOnlyList<string> BuiltInVariableKeys => VariableCatalog.AllBuiltIns.Select(x => x.Key).ToList();
 
@@ -675,7 +681,7 @@ public sealed class VariableHub : IDisposable
             if (requested is not null && !requested.Any(k => k.StartsWith(sourcePrefix, StringComparison.OrdinalIgnoreCase)))
                 continue;
 
-            string cacheKey = source.Name + "|" + source.Url;
+            string cacheKey = source.Name + "|" + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(source))));
             if (!_httpCache.TryGetValue(cacheKey, out var cache) || DateTime.UtcNow >= cache.ExpiresAt)
             {
                 try
@@ -694,15 +700,21 @@ public sealed class VariableHub : IDisposable
                         DateTime.UtcNow.AddSeconds(Math.Clamp(source.RefreshSeconds, 5, 86400)));
                     _httpCache[cacheKey] = cache;
                 }
-                catch
+                catch (OperationCanceledException) when (ct.IsCancellationRequested) { throw; }
+                catch (Exception ex)
                 {
-                    if (OperatingSystem.IsMacOS())
-                        foreach (var f in source.Fields)
-                            v[sourcePrefix + Sanitize(f.Variable)] = LocalizationManager.Text("数据源请求失败", "Source request failed");
-                    continue;
+                    string error = ex is HttpRequestException http && http.StatusCode is not null
+                        ? $"HTTP {(int)http.StatusCode}"
+                        : LocalizationManager.Text("请求失败，请检查网络、地址与凭据。", "Request failed; check the network, URL and credentials.");
+                    cache = new HttpCacheEntry("", DateTime.UtcNow.AddSeconds(Math.Clamp(source.RefreshSeconds, 5, 86400)), error);
+                    _httpCache[cacheKey] = cache;
+                    EndfieldChargePlus.Diagnostics.AppLog.Warn($"HTTP source request failed ({ex.GetType().Name}).");
                 }
             }
 
+            v[sourcePrefix + "error"] = cache.Error;
+            v[sourcePrefix + "status"] = cache.Error.Length == 0 ? "OK" : cache.Error;
+            if (cache.Error.Length != 0) continue;
             try
             {
                 using var doc = JsonDocument.Parse(cache.Json);
@@ -711,14 +723,18 @@ public sealed class VariableHub : IDisposable
                     if (TryJsonPath(doc.RootElement, f.JsonPath, out var value))
                         v[$"custom.{Sanitize(source.Name)}.{Sanitize(f.Variable)}"] = JsonToObject(value)
                             ?? (OperatingSystem.IsMacOS() ? LocalizationManager.Text("JSON 值为空", "JSON value is null") : null);
-                    else if (OperatingSystem.IsMacOS()) v[sourcePrefix + Sanitize(f.Variable)] = LocalizationManager.Text("JSON 路径不存在", "JSON path missing");
+                    else
+                    {
+                        v[sourcePrefix + "error"] = LocalizationManager.Text("JSON 路径不存在：", "JSON path missing: ") + f.JsonPath;
+                        v[sourcePrefix + "status"] = v[sourcePrefix + "error"];
+                    }
                 }
             }
-            catch
+            catch (JsonException)
             {
-                if (OperatingSystem.IsMacOS())
-                    foreach (var f in source.Fields)
-                        v[sourcePrefix + Sanitize(f.Variable)] = LocalizationManager.Text("JSON 数据无效", "Invalid JSON");
+                v[sourcePrefix + "error"] = LocalizationManager.Text("响应不是有效的 JSON。", "The response is not valid JSON.");
+                v[sourcePrefix + "status"] = v[sourcePrefix + "error"];
+                EndfieldChargePlus.Diagnostics.AppLog.Warn("HTTP source returned invalid JSON.");
             }
         }
     }
@@ -964,7 +980,7 @@ public sealed class VariableHub : IDisposable
         public string Error => Success ? "" : ReplyStatus;
     }
 
-    private sealed record HttpCacheEntry(string Json, DateTime ExpiresAt);
+    private sealed record HttpCacheEntry(string Json, DateTime ExpiresAt, string Error = "");
 
     public void Dispose() { }
 }
