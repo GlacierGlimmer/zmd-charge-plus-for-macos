@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Check official DeepSeek windows and Chinese holidays
+        run: dotnet run --project Tests/DeepSeekPeriodTests.csproj -c Release
       - name: Build native collectors
         run: bash scripts/build-native.sh '${{ matrix.rid }}'
       - name: Prepare isolated CI Keychain

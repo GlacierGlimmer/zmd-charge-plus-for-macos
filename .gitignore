@@ -41,3 +41,6 @@ settings.*.json
 *.pubxml.user
 
 native/*.dylib
+
+# Isolated official-period regression output
+**/obj-period/

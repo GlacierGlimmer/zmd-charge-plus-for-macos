@@ -25,4 +25,7 @@
   <Target Name="BuildMacNative" BeforeTargets="PrepareForBuild" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
     <Exec Command="bash &quot;$(MSBuildProjectDirectory)/scripts/build-native.sh&quot; $(RuntimeIdentifier)" />
   </Target>
+  <ItemGroup>
+    <EmbeddedResource Include="Assets/china-holidays.json" LogicalName="EndfieldChargePlus.china-holidays.json" />
+  </ItemGroup>
 </Project>
