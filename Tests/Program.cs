@@ -140,13 +140,6 @@ internal static class Tests
         Check(frameDisplays.Count>0 && frameDisplays.All(t=>uint.TryParse(t.Id,out var id) && id>0 && !string.IsNullOrWhiteSpace(t.Name)),"FPS display selector enumerates real CoreGraphics display IDs");
         var frameWindows=FrameRateBackend.Windows();
         Check(frameWindows.All(t=>uint.TryParse(t.Id,out var id) && id>0 && !string.IsNullOrWhiteSpace(t.Name)),"FPS window selector returns native window IDs without synthetic targets");
-        var windowFps=CustomHudSettings.CreateDefault().Profiles.Single(p=>p.BuiltInKey=="system.window-fps") with { FrameWindowId="" };
-        var frameConfig=CustomHudSettings.CreateDefault() with { ActiveProfileId=windowFps.Id,Profiles=new(){windowFps} };
-        var missingFrame=await hub.SnapshotAsync(frameConfig,HudProfileRenderer.GetRequiredVariables(windowFps));
-        Check(missingFrame.TryGetValue("frame.window.fps",out var missingFps) && missingFps is null && missingFrame["frame.window.percent"] is null,"Unselected native FPS target never becomes a fabricated zero");
-        Check(missingFrame["frame.window.status"] is string frameStatus && frameStatus.Contains("Select a window"),"Native FPS reader reports why the selected target is unavailable");
-        Check(HudProfileRenderer.GetUnavailableVariables(windowFps,missingFrame).Count>0,"FPS profile detects unavailable data for its user prompt");
-        FrameRateBackend.KeepAlive("window",""); FrameRateBackend.Stop();
         // Loopback probe is independent of Internet connectivity.
         var probeKeys=VariableCatalog.AllBuiltIns.Where(d=>d.Key.StartsWith("probe.") || d.Key.StartsWith("ping.")).Select(d=>d.Key).ToList();
         var listener=new TcpListener(IPAddress.Loopback,0); listener.Start();
@@ -206,6 +199,13 @@ internal sealed class AuditApp : Application
         if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }
         await window.Clipboard!.SetTextAsync("ECP macOS variable audit");
         using var hub=new VariableHub();
+        var windowFps=CustomHudSettings.CreateDefault().Profiles.Single(p=>p.BuiltInKey=="system.window-fps") with { FrameWindowId="" };
+        var frameConfig=CustomHudSettings.CreateDefault() with { ActiveProfileId=windowFps.Id,Profiles=new(){windowFps} };
+        var missingFrame=await hub.SnapshotAsync(frameConfig,HudProfileRenderer.GetRequiredVariables(windowFps));
+        Tests.Check(missingFrame.TryGetValue("frame.window.fps",out var missingFps) && missingFps is null && missingFrame["frame.window.percent"] is null,"Unselected native FPS target never becomes a fabricated zero");
+        Tests.Check(missingFrame["frame.window.status"] is string frameStatus && frameStatus.Contains("Select a window"),"Native FPS reader reports why the selected target is unavailable");
+        Tests.Check(HudProfileRenderer.GetUnavailableVariables(windowFps,missingFrame).Count>0,"FPS profile detects unavailable data for its user prompt");
+        FrameRateBackend.KeepAlive("window",""); FrameRateBackend.Stop();
         var catalog=VariableCatalog.AllBuiltIns;
         // Conditional online integrations and authorized FPS capture are audited separately.
         var local=catalog.Where(d => !d.Key.StartsWith("deepseek.") && !d.Key.StartsWith("probe.") && !d.Key.StartsWith("ping.") && !d.Key.StartsWith("network.public_") && !d.Key.StartsWith("frame.")).ToList();
