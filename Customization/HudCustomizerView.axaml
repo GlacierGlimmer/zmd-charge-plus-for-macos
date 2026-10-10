@@ -50,7 +50,24 @@
                 </Grid>
               </Border>
 
-              <Border x:Name="GpuOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
+              <Border x:Name="FrameOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
+            <StackPanel Spacing="8">
+              <TextBlock Text="帧率采集目标" Foreground="#C6CA4C"/>
+              <StackPanel x:Name="FrameDisplayOptions" Spacing="6">
+                  <TextBlock Text="目标显示器"/>
+                  <ComboBox x:Name="FrameDisplayTargetCombo"/>
+                </StackPanel>
+                <StackPanel x:Name="FrameWindowOptions" Spacing="6">
+                  <TextBlock Text="目标窗口"/>
+                  <ComboBox x:Name="FrameWindowTargetCombo"/>
+                </StackPanel>
+              <Button x:Name="RefreshFrameTargetsBtn" Content="刷新窗口／显示器列表"/>
+              <TextBlock Text="100% 对应帧率 / FPS" Foreground="#85858B"/>
+              <NumericUpDown x:Name="FrameFullScaleBox" Minimum="1" Maximum="1000" Value="120" Increment="1"/>
+              <TextBlock x:Name="FrameCaptureHint" TextWrapping="Wrap" Foreground="#85858B"/>
+            </StackPanel>
+          </Border>
+          <Border x:Name="GpuOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
                 <Grid ColumnDefinitions="*,420">
                   <StackPanel Spacing="2" Margin="0,0,18,0">
                     <TextBlock Text="GPU 设备" FontSize="12" Foreground="#E6E6E8"/>

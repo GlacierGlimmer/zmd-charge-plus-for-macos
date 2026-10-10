@@ -10,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.Platform;
+using Avalonia.VisualTree;
 using EndfieldChargePlus.Animations;
 using EndfieldChargePlus.Customization;
 using EndfieldChargePlus.Interop;
@@ -23,7 +24,12 @@ public partial class HudWindow : Window
     private AppSettings _settings = new();
     private AnimationOptions _animOptions = AnimationOptions.Default;
     private bool _persistent;
+    private readonly DispatcherTimer _inputTimer=new() { Interval=TimeSpan.FromMilliseconds(16) };
+    public event Action? HudClicked;
+    private bool CanCycleOnClick => _persistent && _settings.AlwaysVisible && _settings.ClickToCycle && !IsHudBusy;
+
     private HudRenderData? _lastRenderData;
+    private Dictionary<TextBlock,FontFamily>? _defaultFonts;
 
     // The progress ring is deliberately animated independently from the existing HUD
     // summon/retract animations. Data updates therefore feel continuous without changing
@@ -35,6 +41,21 @@ public partial class HudWindow : Window
     private DateTime _progressStartedUtc;
     private bool _progressInitialized;
     private static readonly TimeSpan ProgressTransitionDuration = TimeSpan.FromMilliseconds(320);
+
+    private Border? _editingFrame;
+    public void SetEditingHighlight(bool enabled, string name)
+    {
+        if (_editingFrame is null)
+        {
+            _editingFrame=new Border { Width=584, Height=84, BorderBrush=Brushes.Orange,
+                BorderThickness=new Thickness(4), CornerRadius=new CornerRadius(38),
+                HorizontalAlignment=Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment=Avalonia.Layout.VerticalAlignment.Center, IsHitTestVisible=false };
+            GlobalScale.Children.Add(_editingFrame);
+        }
+        _editingFrame.IsVisible=enabled;
+        Title=enabled ? $"Endfield Charge Plus · {name}" : "Endfield Charge Plus";
+    }
 
     public bool IsHudBusy { get; private set; }
 
@@ -50,12 +71,24 @@ public partial class HudWindow : Window
         {
             _progressTimer.Stop();
         };
+        PointerReleased += (_,e) => { if (CanCycleOnClick && e.InitialPressMouseButton==MouseButton.Left) { HudClicked?.Invoke(); e.Handled=true; } };
+        _inputTimer.Tick += (_,_) => {
+            var handle=this.TryGetPlatformHandle();
+            if (handle?.HandleDescriptor is "NSWindow" or "NSView")
+                MacNative.SetHudInteractive(handle.Handle,CanCycleOnClick &&
+                    MacNative.ecp_pointer(out var x,out var y)!=0 && IsPointInsideVisibleHud(new PixelPoint((int)x,(int)y)));
+        };
+        Closed += (_,_) => _inputTimer.Stop();
+        Root.IsHitTestVisible=true;
         ResetToInitial();
     }
 
     public void ApplySettings(AppSettings settings)
     {
         _settings = settings;
+        _defaultFonts ??= this.GetVisualDescendants().OfType<TextBlock>().ToDictionary(t=>t,t=>t.FontFamily);
+        foreach (var (text,original) in _defaultFonts)
+            text.FontFamily=string.IsNullOrWhiteSpace(settings.HudFontFamily) ? original : new FontFamily(settings.HudFontFamily);
         _animOptions = AnimationOptions.FromSettings(settings);
         GlobalScale.RenderTransform = new ScaleTransform(settings.GlobalScale, settings.GlobalScale);
         Opacity = Math.Clamp(settings.HudOpacity, 0.0, 1.0);
@@ -599,6 +632,8 @@ public partial class HudWindow : Window
             hudTop += _settings.HudOffsetY;
         }
 
+        hudLeft=Math.Clamp(hudLeft, area.X, Math.Max(area.X, area.Right-hudWidthPx));
+        hudTop=Math.Clamp(hudTop, area.Y, Math.Max(area.Y, area.Bottom-hudHeightPx));
         int windowX = (int)Math.Round(hudLeft - paddingX);
         int windowY = (int)Math.Round(hudTop - paddingY);
         Position = new PixelPoint(windowX, windowY);
@@ -655,7 +690,10 @@ public partial class HudWindow : Window
     private void EnsureInputHitTest()
     {
         var handle = this.TryGetPlatformHandle();
-        if (handle?.HandleDescriptor is "NSWindow" or "NSView") MacNative.SetHudWindow(handle.Handle, Topmost);
+        if (handle?.HandleDescriptor is "NSWindow" or "NSView") {
+            MacNative.SetHudWindow(handle.Handle, Topmost);
+            if (_persistent && _settings.ClickToCycle) _inputTimer.Start(); else _inputTimer.Stop();
+        }
     }
 
     private bool IsPointInsideVisibleHud(PixelPoint screenPoint)

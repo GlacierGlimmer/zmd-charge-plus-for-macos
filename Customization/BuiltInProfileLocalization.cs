@@ -14,6 +14,8 @@ public static class BuiltInProfileLocalization
 
         return profile.BuiltInKey.ToLowerInvariant() switch
         {
+            "system.display-fps" => profile with { Category="System",Name="Display FPS",TitleTemplate="Display FPS" },
+            "system.window-fps" => profile with { Category="System",Name="Window FPS",TitleTemplate="Window FPS" },
             "system.battery" => profile with
             {
                 Category = "System", Name = "Battery", TitleTemplate = "Battery"

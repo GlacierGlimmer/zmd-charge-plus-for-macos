@@ -52,6 +52,7 @@ internal static class Tests
     }
     private static void UnitTests()
     {
+        FeatureRegressionChecks.Run(Check);
         StartupRemovalTests();
         var p=new MacVariableProvider(); var values=new Dictionary<string,object?>();
         using var first=JsonDocument.Parse("""{"__cpu_ticks":[4294967290,50,100,0],"__network_samples":{"en0":[1000,500]}}""");

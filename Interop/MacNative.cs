@@ -28,6 +28,8 @@ internal static class MacNative
     internal static JsonDocument Display() => JsonDocument.Parse(Consume(ecp_display()) ?? "{}");
     internal static JsonDocument Clipboard() => JsonDocument.Parse(Consume(ecp_clipboard()) ?? "{}");
     internal static string? ReadKeychain(string account) => Consume(ecp_keychain_get(account));
+    [DllImport(Library)] private static extern int ecp_hud_interactive(IntPtr handle, int interactive);
+    internal static void SetHudInteractive(IntPtr handle, bool interactive) => ecp_hud_interactive(handle,interactive ? 1 : 0);
     internal static bool SetHudWindow(IntPtr handle, bool topmost) => ecp_hud_window(handle, topmost ? 1 : 0) == 1;
     internal static void SetHudVerticalOffset(IntPtr handle, double offset) => ecp_hud_vertical_offset(handle, offset);
 }

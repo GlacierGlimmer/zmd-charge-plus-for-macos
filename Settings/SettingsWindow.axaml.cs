@@ -85,8 +85,11 @@ public partial class SettingsWindow : Window
         LanguageChineseBtn.Click += (_, _) => OnLanguageSelected(AppLanguage.SimplifiedChinese);
         LanguageEnglishBtn.Click += (_, _) => OnLanguageSelected(AppLanguage.English);
 
+        HudFontCombo.Items.Add(LocalizationManager.Text("系统默认", "System default"));
+        foreach (var family in FontManager.Current.SystemFonts.OrderBy(f => f.Name)) HudFontCombo.Items.Add(family.Name);
         ApplySettingsToControls(settings);
         UpdateLanguageSwitchVisual();
+        InitializeInstanceEditor();
 
         HudEnabledSwitch.IsCheckedChanged += (_, _) => UpdateModeUi();
         AlwaysVisibleSwitch.IsCheckedChanged += (_, _) => UpdateModeUi();
@@ -112,6 +115,7 @@ public partial class SettingsWindow : Window
 
         string currentVersion = GetCurrentVersionText();
         AboutVersionText.Text = $"v{currentVersion}";
+        Title = LocalizationManager.Text($"Endfield Charge Plus v{currentVersion} 设置", $"Endfield Charge Plus v{currentVersion} Settings");
         UpdateCurrentVersionText.Text = LocalizationManager.Text($"当前版本：v{currentVersion}", $"Current: v{currentVersion}");
         UpdateLatestVersionText.Text = LocalizationManager.Text("最新版本：尚未获取", "Latest: not checked");
         UpdateStatusText.Text = LocalizationManager.Text("状态：尚未检查", "Status: not checked");
@@ -173,7 +177,9 @@ public partial class SettingsWindow : Window
 
         // Language is an immediate UI preference. Persist only the language choice here;
         // other editor changes still require Save & Apply.
-        SettingsManager.Save(_settings);
+        _rootSettings = _rootSettings with { UiLanguage = _settings.UiLanguage };
+        _persistedRootSettings=_persistedRootSettings with { UiLanguage=_rootSettings.UiLanguage };
+        SettingsManager.Save(_persistedRootSettings);
 
         // Persistent and transient HUD renderers read LocalizationManager at render time,
         // so their next live refresh switches language without replacing unsaved settings.
@@ -189,9 +195,11 @@ public partial class SettingsWindow : Window
             PopulateMonitorCombo(force: true);
 
         Customizer.ApplyLocalization();
+        ApplyInstanceEditorLocalization();
 
         string currentVersion = GetCurrentVersionText();
         AboutVersionText.Text = $"v{currentVersion}";
+        Title = LocalizationManager.Text($"Endfield Charge Plus v{currentVersion} 设置", $"Endfield Charge Plus v{currentVersion} Settings");
         UpdateCurrentVersionText.Text = LocalizationManager.Text($"当前版本：v{currentVersion}", $"Current: v{currentVersion}");
         if (LastUpdateResult is { } result)
             ApplyUpdateCheckResult(result);
@@ -259,6 +267,7 @@ public partial class SettingsWindow : Window
 
     private void UpdateModeUi()
     {
+        ClickToCycleSwitch.IsEnabled = AlwaysVisibleSwitch.IsChecked == true;
         bool persistent = AlwaysVisibleSwitch.IsChecked == true;
         PersistentLayerCombo.IsEnabled = persistent;
         PersistentLayerCombo.Opacity = persistent ? 1.0 : 0.45;
@@ -270,10 +279,11 @@ public partial class SettingsWindow : Window
         CustomPositionPanel.Opacity = custom ? 1.0 : 0.40;
     }
 
-    private void ApplySettingsToControls(AppSettings settings)
+    private void ApplyEditorControls(AppSettings settings)
     {
         _settings = settings;
 
+        SamplingIntervalBox.Value = (decimal)settings.SamplingIntervalSeconds;
         ScaleBox.Value = (decimal)settings.GlobalScale;
         DurationBox.Value = (decimal)settings.DisplayDurationSeconds;
         BounceBox.Value = (decimal)settings.BounceStrength;
@@ -282,6 +292,10 @@ public partial class SettingsWindow : Window
         HudOpacitySlider.Value = Math.Clamp(settings.HudOpacity * 100.0, 10.0, 100.0);
         UpdateOpacityLabel();
 
+        HudFontCombo.SelectedIndex = 0;
+        for (int i=1; i<HudFontCombo.Items.Count; i++)
+            if (string.Equals(HudFontCombo.Items[i]?.ToString(), settings.HudFontFamily, StringComparison.OrdinalIgnoreCase)) HudFontCombo.SelectedIndex=i;
+        ClickToCycleSwitch.IsChecked = settings.ClickToCycle;
         HudEnabledSwitch.IsChecked = settings.HudEnabled;
         StartupSwitch.IsChecked = settings.StartWithWindows;
         AlwaysVisibleSwitch.IsChecked = settings.AlwaysVisible;
@@ -299,11 +313,12 @@ public partial class SettingsWindow : Window
             MonitorCombo.SelectedIndex = wanted >= 0 && wanted < MonitorCombo.Items.Count ? wanted : 0;
         }
 
+        Customizer.SetSamplingInterval(settings.SamplingIntervalSeconds);
         Customizer.Load(settings.CustomHud, _hud);
         UpdateModeUi();
     }
 
-    private AppSettings CollectSettingsFromUi()
+    private AppSettings CollectEditorSettings()
         => _settings with
         {
             HudEnabled = HudEnabledSwitch.IsChecked == true,
@@ -314,8 +329,11 @@ public partial class SettingsWindow : Window
             BounceStrength = (double)(BounceBox.Value ?? (decimal)AppSettings.DefaultBounceStrength),
             RippleIntensity = (double)(RippleIntensityBox.Value ?? (decimal)AppSettings.DefaultRippleIntensity),
             RippleSpread = (double)(RippleSpreadBox.Value ?? (decimal)AppSettings.DefaultRippleSpread),
+            SamplingIntervalSeconds = (double)(SamplingIntervalBox.Value ?? 1m),
             HudOpacity = Math.Clamp(HudOpacitySlider.Value / 100.0, 0.10, 1.0),
 
+            HudFontFamily = HudFontCombo.SelectedIndex > 0 ? HudFontCombo.SelectedItem?.ToString() ?? "" : "",
+            ClickToCycle = AlwaysVisibleSwitch.IsChecked == true && ClickToCycleSwitch.IsChecked == true,
             AlwaysVisible = AlwaysVisibleSwitch.IsChecked == true,
             PersistentLayer = PersistentLayerCombo.SelectedIndex == 1
                 ? PersistentHudLayer.Desktop
@@ -366,6 +384,9 @@ public partial class SettingsWindow : Window
         try
         {
             await _runtime.ApplySettingsWithTransitionAsync(_settings);
+            _rootSettings=_settings;
+            _settings=string.IsNullOrEmpty(_selectedInstanceId) ? _rootSettings : _rootSettings.HudInstances.First(i=>i.Id==_selectedInstanceId).Settings;
+            RefreshInstanceEditor();
         }
         finally
         {

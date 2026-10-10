@@ -229,6 +229,16 @@ API int ecp_hud_window(void *handle, int topmost) {
         return window.ignoresMouseEvents ? 1 : 0;
     }
 }
+API int ecp_hud_interactive(void *handle, int interactive) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread || !handle) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if (!window) return 0;
+        window.ignoresMouseEvents=!interactive;
+        return 1;
+    }
+}
 API int ecp_hud_flags(void *handle) {
     @autoreleasepool {
         if (!NSThread.isMainThread || !handle) return 0;

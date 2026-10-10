@@ -7,6 +7,7 @@ internal static class MacVariableCatalog
     private static readonly object Gate = new();
     private static HashSet<string>? _detected;
     private static readonly HashSet<string> UiKeys = new((
+        "frame.display.fps frame.window.fps frame.display.percent frame.window.percent frame.display.name frame.window.name frame.display.status frame.window.status " +
         "display.primary_width_px display.primary_height_px display.virtual_x_points display.virtual_y_points " +
         "display.virtual_width_points display.virtual_height_points display.monitor_count display.system_dpi display.scale_percent " +
         "clipboard.has_text clipboard.text_length clipboard.preview clipboard.has_image clipboard.last_updated " +

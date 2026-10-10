@@ -20,6 +20,9 @@ namespace EndfieldChargePlus.Customization;
 public sealed class VariableHub : IDisposable
 {
     private readonly SemaphoreSlim _snapshotGate = new(1, 1);
+    public double SamplingIntervalSeconds { get; set; } = 1;
+    private readonly Dictionary<string,(long At,Dictionary<string,object?> Values)> _samples=new();
+
     private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(8) };
     private static readonly DeepSeekCalendarUpdater CalendarUpdater = new(Path.Combine(EndfieldChargePlus.Interop.AppPaths.DataDirectory, "holiday-calendar"));
     private readonly HttpClient _http;
@@ -55,6 +58,18 @@ public sealed class VariableHub : IDisposable
             lock (_pingGate) _pingStates.Clear();
         }
         var requested = requestedVariables?.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var sampleProfile=settings.Profiles.FirstOrDefault(p=>p.Id==settings.ActiveProfileId);
+        object? profileKey=requested is null || requested.Any(k=>k.StartsWith("app.") || k.StartsWith("frame.")) ? sampleProfile : null;
+        string sampleKey = string.Join(",", requestedVariables?.OrderBy(k => k).AsEnumerable() ?? new[] { "*" })
+            + "|" + gpuAdapterId + "|" + pingTarget + "|" + probeProtocol + "|" + probePort + "|" + JsonSerializer.Serialize(new { settings.DeepSeekApiKeyProtected,settings.DeepSeekPeakWindows,settings.HttpSources,Profile=profileKey }) + "|" + LocalizationManager.Current;
+        double interval = double.IsFinite(SamplingIntervalSeconds) ? Math.Clamp(SamplingIntervalSeconds, 0.1, 60) : 1;
+        if (_samples.TryGetValue(sampleKey,out var sample) && Environment.TickCount64-sample.At < interval*1000 && !sample.Values.Any(p=>p.Key.StartsWith("frame.") && p.Key.EndsWith(".fps") && p.Value is null))
+        {
+            var cached = new Dictionary<string, object?>(sample.Values, StringComparer.OrdinalIgnoreCase);
+            AddClockAndSystem(cached, NeedsPrefix(requested, "system."), NeedsPrefix(requested, "time."));
+            if (NeedsPrefix(requested, "deepseek.period.")) AddDeepSeekPeriod(cached, settings);
+            return cached;
+        }
         var vars = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
         if (NeedsPrefix(requested, "system.") || NeedsPrefix(requested, "time."))
             AddClockAndSystem(vars, NeedsPrefix(requested, "system."), NeedsPrefix(requested, "time."));
@@ -81,6 +96,20 @@ public sealed class VariableHub : IDisposable
         if (NeedsPrefix(requested, "deepseek.") && !NeedsOnlyPeriodVariables(requested))
             await AddDeepSeekBalanceAsync(vars, settings, ct).ConfigureAwait(false);
         if (NeedsPrefix(requested, "custom.")) await AddCustomHttpAsync(vars, settings, ct, requested).ConfigureAwait(false);
+        var frameProfile=settings.Profiles.FirstOrDefault(p=>p.Id==settings.ActiveProfileId);
+        if (frameProfile is not null)
+        {
+            var frameKeys=requested ?? HudProfileRenderer.GetRequiredVariables(frameProfile).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            if (frameKeys.Any(k=>k.StartsWith("frame.",StringComparison.OrdinalIgnoreCase)))
+                await Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    foreach (var kind in new[] { "display", "window" })
+                        if (frameKeys.Any(k=>k.StartsWith($"frame.{kind}.",StringComparison.OrdinalIgnoreCase)))
+                            FrameRateMetrics.Add(vars,kind,FrameRateBackend.Read(kind,kind=="display" ? frameProfile.FrameDisplayId : frameProfile.FrameWindowId),frameProfile.FrameFullScaleFps);
+                });
+        }
+        if (_samples.Count>64) _samples.Clear();
+        _samples[sampleKey]=(Environment.TickCount64,new Dictionary<string,object?>(vars,StringComparer.OrdinalIgnoreCase));
         return vars;
         }
         finally { _snapshotGate.Release(); }

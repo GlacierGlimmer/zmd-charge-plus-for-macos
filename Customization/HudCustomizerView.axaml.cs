@@ -118,10 +118,12 @@ public partial class HudCustomizerView : UserControl
     private int _selectedIndex = -1;
     private bool _loading;
     private readonly VariableHub _previewVariables = new();
+    public void SetSamplingInterval(double seconds) => _previewVariables.SamplingIntervalSeconds=seconds;
 
     public HudCustomizerView()
     {
         InitializeComponent();
+        RefreshFrameTargetsBtn.Click += (_,_) => RefreshFrameTargets();
 
         LocalizationManager.ApplyStaticText(this);
         RebuildLocalizedChoiceItems();
@@ -443,6 +445,7 @@ public partial class HudCustomizerView : UserControl
             "max" => 3,
             _ => 0,
         };
+        LoadFrameOptions(p);
         NetworkReferenceValueBox.Value = (decimal)Math.Max(0.001d, p.NetworkReferenceValue);
         NetworkReferenceUnitCombo.SelectedIndex = p.NetworkReferenceUnit switch
         {
@@ -476,7 +479,13 @@ public partial class HudCustomizerView : UserControl
 
         if (old.IsBuiltIn || !string.IsNullOrWhiteSpace(old.BuiltInKey))
         {
-            string enteredName = ProfileNameBox.Text?.Trim() ?? "";
+            if (old.BuiltInKey is "system.display-fps" or "system.window-fps" &&
+            ProfilesFunctionallyEqual(editorBase,edited with { FrameDisplayId=editorBase.FrameDisplayId,FrameWindowId=editorBase.FrameWindowId,FrameFullScaleFps=editorBase.FrameFullScaleFps }))
+        {
+            _profiles[_selectedIndex]=old with { FrameDisplayId=edited.FrameDisplayId,FrameWindowId=edited.FrameWindowId,FrameFullScaleFps=edited.FrameFullScaleFps };
+            return !ProfilesFunctionallyEqual(editorBase,edited);
+        }
+        string enteredName = ProfileNameBox.Text?.Trim() ?? "";
             bool renamed = enteredName.Length > 0
                            && !string.Equals(enteredName, ProfileDisplayName(old), StringComparison.Ordinal);
             bool changed = renamed || !ProfilesFunctionallyEqual(editorBase, edited);
@@ -583,6 +592,9 @@ public partial class HudCustomizerView : UserControl
             TimeTargetEnabled = isTime ? TimeTargetSwitch.IsChecked == true : old.TimeTargetEnabled,
             TimeTarget = isTime ? NormalizeTimeTarget(TimeTargetBox.Text, old.TimeTarget) : old.TimeTarget,
             GpuAdapterId = gpuAdapterId,
+        FrameDisplayId = HudProfileRenderer.GetRequiredVariables(old).Any(k=>k.StartsWith("frame.display.")) ? (FrameDisplayTargetCombo.SelectedItem as FrameTarget)?.Id ?? old.FrameDisplayId : old.FrameDisplayId,
+        FrameWindowId = HudProfileRenderer.GetRequiredVariables(old).Any(k=>k.StartsWith("frame.window.")) ? (FrameWindowTargetCombo.SelectedItem as FrameTarget)?.Id ?? old.FrameWindowId : old.FrameWindowId,
+        FrameFullScaleFps = (double)(FrameFullScaleBox.Value ?? (decimal)old.FrameFullScaleFps),
             NetworkDisplayUnit = networkDisplayUnit,
             NetworkPercentMode = networkPercentMode,
             NetworkReferenceValue = networkReferenceValue,
@@ -608,7 +620,8 @@ public partial class HudCustomizerView : UserControl
             || !string.Equals(a.LeftIcon, b.LeftIcon, StringComparison.OrdinalIgnoreCase)
             || !string.Equals(a.RightIcon, b.RightIcon, StringComparison.OrdinalIgnoreCase)
             || !string.Equals(a.AccentColor, b.AccentColor, StringComparison.OrdinalIgnoreCase)
-            || a.TimeTargetEnabled != b.TimeTargetEnabled
+            || a.FrameDisplayId != b.FrameDisplayId || a.FrameWindowId != b.FrameWindowId || a.FrameFullScaleFps != b.FrameFullScaleFps
+        || a.TimeTargetEnabled != b.TimeTargetEnabled
             || !string.Equals(a.TimeTarget, b.TimeTarget, StringComparison.Ordinal)
             || !string.Equals(a.GpuAdapterId, b.GpuAdapterId, StringComparison.OrdinalIgnoreCase)
             || !string.Equals(a.NetworkDisplayUnit, b.NetworkDisplayUnit, StringComparison.OrdinalIgnoreCase)
@@ -750,7 +763,8 @@ public partial class HudCustomizerView : UserControl
         bool isPing = profile is not null && ProfileNeedsPing(profile);
         bool isDeepSeek = profile is not null && ProfileNeedsDeepSeek(profile);
 
-        DeepSeekOptionsHintPanel.IsVisible = isDeepSeek;
+        FrameOptionsPanel.IsVisible=profile is not null && HudProfileRenderer.GetRequiredVariables(profile).Any(k=>k.StartsWith("frame."));
+    DeepSeekOptionsHintPanel.IsVisible = isDeepSeek;
 
         TimeOptionsPanel.IsVisible = isTime;
         TimeTargetSwitch.IsEnabled = isTime;
@@ -979,12 +993,14 @@ public partial class HudCustomizerView : UserControl
             var profile = HudSettingsNormalizer.NormalizeProfile(BuildEditedProfile(_profiles[_selectedIndex]));
             var required = HudProfileRenderer.GetRequiredVariables(profile);
             var vars = await _previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort);
+            ProfileDataWarnings.Check(profile,vars,"preview");
             var data = HudProfileRenderer.Render(profile, vars);
             ProfileStatusText.Text = "";
 
             Func<System.Threading.CancellationToken, System.Threading.Tasks.Task<HudRenderData>> refresh = async ct =>
             {
                 var latest = await _previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort, ct);
+                ProfileDataWarnings.Check(profile,latest,"preview");
                 return HudProfileRenderer.Render(profile, latest);
             };
 
