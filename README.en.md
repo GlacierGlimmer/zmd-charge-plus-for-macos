@@ -1,5 +1,7 @@
 # Endfield Charge Plus For MacOS
 
+Current source version: **v0.1.3** (not published in Releases). Version changes require an explicit user request; see [version policy](docs/VERSIONING.md).
+
 [简体中文](README.md) · **English** | macOS 13+ | Apple Silicon / Intel
 
 An Endfield-inspired menu bar and floating desktop HUD with customizable profiles, animations, system metrics, clocks, network probes, DeepSeek and HTTP/JSON sources.

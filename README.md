@@ -1,5 +1,7 @@
 # Endfield Charge Plus For MacOS
 
+当前源码版本：**v0.1.3**（尚未发布 Releases）。版本只在用户明确要求时修改，见[版本约定](docs/VERSIONING.md)。
+
 **简体中文** · [English](README.en.md) | macOS 13+ | Apple Silicon / Intel
 
 终末地风格菜单栏与桌面悬浮 HUD。保留 ECP 的自定义方案、动画、时间、系统监控、网络探测、DeepSeek API 和 HTTP/JSON 数据源，使用 macOS 原生接口采集数据。
@@ -22,8 +24,8 @@ Android 仓库已建立；可下载版本以其 Releases 页面为准。
 
 | 安装包 | 适用设备 |
 | --- | --- |
-| **EndfieldChargePlusForMacOS-v0.1.2-osx-arm64.dmg** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
-| EndfieldChargePlusForMacOS-v0.1.2-osx-x64.dmg | Intel Mac |
+| **EndfieldChargePlusForMacOS-osx-arm64.dmg（以 Releases 实际文件名为准）** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
+| EndfieldChargePlusForMacOS-osx-x64.dmg（以 Releases 实际文件名为准） | Intel Mac |
 
 打开 DMG，把 **Endfield Charge Plus For MacOS.app** 拖到 **Applications** 后启动。包内自带 .NET 运行时。应用在菜单栏驻留，关闭设置窗口后继续运行，通过菜单栏退出。
 

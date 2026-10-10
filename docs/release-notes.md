@@ -1,4 +1,7 @@
-Endfield Charge Plus For MacOS v0.1.2。
+Endfield Charge Plus For MacOS v0.1.3（源码待发布）。
+
+新增：同步 HTTP／JSON、轮播、颜色规则、热区与 2030 年 DeepSeek 日历修复；版本仅由用户要求调整。
+
 
 修复首次使用时“保存并应用”失败：当登录启动关闭且 `~/Library/LaunchAgents` 尚不存在时，按未注册登录启动处理，不再因删除不存在的 plist 而中断保存。无需手动创建目录。已存在的 ECP 启动项仍可正常移除；权限错误等真实异常仍会提示。
 

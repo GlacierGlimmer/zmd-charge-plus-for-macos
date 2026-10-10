@@ -9,7 +9,9 @@
     <Company>GlacierGlimmer_冰川雪貓</Company><Authors>GlacierGlimmer_冰川雪貓</Authors>
     <Copyright>© 2026 GlacierGlimmer_冰川雪貓</Copyright>
     <Description>Endfield-style menu bar and desktop HUD for macOS</Description>
-    <Version>0.1.2</Version>
+    <Version>0.1.3</Version>
+    <FileVersion>0.1.3.0</FileVersion>
+    <AssemblyVersion>0.1.3.0</AssemblyVersion>
     <NoWarn>$(NoWarn);AVLN3001</NoWarn>
     <PublishTrimmed>false</PublishTrimmed><PublishSingleFile>false</PublishSingleFile>
   </PropertyGroup>

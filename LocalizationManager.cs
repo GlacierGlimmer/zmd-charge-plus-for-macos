@@ -58,7 +58,7 @@ public static class LocalizationManager
         ["波纹幅度"] = "Ripple Spread",
         ["终末地风格状态栏 HUD"] = "Endfield-style Status HUD",
         ["检查更新"] = "Check Updates",
-        ["当前版本：v0.1.0"] = "Current: v0.1.0",
+        ["当前版本：v0.1.3"] = "Current: v0.1.3",
         ["最新版本：尚未获取"] = "Latest: not checked",
         ["状态：尚未检查"] = "Status: not checked",
         ["项目与协议"] = "Project & License",

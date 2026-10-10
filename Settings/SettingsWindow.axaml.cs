@@ -533,7 +533,7 @@ public partial class SettingsWindow : Window
     }
 
     private static string GetCurrentVersionText()
-        => typeof(SettingsWindow).Assembly.GetName().Version?.ToString(3) ?? "0.1.0";
+        => typeof(SettingsWindow).Assembly.GetName().Version?.ToString(3) ?? "0.1.3";
 
     private async void OnCheckUpdate(object? sender, RoutedEventArgs e)
     {
