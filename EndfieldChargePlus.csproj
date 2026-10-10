@@ -20,11 +20,6 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.2.1" />
     <PackageReference Include="Avalonia.Desktop" Version="11.2.1" />
@@ -37,11 +32,6 @@
   <Target Name="BuildMacNative" BeforeTargets="PrepareForBuild" Condition="$([MSBuild]::IsOSPlatform('OSX'))">
     <Exec Command="bash &quot;$(MSBuildProjectDirectory)/scripts/build-native.sh&quot; $(RuntimeIdentifier)" />
   </Target>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>none</DebugType>
-    <DebugSymbols>false</DebugSymbols>
-  </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Assets/china-holidays.json" LogicalName="EndfieldChargePlus.china-holidays.json" />
   </ItemGroup>
