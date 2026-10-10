@@ -14,7 +14,7 @@ mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources" "$out"
 bash scripts/build-native.sh "$rid"
 dotnet publish EndfieldChargePlus.csproj -c Release -r "$rid" --self-contained true \
   -p:Version="$version" -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=false \
-  -p:DebugType=embedded -p:DebugSymbols=false -p:PublishTrimmed=false -o "$app/Contents/MacOS"
+  -p:DebugType=none -p:DebugSymbols=false -p:PublishTrimmed=false -o "$app/Contents/MacOS"
 cp native/libecpmac.dylib "$app/Contents/MacOS/"
 chmod 755 "$app/Contents/MacOS/EndfieldChargePlus"
 python3 - "$app" "$version" "$arch" <<'PY'
