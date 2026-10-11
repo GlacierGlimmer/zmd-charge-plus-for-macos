@@ -322,7 +322,7 @@ public partial class SettingsWindow : Window
         Customizer.SetSamplingInterval(_rootSettings.SamplingIntervalSeconds);
         Customizer.Load(settings.CustomHud, _runtime.GetInstanceHud(_selectedInstanceId));
         string previewId=_selectedInstanceId;
-        Customizer.PreviewPresenter=(data,refresh)=>_runtime.PreviewInstanceAsync(previewId,data,refresh);
+        Customizer.PreviewPresenter=(data,refresh)=>_settingsEditorOpen && previewId==_selectedInstanceId ? _runtime.PreviewInstanceAsync(previewId,data,refresh) : Task.CompletedTask;
         UpdateModeUi();
     }
 
