@@ -25,6 +25,8 @@ public partial class HudWindow : Window
     private AnimationOptions _animOptions = AnimationOptions.Default;
     private bool _persistent;
     private readonly DispatcherTimer _inputTimer=new() { Interval=TimeSpan.FromMilliseconds(16) };
+    private readonly MacNative.HudClick _nativeClick;
+    private IntPtr _macInputOwner;
     public event Action? HudClicked;
     private bool CanCycleOnClick => !_closed && IsVisible && _settings.AlwaysVisible && _settings.ClickToCycle ;
 
@@ -51,6 +53,9 @@ public partial class HudWindow : Window
     private static readonly TimeSpan ProgressTransitionDuration = TimeSpan.FromMilliseconds(320);
 
     private Border? _editingFrame;
+    private TextBlock? _editingHint;
+    private bool _editingHighlight;
+    public bool IsEditingHighlighted => _editingHighlight;
     public void SetEditingHighlight(bool enabled, string name)
     {
         if (_editingFrame is null)
@@ -59,8 +64,14 @@ public partial class HudWindow : Window
                 BorderThickness=new Thickness(4), CornerRadius=new CornerRadius(38),
                 HorizontalAlignment=Avalonia.Layout.HorizontalAlignment.Center,
                 VerticalAlignment=Avalonia.Layout.VerticalAlignment.Center, IsHitTestVisible=false };
+            _editingHint=new TextBlock { Name="EditingHint",FontSize=12,Foreground=Brushes.Orange,
+                HorizontalAlignment=Avalonia.Layout.HorizontalAlignment.Left,VerticalAlignment=Avalonia.Layout.VerticalAlignment.Bottom,
+                Margin=new Thickness(20,0,0,3),IsHitTestVisible=false };
+            _editingFrame.Child=_editingHint;
             GlobalScale.Children.Add(_editingFrame);
         }
+        _editingHighlight=enabled;
+        _editingHint!.Text=LocalizationManager.Text("当前正在设置","Currently editing");
         _editingFrame.IsVisible=enabled;
         Title=enabled ? $"Endfield Charge Plus · {name}" : "Endfield Charge Plus";
     }
@@ -69,6 +80,7 @@ public partial class HudWindow : Window
 
     public HudWindow()
     {
+        _nativeClick=()=> { try { if(CanCycleOnClick) HudClicked?.Invoke(); } catch(Exception ex) { EndfieldChargePlus.Diagnostics.AppLog.Error("HUD native input failed.",ex); } };
         InitializeComponent();
         LocalizationManager.ApplyStaticText(this);
 
@@ -77,6 +89,7 @@ public partial class HudWindow : Window
 
         Closed += (_, _) =>
         {
+            if(_macInputOwner!=IntPtr.Zero) { MacNative.ecp_hud_input_close(_macInputOwner);_macInputOwner=IntPtr.Zero; }
             _closed=true;
             CancelPresentation();
             _progressTimer.Stop();
@@ -95,12 +108,7 @@ public partial class HudWindow : Window
             _pointerPressedInside=false;
             if (clicked) { HudClicked?.Invoke(); e.Handled=true; }
         };
-        _inputTimer.Tick += (_,_) => {
-            var handle=this.TryGetPlatformHandle();
-            if (handle?.HandleDescriptor is "NSWindow" or "NSView")
-                MacNative.SetHudInteractive(handle.Handle,CanCycleOnClick &&
-                    MacNative.ecp_pointer(out var x,out var y)!=0 && IsPointInsideVisibleHud(new PixelPoint((int)x,(int)y)));
-        };
+        _inputTimer.Tick += (_,_) => RefreshMacInput();
         Closed += (_,_) => _inputTimer.Stop();
         Root.IsHitTestVisible=true;
         ResetToInitial();
@@ -217,7 +225,7 @@ public partial class HudWindow : Window
             if (ReferenceEquals(_cts, localCts))
             {
                 if (!ct.IsCancellationRequested && IsVisible)
-                    Hide();
+                    if (!_editingHighlight) Hide();
                 IsHudBusy = false;
             }
         }
@@ -379,7 +387,7 @@ public partial class HudWindow : Window
         {
             if (ReferenceEquals(_cts,hideCts))
             {
-                if (!_closed && IsVisible) Hide();
+                if (!_closed && IsVisible && !_editingHighlight) Hide();
                 IsHudBusy = false;
             }
         }
@@ -638,38 +646,15 @@ public partial class HudWindow : Window
         double hudHeightPx = 60d * _settings.GlobalScale * scaling; // 最终可见胶囊高度
         double paddingX = Math.Max(0d, (windowWidthPx - hudWidthPx) / 2d);
         double paddingY = Math.Max(0d, (windowHeightPx - hudHeightPx) / 2d);
-        const double margin = 0d;
 
-        double hudLeft;
-        double hudTop;
-
-        if (_settings.PositionMode == HudPositionMode.CustomCoordinates)
-        {
-            hudLeft = area.X + _settings.HudCustomX;
-            hudTop = area.Y + _settings.HudCustomY;
+        var origin=HudPlacement.VisibleOrigin(_settings,screen.Bounds,screen.WorkingArea,hudWidthPx,hudHeightPx);
+        double hudLeft=origin.X,hudTop=origin.Y;
+        if(_editingHighlight) {
+            // Keep the outline/caption visible at physical monitor edges; restore the saved position on close.
+            double extra=12*_settings.GlobalScale*scaling;
+            hudLeft=Math.Clamp(hudLeft,screen.Bounds.X+extra,Math.Max(screen.Bounds.X+extra,screen.Bounds.Right-hudWidthPx-extra));
+            hudTop=Math.Clamp(hudTop,screen.Bounds.Y+extra,Math.Max(screen.Bounds.Y+extra,screen.Bounds.Bottom-hudHeightPx-extra));
         }
-        else
-        {
-            hudLeft = _settings.HudPosition switch
-            {
-                HudPosition.TopLeft or HudPosition.CenterLeft or HudPosition.BottomLeft => area.X + margin,
-                HudPosition.TopRight or HudPosition.CenterRight or HudPosition.BottomRight => area.X + area.Width - hudWidthPx - margin,
-                _ => area.X + (area.Width - hudWidthPx) / 2d,
-            };
-
-            hudTop = _settings.HudPosition switch
-            {
-                HudPosition.TopLeft or HudPosition.TopCenter or HudPosition.TopRight => area.Y + margin,
-                HudPosition.BottomLeft or HudPosition.BottomCenter or HudPosition.BottomRight => area.Y + area.Height - hudHeightPx - margin,
-                _ => area.Y + (area.Height - hudHeightPx) / 2d,
-            };
-
-            hudLeft += _settings.HudOffsetX;
-            hudTop += _settings.HudOffsetY;
-        }
-
-        hudLeft=Math.Clamp(hudLeft, area.X, Math.Max(area.X, area.Right-hudWidthPx));
-        hudTop=Math.Clamp(hudTop, area.Y, Math.Max(area.Y, area.Bottom-hudHeightPx));
         int windowX = (int)Math.Round(hudLeft - paddingX);
         int windowY = (int)Math.Round(hudTop - paddingY);
         Position = new PixelPoint(windowX, windowY);
@@ -677,7 +662,7 @@ public partial class HudWindow : Window
         // origin explicitly so window-manager clamping does not add that padding as a gap.
         var handle = this.TryGetPlatformHandle();
         if (OperatingSystem.IsMacOS() && handle?.HandleDescriptor is "NSWindow" or "NSView")
-            MacNative.SetHudVerticalOffset(handle.Handle, (hudTop - area.Y - paddingY) / scaling);
+            MacNative.ecp_hud_origin(handle.Handle,windowX,windowY);
     }
 
     private Avalonia.Platform.Screen? ResolveScreen(int monitorIndex)
@@ -723,12 +708,22 @@ public partial class HudWindow : Window
             && screenPoint.Y <= bounds.Y + hotHeight;
     }
 
+    private void RefreshMacInput()
+    {
+        var native=this.TryGetPlatformHandle();
+        if(native?.HandleDescriptor is not ("NSWindow" or "NSView")) return;
+        _macInputOwner=native.Handle;
+        var a=Pill.PointToScreen(new Point(0,0));var b=Pill.PointToScreen(new Point(Pill.Bounds.Width,Pill.Bounds.Height));
+        MacNative.ecp_hud_input(native.Handle,CanCycleOnClick && _persistent && Pill.Opacity>.02 ? 1 : 0,
+            Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y),Topmost ? 1 : 0,_nativeClick);
+    }
     private void EnsureInputHitTest()
     {
         var handle = this.TryGetPlatformHandle();
         if (handle?.HandleDescriptor is "NSWindow" or "NSView") {
             MacNative.SetHudWindow(handle.Handle, Topmost);
-            if (_persistent && _settings.ClickToCycle) _inputTimer.Start(); else _inputTimer.Stop();
+            RefreshMacInput();
+            if (_persistent && CanCycleOnClick) _inputTimer.Start(); else _inputTimer.Stop();
         }
     }
 

@@ -154,7 +154,7 @@ public static class SettingsManager
                     Name=string.IsNullOrWhiteSpace(i.Name) ? "HUD" : i.Name.Trim(),
                     Settings=Normalize((i.Settings ?? new()) with { MultiHudEnabled=false, HudInstances=new() }) }).ToList(),
             HudFontFamily = (settings.HudFontFamily ?? "").Trim(),
-            ClickToCycle = settings.AlwaysVisible && settings.ClickToCycle,
+            ClickToCycle = settings.ClickToCycle,
             UiLanguage = LocalizationManager.NormalizePreference(settings.UiLanguage),
             CustomHud = HudSettingsNormalizer.Normalize(settings.CustomHud ?? CustomHudSettings.CreateDefault()),
         };

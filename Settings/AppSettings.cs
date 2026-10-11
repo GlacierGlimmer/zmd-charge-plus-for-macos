@@ -68,4 +68,13 @@ public enum HudPosition
     BottomLeft,
     BottomCenter,
     BottomRight,
+    ScreenTopLeft,
+    ScreenTopCenter,
+    ScreenTopRight,
+    ScreenCenterLeft,
+    ScreenCenter,
+    ScreenCenterRight,
+    ScreenBottomLeft,
+    ScreenBottomCenter,
+    ScreenBottomRight,
 }

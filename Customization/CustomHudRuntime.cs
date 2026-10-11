@@ -104,6 +104,7 @@ public sealed partial class CustomHudRuntime : IDisposable
         SyncInstances(_appSettings);
         _variables.SamplingIntervalSeconds = _appSettings.SamplingIntervalSeconds;
         _settings = HudSettingsNormalizer.Normalize(_appSettings.CustomHud ?? CustomHudSettings.CreateDefault());
+        RestoreInstanceHighlight();
         _manualProfileId="";
         _profileIndex = _settings.AutoCycle ? 0 : ResolveActiveProfileIndex();
         _nextPersistentRefresh = DateTime.MinValue;
@@ -729,6 +730,7 @@ public sealed partial class CustomHudRuntime : IDisposable
         if (_disposed) return;
         _disposed=true; _running=false;
         _timer.Stop(); _revision.Cancel(); _hud.CancelPresentation();
+        ProfileDataWarnings.Forget(_warningScope);
         _hud.HudClicked -= OnHudClicked;
         _hud.Closed -= OnHudClosed;
         DisposeInstances();

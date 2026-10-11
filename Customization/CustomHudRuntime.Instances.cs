@@ -9,6 +9,9 @@ public sealed partial class CustomHudRuntime
     private readonly Dictionary<string, (HudWindow Hud, CustomHudRuntime Runtime)> _instances = new();
     private bool _isChild;
     private bool _editingPreview;
+    private bool _settingsEditing;
+    private string _editingInstanceId="";
+    private string _editingInstanceName="";
     private void SyncInstances(AppSettings settings)
     {
         if (_isChild || _disposed) return;
@@ -23,7 +26,7 @@ public sealed partial class CustomHudRuntime
         {
             var local = instance.Settings with { MultiHudEnabled=false, HudInstances=new(),
                 HudEnabled=settings.HudEnabled && instance.Settings.HudEnabled,
-                SamplingIntervalSeconds=settings.SamplingIntervalSeconds, UiLanguage=settings.UiLanguage };
+                SamplingIntervalSeconds=settings.SamplingIntervalSeconds, ClickToCycle=settings.ClickToCycle, UiLanguage=settings.UiLanguage };
             if (_instances.TryGetValue(instance.Id, out var existing) && !existing.Hud.IsClosed)
             {
                 if (System.Text.Json.JsonSerializer.Serialize(existing.Runtime._appSettings)!=System.Text.Json.JsonSerializer.Serialize(local))
@@ -51,10 +54,21 @@ public sealed partial class CustomHudRuntime
         }
     }
 
+    private void RestoreInstanceHighlight()
+    {
+        if (!_settingsEditing || _instances.Count==0) { ClearInstanceHighlights(); return; }
+        var target=string.IsNullOrEmpty(_editingInstanceId) ? (_hud,this) :
+            _instances.TryGetValue(_editingInstanceId,out var found) ? (found.Hud,found.Runtime) : (_hud,this);
+        target.Item2._editingPreview=true;
+        target.Item1.SetEditingHighlight(true,_editingInstanceName);
+        target.Item1.ApplySettings(target.Item2._appSettings with { PersistentLayer=PersistentHudLayer.Topmost });
+    }
     public async Task<bool> HighlightInstanceAsync(string id, string name)
     {
         if (_disposed) return false;
-        EndInstanceEditing();
+        _settingsEditing=true;_editingInstanceId=id;_editingInstanceName=name;
+        ClearInstanceHighlights();
+        if (_instances.Count==0) return false;
         var target = string.IsNullOrEmpty(id) ? (_hud, this) :
             _instances.TryGetValue(id, out var found) ? (found.Hud, found.Runtime) : default;
         if (target.Item1 is null) return false;
@@ -67,6 +81,11 @@ public sealed partial class CustomHudRuntime
     }
 
     public void EndInstanceEditing()
+    {
+        _settingsEditing=false;
+        ClearInstanceHighlights();
+    }
+    private void ClearInstanceHighlights()
     {
         if (_disposed) return;
         EndPreview(this);

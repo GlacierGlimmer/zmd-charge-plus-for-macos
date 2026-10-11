@@ -256,6 +256,7 @@ internal sealed class AuditApp : Application
             await hud.HidePersistentAsync();
         }
         await MultiHudRegressionChecks.Run(Tests.Check);
+        await InteractionRegressionChecks.Run(Tests.Check);
         hud.Show(); await Task.Delay(300);
         var handle=hud.TryGetPlatformHandle();
         Tests.Check(handle is not null,"HUD exposes a native handle");

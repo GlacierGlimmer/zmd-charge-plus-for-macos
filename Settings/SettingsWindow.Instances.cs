@@ -11,6 +11,7 @@ public partial class SettingsWindow
     private AppSettings _rootSettings = new();
     private AppSettings _persistedRootSettings = new();
     private string _selectedInstanceId = "";
+    private bool _refreshingInstanceChoice, _settingsEditorOpen;
     private ComboBox? _instanceChoice;
     private CheckBox? _multiSwitch;
     private TextBox? _instanceName;
@@ -28,7 +29,8 @@ public partial class SettingsWindow
     }
     private void ApplyInstanceEditorLocalization()
     {
-        if(_instanceChoice is not null && _instanceChoice.Items.Count>0) { string? selected=(_instanceChoice.SelectedItem as InstanceChoice)?.Id; _instanceChoice.Items[0]=new InstanceChoice("",LocalizationManager.Text("主 HUD","Primary HUD")); _instanceChoice.SelectedItem=_instanceChoice.Items.OfType<InstanceChoice>().FirstOrDefault(i=>i.Id==selected); }
+        RefreshInstanceEditor();
+        _=RefreshEditingHighlightAsync();
         foreach(var (control,zh,en) in _instanceTranslations) SetInstanceText(control,LocalizationManager.Text(zh,en));
         if(_editingLabel is not null) _editingLabel.Text=LocalizationManager.Text("当前编辑：", "Editing: ")+(_rootSettings.HudInstances.FirstOrDefault(i=>i.Id==_selectedInstanceId)?.Name ?? LocalizationManager.Text("主 HUD","Primary HUD"));
         if(HudFontCombo.Items.Count>0) { int font=HudFontCombo.SelectedIndex; HudFontCombo.Items[0]=LocalizationManager.Text("系统默认","System default"); if(font==0) HudFontCombo.SelectedIndex=0; }
@@ -48,8 +50,8 @@ public partial class SettingsWindow
         buttons.Children.Add(add); buttons.Children.Add(remove); buttons.Children.Add(editButton);
         ExperimentalPanel.Children.Add(InstanceText(new TextBlock { FontSize=18 },"多实例 HUD", "Multiple HUD instances"));
         ExperimentalPanel.Children.Add(InstanceText(new TextBlock { TextWrapping=TextWrapping.Wrap },
-            "各 HUD 可独立设置方案、轮播、字体、大小、常驻模式和目标显示器。选中后点击定位并编辑，再到前两个选项卡调整。橙色框表示当前编辑的实例。新增或删除后保存并应用；关闭设置窗口后取消高亮。采样间隔、语言和开机启动由主 HUD 统一管理。最多 16 个 HUD。",
-            "Each HUD has independent profiles, cycling, font, size, visibility and target display. Select Locate and edit, then adjust the first two tabs. An orange outline identifies the edited HUD. Save & Apply after adding or removing an instance; closing Settings clears the outline. Sampling interval, language and startup are shared with the primary HUD. Up to 16 HUDs."));
+            "各 HUD 可独立设置方案、轮播、字体、大小、常驻模式和目标显示器。选择实例后即可到前两个选项卡调整；定位按钮可跳转到位置设置。设置窗口打开期间，橙色框和“当前正在设置”标记持续指示当前实例。新增或删除后保存并应用；关闭设置窗口后取消高亮。采样间隔和点击切换开关对全部 HUD 生效，可在编辑任意实例时修改；语言和开机启动统一管理。最多 16 个 HUD。",
+            "Each HUD has independent profiles, cycling, font, size, visibility and target display. Select an instance and adjust it in the first two tabs; Locate jumps to position settings. An orange outline and Currently editing label remain on the selected HUD while Settings is open. Save & Apply after adding or removing an instance; closing Settings clears the outline. Sampling interval and click switching are shared by all HUDs and can be changed while editing any instance; language and startup are global. Up to 16 HUDs."));
         ExperimentalPanel.Children.Add(_multiSwitch); ExperimentalPanel.Children.Add(_instanceChoice);
         ExperimentalPanel.Children.Add(_instanceName); ExperimentalPanel.Children.Add(buttons); ExperimentalPanel.Children.Add(_editingLabel);
         add.Click += (_,_) =>
@@ -69,7 +71,7 @@ public partial class SettingsWindow
             _rootSettings=CollectSettingsFromUi();
             _rootSettings=_rootSettings with { HudInstances=_rootSettings.HudInstances.Where(i => i.Id!=id).ToList() };
             if (_selectedInstanceId==id) { _selectedInstanceId=""; ApplyEditorControls(_rootSettings); }
-            _runtime.EndInstanceEditing(); RefreshInstanceEditor();
+            RefreshInstanceEditor(); _=RefreshEditingHighlightAsync();
         };
         editButton.Click += async (_,_) =>
         {
@@ -89,28 +91,53 @@ public partial class SettingsWindow
             catch (Exception ex) { _editingLabel.Text=LocalizationManager.Text("无法定位 HUD：","Unable to locate HUD: ")+ex.Message; }
             finally { editButton.IsEnabled=true; }
         };
-        Closed += (_,_) => _runtime.EndInstanceEditing();
+        _instanceChoice.SelectionChanged += (_,_) =>
+        {
+            if(_refreshingInstanceChoice || _instanceChoice.SelectedItem is not InstanceChoice choice || choice.Id==_selectedInstanceId) return;
+            string requested=choice.Id;
+            // Let Avalonia finish its selection transaction before loading/replacing editor lists.
+            Avalonia.Threading.Dispatcher.UIThread.Post(async ()=> {
+                if(_refreshingInstanceChoice || _instanceChoice.SelectedItem is not InstanceChoice selected || selected.Id!=requested) return;
+                try {
+                    _rootSettings=CollectSettingsFromUi();_selectedInstanceId=requested;
+                    var local=string.IsNullOrEmpty(requested) ? _rootSettings : _rootSettings.HudInstances.FirstOrDefault(i=>i.Id==requested)?.Settings ?? _rootSettings;
+                    ApplyEditorControls(local);RefreshInstanceEditor();await RefreshEditingHighlightAsync();
+                } catch(Exception ex) { EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to select HUD instance.",ex); }
+            });
+        };
+        Opened += async (_,_) => { _settingsEditorOpen=true; await RefreshEditingHighlightAsync(); };
+        Closed += (_,_) => { _settingsEditorOpen=false; _runtime.EndInstanceEditing(); };
         RefreshInstanceEditor();
     }
 
+    private async Task RefreshEditingHighlightAsync()
+    {
+        if (!_settingsEditorOpen) return;
+        try {
+            string name=_rootSettings.HudInstances.FirstOrDefault(i=>i.Id==_selectedInstanceId)?.Name ?? LocalizationManager.Text("主 HUD","Primary HUD");
+            await _runtime.HighlightInstanceAsync(_selectedInstanceId,name);
+        } catch(Exception ex) { EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to highlight the edited HUD.",ex); }
+    }
     private void RefreshInstanceEditor()
     {
         if (_instanceChoice is null || _multiSwitch is null || _instanceName is null) return;
+        _refreshingInstanceChoice=true;
         _multiSwitch.IsChecked=_rootSettings.MultiHudEnabled;
-        _instanceChoice.Items.Clear();
-        _instanceChoice.Items.Add(new InstanceChoice("",LocalizationManager.Text("主 HUD", "Primary HUD")));
-        foreach (var instance in _rootSettings.HudInstances) _instanceChoice.Items.Add(new InstanceChoice(instance.Id,instance.Name));
-        _instanceChoice.SelectedItem=_instanceChoice.Items.OfType<InstanceChoice>().FirstOrDefault(i => i.Id==_selectedInstanceId);
+        var choices=new[] { new InstanceChoice("",LocalizationManager.Text("主 HUD","Primary HUD")) }
+            .Concat(_rootSettings.HudInstances.Select(i=>new InstanceChoice(i.Id,i.Name))).ToArray();
+        _instanceChoice.ItemsSource=choices;
+        _instanceChoice.SelectedItem=choices.FirstOrDefault(i=>i.Id==_selectedInstanceId);
         _instanceName.IsEnabled=!string.IsNullOrEmpty(_selectedInstanceId);
         _instanceName.Text=_rootSettings.HudInstances.FirstOrDefault(i => i.Id==_selectedInstanceId)?.Name ?? "";
         if (_editingLabel is not null) _editingLabel.Text=LocalizationManager.Text("当前编辑：", "Editing: ")+_instanceChoice.SelectedItem;
-        SamplingIntervalBox.IsEnabled=string.IsNullOrEmpty(_selectedInstanceId);
+        _refreshingInstanceChoice=false;
+        SamplingIntervalBox.IsEnabled=true;
         StartupSwitch.IsEnabled=string.IsNullOrEmpty(_selectedInstanceId);
     }
 
     private void ApplySettingsToControls(AppSettings settings)
     {
-        _rootSettings=settings; _persistedRootSettings=settings; _selectedInstanceId=""; ApplyEditorControls(settings); RefreshInstanceEditor();
+        _rootSettings=settings; _persistedRootSettings=settings; _selectedInstanceId=""; ApplyEditorControls(settings); RefreshInstanceEditor(); _=RefreshEditingHighlightAsync();
     }
 
     private AppSettings CollectSettingsFromUi()
@@ -123,6 +150,9 @@ public partial class SettingsWindow
             _rootSettings=_rootSettings with { MultiHudEnabled=multi,
                 HudInstances=_rootSettings.HudInstances.Select(i => i.Id==_selectedInstanceId ? i with {
                     Settings=editor, Name=string.IsNullOrWhiteSpace(_instanceName?.Text) ? i.Name : _instanceName.Text.Trim() } : i).ToList() };
+        _rootSettings=_rootSettings with { SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle,UiLanguage=editor.UiLanguage,
+            HudInstances=_rootSettings.HudInstances.Select(i=>i with { Settings=i.Settings with {
+                SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle } }).ToList() };
         return _rootSettings;
     }
 }

@@ -116,7 +116,7 @@ public partial class SettingsWindow : Window
 
         string currentVersion = GetCurrentVersionText();
         AboutVersionText.Text = $"v{currentVersion}";
-        Title = LocalizationManager.Text($"Endfield Charge Plus v{currentVersion} 设置", $"Endfield Charge Plus v{currentVersion} Settings");
+        Title = EndfieldChargePlus.Interop.ProcessPrivileges.SettingsTitle(currentVersion);
         UpdateCurrentVersionText.Text = LocalizationManager.Text($"当前版本：v{currentVersion}", $"Current: v{currentVersion}");
         UpdateLatestVersionText.Text = LocalizationManager.Text("最新版本：尚未获取", "Latest: not checked");
         UpdateStatusText.Text = LocalizationManager.Text("状态：尚未检查", "Status: not checked");
@@ -155,8 +155,8 @@ public partial class SettingsWindow : Window
         PositionModeCombo.Items.Add(LocalizationManager.Text("自定义坐标", "Custom Coordinates"));
 
         PositionCombo.Items.Clear();
-        string[] zh = ["左上", "顶部居中", "右上", "左侧居中", "屏幕居中", "右侧居中", "左下", "底部居中", "右下"];
-        string[] en = ["Top Left", "Top Center", "Top Right", "Center Left", "Center", "Center Right", "Bottom Left", "Bottom Center", "Bottom Right"];
+        string[] zh = ["左上（工作区）", "顶部居中（工作区）", "右上（工作区）", "左侧居中（工作区）", "居中（工作区）", "右侧居中（工作区）", "左下（任务栏 / Dock 上）", "底部居中（任务栏 / Dock 上）", "右下（任务栏 / Dock 上）", "屏幕左上角", "屏幕顶部居中", "屏幕右上角", "屏幕左侧居中", "屏幕正中央", "屏幕右侧居中", "屏幕左下角", "屏幕底部居中", "屏幕右下角"];
+        string[] en = ["Top Left (work area)", "Top Center (work area)", "Top Right (work area)", "Center Left (work area)", "Center (work area)", "Center Right (work area)", "Bottom Left (above taskbar / Dock)", "Bottom Center (above taskbar / Dock)", "Bottom Right (above taskbar / Dock)", "Screen Top Left", "Screen Top Center", "Screen Top Right", "Screen Center Left", "Screen Center", "Screen Center Right", "Screen Bottom Left", "Screen Bottom Center", "Screen Bottom Right"];
         for (int i = 0; i < zh.Length; i++)
             PositionCombo.Items.Add(LocalizationManager.Text(zh[i], en[i]));
 
@@ -200,7 +200,7 @@ public partial class SettingsWindow : Window
 
         string currentVersion = GetCurrentVersionText();
         AboutVersionText.Text = $"v{currentVersion}";
-        Title = LocalizationManager.Text($"Endfield Charge Plus v{currentVersion} 设置", $"Endfield Charge Plus v{currentVersion} Settings");
+        Title = EndfieldChargePlus.Interop.ProcessPrivileges.SettingsTitle(currentVersion);
         UpdateCurrentVersionText.Text = LocalizationManager.Text($"当前版本：v{currentVersion}", $"Current: v{currentVersion}");
         if (LastUpdateResult is { } result)
             ApplyUpdateCheckResult(result);
@@ -270,7 +270,7 @@ public partial class SettingsWindow : Window
 
     private void UpdateModeUi()
     {
-        ClickToCycleSwitch.IsEnabled = AlwaysVisibleSwitch.IsChecked == true;
+        ClickToCycleSwitch.IsEnabled = AlwaysVisibleSwitch.IsChecked == true || _rootSettings.AlwaysVisible || (_rootSettings.MultiHudEnabled && _rootSettings.HudInstances.Any(i=>i.Enabled && i.Settings.AlwaysVisible));
         bool persistent = AlwaysVisibleSwitch.IsChecked == true;
         PersistentLayerCombo.IsEnabled = persistent;
         PersistentLayerCombo.Opacity = persistent ? 1.0 : 0.45;
@@ -286,7 +286,7 @@ public partial class SettingsWindow : Window
     {
         _settings = settings;
 
-        SamplingIntervalBox.Value = (decimal)settings.SamplingIntervalSeconds;
+        SamplingIntervalBox.Value = (decimal)_rootSettings.SamplingIntervalSeconds;
         ScaleBox.Value = (decimal)settings.GlobalScale;
         DurationBox.Value = (decimal)settings.DisplayDurationSeconds;
         BounceBox.Value = (decimal)settings.BounceStrength;
@@ -298,7 +298,7 @@ public partial class SettingsWindow : Window
         HudFontCombo.SelectedIndex = 0;
         for (int i=1; i<HudFontCombo.Items.Count; i++)
             if (string.Equals(HudFontCombo.Items[i]?.ToString(), settings.HudFontFamily, StringComparison.OrdinalIgnoreCase)) HudFontCombo.SelectedIndex=i;
-        ClickToCycleSwitch.IsChecked = settings.ClickToCycle;
+        ClickToCycleSwitch.IsChecked = _rootSettings.ClickToCycle;
         HudEnabledSwitch.IsChecked = settings.HudEnabled;
         StartupSwitch.IsChecked = settings.StartWithWindows;
         AlwaysVisibleSwitch.IsChecked = settings.AlwaysVisible;
@@ -316,7 +316,7 @@ public partial class SettingsWindow : Window
             MonitorCombo.SelectedIndex = wanted >= 0 && wanted < MonitorCombo.Items.Count ? wanted : 0;
         }
 
-        Customizer.SetSamplingInterval(settings.SamplingIntervalSeconds);
+        Customizer.SetSamplingInterval(_rootSettings.SamplingIntervalSeconds);
         Customizer.Load(settings.CustomHud, _hud);
         UpdateModeUi();
     }
@@ -336,7 +336,7 @@ public partial class SettingsWindow : Window
             HudOpacity = Math.Clamp(HudOpacitySlider.Value / 100.0, 0.10, 1.0),
 
             HudFontFamily = HudFontCombo.SelectedIndex > 0 ? HudFontCombo.SelectedItem?.ToString() ?? "" : "",
-            ClickToCycle = AlwaysVisibleSwitch.IsChecked == true && ClickToCycleSwitch.IsChecked == true,
+            ClickToCycle = ClickToCycleSwitch.IsChecked == true,
             AlwaysVisible = AlwaysVisibleSwitch.IsChecked == true,
             PersistentLayer = PersistentLayerCombo.SelectedIndex == 1
                 ? PersistentHudLayer.Desktop
@@ -394,6 +394,7 @@ public partial class SettingsWindow : Window
             _rootSettings=_settings;
             _settings=string.IsNullOrEmpty(_selectedInstanceId) ? _rootSettings : _rootSettings.HudInstances.FirstOrDefault(i=>i.Id==_selectedInstanceId)?.Settings ?? _rootSettings;
             RefreshInstanceEditor();
+            await RefreshEditingHighlightAsync();
         }
         finally
         {
@@ -725,31 +726,7 @@ public partial class SettingsWindow : Window
         catch { }
     }
 
-    private static int PositionToIndex(HudPosition p) => p switch
-    {
-        HudPosition.TopLeft => 0,
-        HudPosition.TopCenter => 1,
-        HudPosition.TopRight => 2,
-        HudPosition.CenterLeft => 3,
-        HudPosition.Center => 4,
-        HudPosition.CenterRight => 5,
-        HudPosition.BottomLeft => 6,
-        HudPosition.BottomCenter => 7,
-        HudPosition.BottomRight => 8,
-        _ => 1,
-    };
+    private static int PositionToIndex(HudPosition p) => Math.Clamp((int)p,0,17);
 
-    private static HudPosition IndexToPosition(int index) => index switch
-    {
-        0 => HudPosition.TopLeft,
-        1 => HudPosition.TopCenter,
-        2 => HudPosition.TopRight,
-        3 => HudPosition.CenterLeft,
-        4 => HudPosition.Center,
-        5 => HudPosition.CenterRight,
-        6 => HudPosition.BottomLeft,
-        7 => HudPosition.BottomCenter,
-        8 => HudPosition.BottomRight,
-        _ => HudPosition.TopCenter,
-    };
+    private static HudPosition IndexToPosition(int index) => index is >=0 and <=17 ? (HudPosition)index : HudPosition.TopCenter;
 }
