@@ -91,6 +91,7 @@ public partial class SettingsWindow
             catch (Exception ex) { _editingLabel.Text=LocalizationManager.Text("无法定位 HUD：","Unable to locate HUD: ")+ex.Message; }
             finally { editButton.IsEnabled=true; }
         };
+        _multiSwitch.IsCheckedChanged+=(_,_)=>UpdateModeUi();
         _instanceChoice.SelectionChanged += (_,_) =>
         {
             if(_refreshingInstanceChoice || _instanceChoice.SelectedItem is not InstanceChoice choice || choice.Id==_selectedInstanceId) return;
@@ -106,7 +107,7 @@ public partial class SettingsWindow
             });
         };
         Opened += async (_,_) => { _settingsEditorOpen=true; await RefreshEditingHighlightAsync(); };
-        Closed += (_,_) => { _settingsEditorOpen=false; _runtime.EndInstanceEditing(); };
+        Closed += (_,_) => { _settingsEditorOpen=false; ProfileDataWarnings.Forget("preview");_runtime.EndInstanceEditing(); };
         RefreshInstanceEditor();
     }
 
@@ -133,6 +134,8 @@ public partial class SettingsWindow
         _refreshingInstanceChoice=false;
         SamplingIntervalBox.IsEnabled=true;
         StartupSwitch.IsEnabled=string.IsNullOrEmpty(_selectedInstanceId);
+        Customizer.SetPreviewHud(_runtime.GetInstanceHud(_selectedInstanceId));
+        UpdateModeUi();
     }
 
     private void ApplySettingsToControls(AppSettings settings)

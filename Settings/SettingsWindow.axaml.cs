@@ -270,7 +270,10 @@ public partial class SettingsWindow : Window
 
     private void UpdateModeUi()
     {
-        ClickToCycleSwitch.IsEnabled = AlwaysVisibleSwitch.IsChecked == true || _rootSettings.AlwaysVisible || (_rootSettings.MultiHudEnabled && _rootSettings.HudInstances.Any(i=>i.Enabled && i.Settings.AlwaysVisible));
+        bool multi=_multiSwitch?.IsChecked ?? _rootSettings.MultiHudEnabled;
+        bool anyPersistent=(string.IsNullOrEmpty(_selectedInstanceId) ? AlwaysVisibleSwitch.IsChecked==true : _rootSettings.AlwaysVisible)
+            || (multi && _rootSettings.HudInstances.Any(i=>i.Enabled && (i.Id==_selectedInstanceId ? AlwaysVisibleSwitch.IsChecked==true : i.Settings.AlwaysVisible)));
+        ClickToCycleSwitch.IsEnabled=anyPersistent;
         bool persistent = AlwaysVisibleSwitch.IsChecked == true;
         PersistentLayerCombo.IsEnabled = persistent;
         PersistentLayerCombo.Opacity = persistent ? 1.0 : 0.45;
@@ -317,7 +320,9 @@ public partial class SettingsWindow : Window
         }
 
         Customizer.SetSamplingInterval(_rootSettings.SamplingIntervalSeconds);
-        Customizer.Load(settings.CustomHud, _hud);
+        Customizer.Load(settings.CustomHud, _runtime.GetInstanceHud(_selectedInstanceId));
+        string previewId=_selectedInstanceId;
+        Customizer.PreviewPresenter=(data,refresh)=>_runtime.PreviewInstanceAsync(previewId,data,refresh);
         UpdateModeUi();
     }
 

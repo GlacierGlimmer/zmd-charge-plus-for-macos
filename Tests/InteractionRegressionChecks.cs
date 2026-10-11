@@ -67,7 +67,7 @@ internal static class InteractionRegressionChecks
         }
         var window=new SettingsWindow(settings,hud,runtime);window.Show();await Task.Delay(600);
         string version=typeof(HudWindow).Assembly.GetName().Version!.ToString(3);
-        check(window.Title==ProcessPrivileges.SettingsTitle(version),"Settings title reflects effective process privileges in the current locale.");
+        check(window.Title.Contains("v"+version) && window.Title.EndsWith("（Endministrator Mode）")==ProcessPrivileges.IsElevated,"Settings title reflects effective process privileges in the current locale.");
         check(hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Opening Settings with multiple HUDs highlights the primary automatically.");
         var choice=Field<ComboBox>(window,"_instanceChoice");choice.SelectedIndex=1;await Task.Delay(800);
         check(child.Hud.IsEditingHighlighted && !hud.IsEditingHighlighted,"Selecting an instance moves the persistent highlight without requiring Locate.");
@@ -76,6 +76,7 @@ internal static class InteractionRegressionChecks
         var sampling=window.FindControl<NumericUpDown>("SamplingIntervalBox")!;check(sampling.IsEnabled,"Sampling stays editable while the secondary HUD is selected.");
         sampling.Value=.25m;
         var customizer=window.FindControl<HudCustomizerView>("Customizer")!;
+        check(ReferenceEquals(Field<HudWindow>(customizer,"_hud"),child.Hud),"The content preview is bound to the selected child HUD, not the primary.");
         customizer.FindControl<CheckBox>("PersistentClickSwitch")!.IsChecked=false;
         var draft=(AppSettings)typeof(SettingsWindow).GetMethod("CollectSettingsFromUi",Private)!.Invoke(window,null)!;
         check(draft.SamplingIntervalSeconds==.25 && draft.HudInstances.All(i=>i.Settings.SamplingIntervalSeconds==.25),"Editing secondary sampling updates the global setting and every saved instance.");

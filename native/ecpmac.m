@@ -364,7 +364,7 @@ API int ecp_hud_input(void *handle,int enabled,double x,double y,double width,do
             panel.collectionBehavior=owner.collectionBehavior;
             [owner addChildWindow:panel ordered:NSWindowBelow];ecpHudInputs[key]=panel;
         }
-        panel.click=click;BOOL layerChanged=panel.level!=owner.level;if(layerChanged) panel.level=owner.level;
+        panel.click=click;NSInteger level=topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;BOOL layerChanged=panel.level!=level;if(layerChanged) panel.level=level;
         double primaryHeight=NSMaxY(NSScreen.screens.firstObject.frame);
         NSRect frame=NSMakeRect(x,primaryHeight-y-height,width,height);
         BOOL moved=!NSEqualRects(panel.frame,frame);if(moved) [panel setFrame:frame display:NO];

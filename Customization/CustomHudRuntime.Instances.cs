@@ -63,6 +63,19 @@ public sealed partial class CustomHudRuntime
         target.Item1.SetEditingHighlight(true,_editingInstanceName);
         target.Item1.ApplySettings(target.Item2._appSettings with { PersistentLayer=PersistentHudLayer.Topmost });
     }
+    public HudWindow? GetInstanceHud(string id) => string.IsNullOrEmpty(id) ? (_hud.IsClosed ? null : _hud) :
+        _instances.TryGetValue(id,out var found) && !found.Hud.IsClosed ? found.Hud : null;
+    public Task PreviewInstanceAsync(string id,HudRenderData data,Func<CancellationToken,Task<HudRenderData>> refresh)
+    {
+        var target=string.IsNullOrEmpty(id) ? this : _instances.TryGetValue(id,out var found) ? found.Runtime : null;
+        if(target is null || target._disposed) return Task.CompletedTask;
+        target.CancelRevision();
+        return target.RunSerializedAsync(async ()=> {
+            if(target._editingPreview) await target._hud.ShowPersistentAsync(data,refresh);
+            else await target._hud.ShowCustomAsync(data,refresh);
+            target._persistentShown=false;target._nextPersistentRefresh=DateTime.MinValue;
+        },wait:true);
+    }
     public async Task<bool> HighlightInstanceAsync(string id, string name)
     {
         if (_disposed) return false;

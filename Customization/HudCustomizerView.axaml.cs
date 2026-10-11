@@ -114,6 +114,12 @@ public partial class HudCustomizerView : UserControl
     private List<string> _cycleSourceProfileIds = new();
     private IReadOnlyList<GpuAdapterInfo> _gpuAdapters = Array.Empty<GpuAdapterInfo>();
     private HudWindow? _hud;
+    public Func<HudRenderData,Func<System.Threading.CancellationToken,Task<HudRenderData>>,Task>? PreviewPresenter { get; set; }
+    public void SetPreviewHud(HudWindow? hud)
+    {
+        _hud=hud;PreviewBtn.IsEnabled=hud is { IsClosed:false };
+        ToolTip.SetTip(PreviewBtn,hud is null ? LocalizationManager.Text("请先保存并应用新增实例。","Save & Apply the new instance first.") : null);
+    }
     private CustomHudSettings _loaded = CustomHudSettings.CreateDefault();
     private int _selectedIndex = -1;
     private bool _loading;
@@ -296,10 +302,10 @@ public partial class HudCustomizerView : UserControl
             box.Text = desired;
     }
 
-    public void Load(CustomHudSettings? settings, HudWindow hud)
+    public void Load(CustomHudSettings? settings, HudWindow? hud)
     {
         _loading = true;
-        _hud = hud;
+        SetPreviewHud(hud);
         _loaded = HudSettingsNormalizer.Normalize(settings ?? CustomHudSettings.CreateDefault());
         AutoCycleSwitch.IsChecked = _loaded.AutoCycle;
         CycleSecondsBox.Value = _loaded.CycleSeconds;
@@ -973,6 +979,7 @@ public partial class HudCustomizerView : UserControl
         if (_hud is null) return;
         if (_selectedIndex < 0 || _selectedIndex >= _profiles.Count) return;
 
+        var presenter=PreviewPresenter;
         PreviewBtn.IsEnabled = false;
         ProfileStatusText.Text = LocalizationManager.Text("正在读取数据…", "Reading data…");
         try
@@ -1004,7 +1011,8 @@ public partial class HudCustomizerView : UserControl
                 return HudProfileRenderer.Render(profile, latest);
             };
 
-            await _hud.ShowCustomAsync(data, refresh);
+            if(presenter is not null) await presenter(data,refresh);
+            else await _hud.ShowCustomAsync(data, refresh);
         }
         catch (Exception ex)
         {
@@ -1012,7 +1020,7 @@ public partial class HudCustomizerView : UserControl
         }
         finally
         {
-            PreviewBtn.IsEnabled = true;
+            PreviewBtn.IsEnabled = _hud is { IsClosed:false };
         }
     }
 
