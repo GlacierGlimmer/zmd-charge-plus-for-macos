@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -20,6 +20,7 @@ namespace EndfieldChargePlus.Customization;
 public sealed class VariableHub : IDisposable
 {
     private readonly SemaphoreSlim _snapshotGate = new(1, 1);
+    private int _disposed;
     public double SamplingIntervalSeconds { get; set; } = 1;
     private readonly Dictionary<string,(long At,Dictionary<string,object?> Values)> _samples=new();
 
@@ -49,9 +50,11 @@ public sealed class VariableHub : IDisposable
         string? pingTarget = null, string? probeProtocol = null, int probePort = 443,
         CancellationToken ct = default)
     {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed)!=0,this);
         await _snapshotGate.WaitAsync(ct).ConfigureAwait(false);
         try
         {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed)!=0,this);
         if (_lastLanguage != LocalizationManager.Current)
         {
             _lastLanguage = LocalizationManager.Current;
@@ -949,5 +952,15 @@ public sealed class VariableHub : IDisposable
 
     private sealed record HttpCacheEntry(string Json, DateTime ExpiresAt, string Error = "");
 
-    public void Dispose() { }
+    public void Dispose()
+    {
+        if (Interlocked.Exchange(ref _disposed,1)!=0) return;
+        _=DisposeAfterSamplingAsync();
+    }
+    private async Task DisposeAfterSamplingAsync()
+    {
+        await _snapshotGate.WaitAsync().ConfigureAwait(false);
+        try { _samples.Clear(); }
+        finally { _snapshotGate.Release(); }
+    }
 }

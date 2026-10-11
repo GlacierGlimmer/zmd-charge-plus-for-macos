@@ -1,3 +1,4 @@
+using Avalonia.LogicalTree;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -265,6 +266,8 @@ public partial class SettingsWindow : Window
         MonitorCombo.SelectedIndex = wanted >= 0 && wanted < MonitorCombo.Items.Count ? wanted : 0;
     }
 
+    private CheckBox ClickToCycleSwitch => Customizer.FindControl<CheckBox>("PersistentClickSwitch")!;
+
     private void UpdateModeUi()
     {
         ClickToCycleSwitch.IsEnabled = AlwaysVisibleSwitch.IsChecked == true;
@@ -354,6 +357,7 @@ public partial class SettingsWindow : Window
 
     private async void OnSave(object? sender, RoutedEventArgs e)
     {
+        if (!SaveBtn.IsEnabled) return;
         try
         {
         try
@@ -362,6 +366,7 @@ public partial class SettingsWindow : Window
             StartupManager.Apply(updated.StartWithWindows);
             SettingsManager.Save(updated);
             _settings = updated;
+            _persistedRootSettings=updated;
         }
         catch (Exception ex)
         {
@@ -379,18 +384,21 @@ public partial class SettingsWindow : Window
             return;
         }
 
+        var editorTabs=this.GetLogicalDescendants().OfType<TabControl>().FirstOrDefault();
+        if(editorTabs is not null) editorTabs.IsEnabled=false;
         SaveBtn.IsEnabled = false;
         SaveBtn.Content = LocalizationManager.Text("应用中…", "Applying…");
         try
         {
             await _runtime.ApplySettingsWithTransitionAsync(_settings);
             _rootSettings=_settings;
-            _settings=string.IsNullOrEmpty(_selectedInstanceId) ? _rootSettings : _rootSettings.HudInstances.First(i=>i.Id==_selectedInstanceId).Settings;
+            _settings=string.IsNullOrEmpty(_selectedInstanceId) ? _rootSettings : _rootSettings.HudInstances.FirstOrDefault(i=>i.Id==_selectedInstanceId)?.Settings ?? _rootSettings;
             RefreshInstanceEditor();
         }
         finally
         {
             SaveBtn.IsEnabled = true;
+            if(editorTabs is not null) editorTabs.IsEnabled=true;
         }
 
         SaveBtn.Content = LocalizationManager.Text("已保存", "Saved");
@@ -405,6 +413,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             SaveBtn.IsEnabled = true;
+            foreach(var tabs in this.GetLogicalDescendants().OfType<TabControl>()) tabs.IsEnabled=true;
             SaveBtn.Content = LocalizationManager.Text("保存失败", "Save failed");
             MaintenanceStatusText.Text = ex.Message;
             EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to apply settings.", ex);

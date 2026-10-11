@@ -169,6 +169,11 @@
                     <TextBlock Text="选择框中的方案即当前使用方案；始终保持一个方案被选中。" FontSize="11" Foreground="#6F6F74"/>
                   </StackPanel>
 
+                  <StackPanel Spacing="6">
+                    <CheckBox x:Name="PersistentClickSwitch" Content="常驻时点击 HUD 切换方案"/>
+                    <TextBlock Text="仅常驻模式可用。每次点击可见 HUD，按下方轮播队列顺序切换，并使用轮播动画；无需开启自动轮播。点击后重新计时自动轮播间隔。" FontSize="12" Foreground="#85858B" TextWrapping="Wrap"/>
+                  </StackPanel>
+
                   <Border x:Name="CycleOptionsPanel" Background="#19191B" BorderBrush="#303034" BorderThickness="1" CornerRadius="8" Padding="14">
                     <StackPanel Spacing="12">
                       <Grid ColumnDefinitions="*,Auto">

@@ -16,6 +16,8 @@ public sealed class FrameEventWindow
     private readonly object _gate = new();
     private double _lastTimestamp = double.NaN;
     public bool Primed { get; private set; }
+    public long LastArrival { get; private set; }
+    public int RecentCount(long now) { lock (_gate) { Trim(now); return _events.Count; } }
     public void Add(double timestamp, long now)
     {
         if (!double.IsFinite(timestamp)) return;
@@ -23,7 +25,7 @@ public sealed class FrameEventWindow
         {
             if (timestamp == _lastTimestamp) return;
             if (timestamp < _lastTimestamp) _events.Clear();
-            _lastTimestamp=timestamp; Primed=true; _events.Enqueue((now,timestamp));
+            _lastTimestamp=timestamp; LastArrival=now; Primed=true; _events.Enqueue((now,timestamp));
             Trim(now);
         }
     }

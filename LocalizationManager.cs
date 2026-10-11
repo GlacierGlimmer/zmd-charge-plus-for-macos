@@ -35,6 +35,7 @@ public static class LocalizationManager
     ["100% 对应帧率 / FPS"] = "Frame rate at 100% / FPS",
         ["系统默认"] = "System default",
         ["选择已安装字体；系统默认会自动补全缺失的中文字符。"] = "Choose an installed font; the system supplies fallback glyphs for missing characters.",
+        ["仅常驻模式可用。每次点击可见 HUD，按下方轮播队列顺序切换，并使用轮播动画；无需开启自动轮播。点击后重新计时自动轮播间隔。"] = "Available only in persistent mode. Click the visible HUD to advance through the carousel queue using its transition animation, even with auto cycling off. A click restarts the automatic cycle interval.",
         ["常驻时点击 HUD 切换方案"] = "Click a persistent HUD to switch profiles",
         ["仅一直显示时可启用。每次点击按自动轮播队列的顺序切换，使用轮播切换动画；无需开启自动轮播。队列为空或只有一个方案时不切换。"] = "Available only in Always Visible mode. Each click advances through the automatic-cycle queue using its transition animation, even when automatic cycling is off. An empty or single-item queue does not switch.",
         ["数据采样间隔 / 秒"] = "Data sampling interval / seconds",

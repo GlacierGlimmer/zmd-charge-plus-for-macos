@@ -27,11 +27,11 @@ public partial class HudCustomizerView
     {
         string selected=(combo.SelectedItem as FrameTarget)?.Id ?? previous;
         var targets=kind=="window" ? FrameRateBackend.Windows() : FrameRateBackend.Displays();
-        combo.Items.Clear();
-        combo.Items.Add(new FrameTarget("",kind=="display" ? LocalizationManager.Text("主显示器（自动）","Primary display (auto)") : LocalizationManager.Text("请选择窗口","Select a window")));
-        foreach(var target in targets) combo.Items.Add(target);
-        if(!string.IsNullOrEmpty(selected) && !targets.Any(t=>t.Id==selected)) combo.Items.Add(new FrameTarget(selected,LocalizationManager.Text("目标已关闭：","Target unavailable: ")+selected));
-        combo.SelectedItem=combo.Items.OfType<FrameTarget>().FirstOrDefault(t=>t.Id==selected);
+        var items=new[] { new FrameTarget("",kind=="display" ? LocalizationManager.Text("主显示器（自动）","Primary display (auto)") : LocalizationManager.Text("请选择窗口","Select a window")) }
+            .Concat(targets.GroupBy(t=>t.Id).Select(g=>g.First())).ToArray();
+        if (!items.Any(t=>t.Id==selected)) selected="";
+        combo.ItemsSource=items;
+        combo.SelectedItem=items.First(t=>t.Id==selected);
         return selected;
     }
 }

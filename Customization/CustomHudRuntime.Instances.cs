@@ -11,31 +11,49 @@ public sealed partial class CustomHudRuntime
     private bool _editingPreview;
     private void SyncInstances(AppSettings settings)
     {
-        if (_isChild) return;
-        var enabled = settings.MultiHudEnabled ? settings.HudInstances.Where(i => i.Enabled).ToList() : new();
+        if (_isChild || _disposed) return;
+        var enabled = settings.MultiHudEnabled ? (settings.HudInstances ?? new()).Where(i => i is not null && i.Enabled && !string.IsNullOrWhiteSpace(i.Id)).GroupBy(i=>i.Id).Select(g=>g.First()).Take(15).ToList() : new();
         var ids = enabled.Select(i => i.Id).ToHashSet(StringComparer.Ordinal);
         foreach (var id in _instances.Keys.Where(id => !ids.Contains(id)).ToArray())
         {
-            var entry = _instances[id]; entry.Runtime.Dispose(); entry.Hud.Close(); _instances.Remove(id);
+            var entry = _instances[id]; _instances.Remove(id);
+            entry.Runtime.Dispose(); if (!entry.Hud.IsClosed) entry.Hud.Close();
         }
         foreach (var instance in enabled)
         {
             var local = instance.Settings with { MultiHudEnabled=false, HudInstances=new(),
                 HudEnabled=settings.HudEnabled && instance.Settings.HudEnabled,
                 SamplingIntervalSeconds=settings.SamplingIntervalSeconds, UiLanguage=settings.UiLanguage };
-            if (_instances.TryGetValue(instance.Id, out var existing))
-                { existing.Runtime.ApplySettings(local); existing.Hud.ApplySettings(local); }
+            if (_instances.TryGetValue(instance.Id, out var existing) && !existing.Hud.IsClosed)
+            {
+                if (System.Text.Json.JsonSerializer.Serialize(existing.Runtime._appSettings)!=System.Text.Json.JsonSerializer.Serialize(local))
+                {
+                    existing.Runtime.ApplySettings(local);
+                    existing.Hud.ApplySettings(existing.Runtime._editingPreview ? local with { PersistentLayer=PersistentHudLayer.Topmost } : local);
+                }
+            }
             else
             {
-                var hud = new HudWindow(); hud.ApplySettings(local);
-                var child = new CustomHudRuntime(hud,_variables) { _isChild=true };
-                child.ApplySettings(local); _instances.Add(instance.Id, (hud,child)); child.Start();
+                _instances.Remove(instance.Id);
+                HudWindow? hud=null; CustomHudRuntime? child=null;
+                try
+                {
+                    hud=new HudWindow(); hud.ApplySettings(local);
+                    child=new CustomHudRuntime(hud,_variables) { _isChild=true };
+                    child.ApplySettings(local); _instances.Add(instance.Id,(hud,child)); child.Start();
+                }
+                catch (Exception ex)
+                {
+                    child?.Dispose(); if (hud is { IsClosed:false }) hud.Close();
+                    EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to create HUD instance.",ex);
+                }
             }
         }
     }
 
     public async Task<bool> HighlightInstanceAsync(string id, string name)
     {
+        if (_disposed) return false;
         EndInstanceEditing();
         var target = string.IsNullOrEmpty(id) ? (_hud, this) :
             _instances.TryGetValue(id, out var found) ? (found.Hud, found.Runtime) : default;
@@ -44,20 +62,33 @@ public sealed partial class CustomHudRuntime
         target.Item1.ApplySettings(target.Item2._appSettings with { PersistentLayer=PersistentHudLayer.Topmost });
         target.Item2._nextPersistentRefresh=DateTime.MinValue;
         target.Item1.SetEditingHighlight(true, name);
-        await target.Item2.TickPersistentAsync();
-        return true;
+        await target.Item2.RunSerializedAsync(target.Item2.TickPersistentAsync,wait:true);
+        return !target.Item1.IsClosed && !target.Item2._disposed;
     }
 
     public void EndInstanceEditing()
     {
-        if(_editingPreview) _hud.ApplySettings(_appSettings);
-        _editingPreview=false; _hud.SetEditingHighlight(false, "");
-        foreach (var instance in _instances.Values) { if(instance.Runtime._editingPreview) instance.Hud.ApplySettings(instance.Runtime._appSettings); instance.Runtime._editingPreview=false; instance.Hud.SetEditingHighlight(false, ""); }
+        if (_disposed) return;
+        EndPreview(this);
+        foreach(var instance in _instances.Values.ToArray()) EndPreview(instance.Runtime);
+    }
+    private static void EndPreview(CustomHudRuntime runtime)
+    {
+        if (runtime._disposed) return;
+        bool wasEditing=runtime._editingPreview;
+        runtime._editingPreview=false;
+        runtime._hud.SetEditingHighlight(false, "");
+        if (!wasEditing) return;
+        runtime.CancelRevision();
+        runtime._hud.ApplySettings(runtime._appSettings);
+        runtime._nextPersistentRefresh=DateTime.MinValue;
+        runtime._lastRenderedLocalSecond=-1;
+        runtime.RunSerializedAsync(runtime.TickAsync,wait:true);
     }
 
     private void DisposeInstances()
     {
-        foreach (var instance in _instances.Values) { instance.Runtime.Dispose(); instance.Hud.Close(); }
-        _instances.Clear();
+        var instances=_instances.Values.ToArray(); _instances.Clear();
+        foreach (var instance in instances) { instance.Runtime.Dispose(); if (!instance.Hud.IsClosed) instance.Hud.Close(); }
     }
 }

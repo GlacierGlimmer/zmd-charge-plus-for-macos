@@ -26,10 +26,18 @@ public partial class HudWindow : Window
     private bool _persistent;
     private readonly DispatcherTimer _inputTimer=new() { Interval=TimeSpan.FromMilliseconds(16) };
     public event Action? HudClicked;
-    private bool CanCycleOnClick => _persistent && _settings.AlwaysVisible && _settings.ClickToCycle && !IsHudBusy;
+    private bool CanCycleOnClick => !_closed && IsVisible && _settings.AlwaysVisible && _settings.ClickToCycle ;
 
     private HudRenderData? _lastRenderData;
-    private Dictionary<TextBlock,FontFamily>? _defaultFonts;
+    private bool _closed;
+    private bool _pointerPressedInside;
+    public bool IsClosed => _closed;
+
+    public void CancelPresentation()
+    {
+        _cts?.Cancel();
+        IsHudBusy = false;
+    }
 
     // The progress ring is deliberately animated independently from the existing HUD
     // summon/retract animations. Data updates therefore feel continuous without changing
@@ -69,9 +77,24 @@ public partial class HudWindow : Window
 
         Closed += (_, _) =>
         {
+            _closed=true;
+            CancelPresentation();
             _progressTimer.Stop();
         };
-        PointerReleased += (_,e) => { if (CanCycleOnClick && e.InitialPressMouseButton==MouseButton.Left) { HudClicked?.Invoke(); e.Handled=true; } };
+        PointerPressed += (_,e) =>
+        {
+            if (OperatingSystem.IsWindows()) return; // Native HWND owns Windows clicks.
+            _pointerPressedInside=CanCycleOnClick && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+                && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)));
+        };
+        PointerReleased += (_,e) =>
+        {
+            if (OperatingSystem.IsWindows()) return;
+            bool clicked=_pointerPressedInside && CanCycleOnClick && e.InitialPressMouseButton==MouseButton.Left
+                && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)));
+            _pointerPressedInside=false;
+            if (clicked) { HudClicked?.Invoke(); e.Handled=true; }
+        };
         _inputTimer.Tick += (_,_) => {
             var handle=this.TryGetPlatformHandle();
             if (handle?.HandleDescriptor is "NSWindow" or "NSView")
@@ -86,9 +109,15 @@ public partial class HudWindow : Window
     public void ApplySettings(AppSettings settings)
     {
         _settings = settings;
-        _defaultFonts ??= this.GetVisualDescendants().OfType<TextBlock>().ToDictionary(t=>t,t=>t.FontFamily);
-        foreach (var (text,original) in _defaultFonts)
-            text.FontFamily=string.IsNullOrWhiteSpace(settings.HudFontFamily) ? original : new FontFamily(settings.HudFontFamily);
+        if (_closed) return;
+        // Named controls exist immediately after XAML loads; the visual tree does not.
+        FontFamily numeric=new("avares://Avalonia.Fonts.Inter/Assets#Inter, Microsoft YaHei UI, PingFang SC, sans-serif");
+        FontFamily title=numeric;
+        if (!string.IsNullOrWhiteSpace(settings.HudFontFamily))
+            numeric=title=new FontFamily(settings.HudFontFamily);
+        foreach (var text in new[] { TagLineText, PrimaryText, SecondaryText, RightText, RightSuffixText })
+            text.FontFamily=numeric;
+        TitleText.FontFamily=title;
         _animOptions = AnimationOptions.FromSettings(settings);
         GlobalScale.RenderTransform = new ScaleTransform(settings.GlobalScale, settings.GlobalScale);
         Opacity = Math.Clamp(settings.HudOpacity, 0.0, 1.0);
@@ -116,9 +145,10 @@ public partial class HudWindow : Window
         HudRenderData data,
         Func<CancellationToken, Task<HudRenderData>>? liveRefresh = null)
     {
+        if (_closed) return;
         if (IsVisible)
             await HideAnimatedAsync();
-
+        if (_closed) return;
         _persistent = false;
         ApplyWindowLayer(false);
 
@@ -232,6 +262,7 @@ public partial class HudWindow : Window
         HudRenderData data,
         Func<CancellationToken, Task<HudRenderData>>? liveRefresh = null)
     {
+        if (_closed) return;
         _persistent = true;
         ApplyWindowLayer(true);
 
@@ -308,7 +339,7 @@ public partial class HudWindow : Window
 
     public void UpdatePersistent(HudRenderData data)
     {
-        if (!_persistent) return;
+        if (_closed || !_persistent) return;
 
         ApplyRenderData(data);
         ApplyWindowLayer(true);
@@ -325,9 +356,11 @@ public partial class HudWindow : Window
     public async Task HideAnimatedAsync()
     {
         _cts?.Cancel();
+        _cts=new CancellationTokenSource();
+        var hideCts=_cts;
         _persistent = false;
 
-        if (!IsVisible)
+        if (_closed || !IsVisible)
         {
             IsHudBusy = false;
             return;
@@ -339,13 +372,16 @@ public partial class HudWindow : Window
             // A settings/profile switch always exits from the final C state, so the transition
             // is deterministic: old HUD retracts completely before the next HUD is shown.
             SetPersistentFinalState();
-            await HudAnimations.CloseFromC().RunAsync(ScaleHost);
+            await HudAnimations.CloseFromC().RunAsync(ScaleHost,hideCts.Token);
         }
         catch { }
         finally
         {
-            if (IsVisible) Hide();
-            IsHudBusy = false;
+            if (ReferenceEquals(_cts,hideCts))
+            {
+                if (!_closed && IsVisible) Hide();
+                IsHudBusy = false;
+            }
         }
     }
 
@@ -698,22 +734,15 @@ public partial class HudWindow : Window
 
     private bool IsPointInsideVisibleHud(PixelPoint screenPoint)
     {
-        var screen = ResolveScreen(_settings.MonitorIndex);
-        if (screen is null) return true;
+        if (_closed || !IsVisible || !Pill.IsVisible) return false;
+        var local=Pill.PointToClient(screenPoint);
+        var bounds=new Rect(Pill.Bounds.Size);
+        if (!bounds.Contains(local)) return false;
+        double radius=Math.Min(bounds.Width,bounds.Height)/2;
+        double centerX=Math.Clamp(local.X,radius,bounds.Width-radius);
+        double centerY=bounds.Height/2;
+        double dx=local.X-centerX,dy=local.Y-centerY;
+        return dx*dx+dy*dy <= radius*radius;
 
-        double scaling = screen.Scaling > 0 ? screen.Scaling : 1d;
-        double windowWidthPx = Width * scaling;
-        double windowHeightPx = Height * scaling;
-        double hudWidthPx = 560d * _settings.GlobalScale * scaling;
-        double currentPillHeight = double.IsNaN(Pill.Height) ? 60d : Math.Max(60d, Pill.Height);
-        double hudHeightPx = currentPillHeight * _settings.GlobalScale * scaling;
-        double left = Position.X + (windowWidthPx - hudWidthPx) / 2d;
-        double top = Position.Y + (windowHeightPx - hudHeightPx) / 2d;
-        const double tolerance = 4d;
-
-        return screenPoint.X >= left - tolerance
-            && screenPoint.X <= left + hudWidthPx + tolerance
-            && screenPoint.Y >= top - tolerance
-            && screenPoint.Y <= top + hudHeightPx + tolerance;
     }
 }

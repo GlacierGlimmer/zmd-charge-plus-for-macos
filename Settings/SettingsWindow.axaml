@@ -132,10 +132,11 @@
                 <TextBlock Text="HUD 字体" Foreground="#C6CA4C"/>
                 <ComboBox x:Name="HudFontCombo" MinWidth="320" MaxWidth="520" HorizontalAlignment="Left"/>
                 <TextBlock Text="选择已安装字体；系统默认会自动补全缺失的中文字符。" TextWrapping="Wrap" Foreground="#85858B"/>
-                <CheckBox x:Name="ClickToCycleSwitch" Content="常驻时点击 HUD 切换方案"/>
-                <TextBlock Text="仅一直显示时可启用。每次点击按自动轮播队列的顺序切换，使用轮播切换动画；无需开启自动轮播。队列为空或只有一个方案时不切换。" TextWrapping="Wrap" Foreground="#85858B"/>
+              </StackPanel>
+            </Border>
+            <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18,16">
+              <StackPanel Spacing="14">
                 <TextBlock Text="位置" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-
                 <Grid ColumnDefinitions="*,*">
                   <StackPanel Spacing="4" Margin="0,0,6,0">
                     <TextBlock Text="目标显示器" FontSize="11" Foreground="#85858B"/>

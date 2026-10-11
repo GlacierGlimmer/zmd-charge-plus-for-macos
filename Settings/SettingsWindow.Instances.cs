@@ -64,21 +64,30 @@ public partial class SettingsWindow
         };
         remove.Click += (_,_) =>
         {
-            if (string.IsNullOrEmpty(_selectedInstanceId)) return;
+            string id=(_instanceChoice.SelectedItem as InstanceChoice)?.Id ?? "";
+            if (string.IsNullOrEmpty(id)) return;
             _rootSettings=CollectSettingsFromUi();
-            _rootSettings=_rootSettings with { HudInstances=_rootSettings.HudInstances.Where(i => i.Id!=_selectedInstanceId).ToList() };
-            _selectedInstanceId=""; ApplyEditorControls(_rootSettings); RefreshInstanceEditor();
+            _rootSettings=_rootSettings with { HudInstances=_rootSettings.HudInstances.Where(i => i.Id!=id).ToList() };
+            if (_selectedInstanceId==id) { _selectedInstanceId=""; ApplyEditorControls(_rootSettings); }
+            _runtime.EndInstanceEditing(); RefreshInstanceEditor();
         };
         editButton.Click += async (_,_) =>
         {
+            if (!editButton.IsEnabled) return;
+            editButton.IsEnabled=false;
+            try
+            {
             _rootSettings=CollectSettingsFromUi();
             if (_instanceChoice.SelectedItem is not InstanceChoice selected) return;
             _selectedInstanceId=selected.Id;
-            var settings=string.IsNullOrEmpty(selected.Id) ? _rootSettings : _rootSettings.HudInstances.First(i => i.Id==selected.Id).Settings;
+            var settings=string.IsNullOrEmpty(selected.Id) ? _rootSettings : _rootSettings.HudInstances.FirstOrDefault(i => i.Id==selected.Id)?.Settings ?? _rootSettings;
             ApplyEditorControls(settings); RefreshInstanceEditor();
             if (!await _runtime.HighlightInstanceAsync(selected.Id,selected.Name))
             { _editingLabel.Text=LocalizationManager.Text("请先保存并应用以显示新增 HUD，再点击定位。", "Save & Apply to show a new HUD before locating it."); return; }
             if (this.GetLogicalDescendants().OfType<TabControl>().FirstOrDefault() is { } tabs) tabs.SelectedIndex=0;
+            }
+            catch (Exception ex) { _editingLabel.Text=LocalizationManager.Text("无法定位 HUD：","Unable to locate HUD: ")+ex.Message; }
+            finally { editButton.IsEnabled=true; }
         };
         Closed += (_,_) => _runtime.EndInstanceEditing();
         RefreshInstanceEditor();
