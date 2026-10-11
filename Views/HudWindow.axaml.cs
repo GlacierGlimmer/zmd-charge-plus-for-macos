@@ -10,6 +10,7 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.Platform;
+using Avalonia.VisualTree;
 using EndfieldChargePlus.Animations;
 using EndfieldChargePlus.Customization;
 using EndfieldChargePlus.Interop;
@@ -23,7 +24,22 @@ public partial class HudWindow : Window
     private AppSettings _settings = new();
     private AnimationOptions _animOptions = AnimationOptions.Default;
     private bool _persistent;
+    private readonly DispatcherTimer _inputTimer=new() { Interval=TimeSpan.FromMilliseconds(16) };
+    private readonly MacNative.HudClick _nativeClick;
+    private IntPtr _macInputOwner;
+    public event Action? HudClicked;
+    private bool CanCycleOnClick => !_closed && IsVisible && _settings.AlwaysVisible && _settings.ClickToCycle ;
+
     private HudRenderData? _lastRenderData;
+    private bool _closed;
+    private bool _pointerPressedInside;
+    public bool IsClosed => _closed;
+
+    public void CancelPresentation()
+    {
+        _cts?.Cancel();
+        IsHudBusy = false;
+    }
 
     // The progress ring is deliberately animated independently from the existing HUD
     // summon/retract animations. Data updates therefore feel continuous without changing
@@ -36,10 +52,35 @@ public partial class HudWindow : Window
     private bool _progressInitialized;
     private static readonly TimeSpan ProgressTransitionDuration = TimeSpan.FromMilliseconds(320);
 
+    private Border? _editingFrame;
+    private TextBlock? _editingHint;
+    private bool _editingHighlight;
+    public bool IsEditingHighlighted => _editingHighlight;
+    public void SetEditingHighlight(bool enabled, string name)
+    {
+        if (_editingFrame is null)
+        {
+            _editingFrame=new Border { Width=584, Height=84, BorderBrush=Brushes.Orange,
+                BorderThickness=new Thickness(4), CornerRadius=new CornerRadius(38),
+                HorizontalAlignment=Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment=Avalonia.Layout.VerticalAlignment.Center, IsHitTestVisible=false };
+            _editingHint=new TextBlock { Name="EditingHint",FontSize=12,Foreground=Brushes.Orange,
+                HorizontalAlignment=Avalonia.Layout.HorizontalAlignment.Left,VerticalAlignment=Avalonia.Layout.VerticalAlignment.Bottom,
+                Margin=new Thickness(20,0,0,3),IsHitTestVisible=false };
+            _editingFrame.Child=_editingHint;
+            GlobalScale.Children.Add(_editingFrame);
+        }
+        _editingHighlight=enabled;
+        _editingHint!.Text=LocalizationManager.Text("当前正在设置","Currently editing");
+        _editingFrame.IsVisible=enabled;
+        Title=enabled ? $"Endfield Charge Plus · {name}" : "Endfield Charge Plus";
+    }
+
     public bool IsHudBusy { get; private set; }
 
     public HudWindow()
     {
+        _nativeClick=()=> { try { if(CanCycleOnClick) HudClicked?.Invoke(); } catch(Exception ex) { EndfieldChargePlus.Diagnostics.AppLog.Error("HUD native input failed.",ex); } };
         InitializeComponent();
         LocalizationManager.ApplyStaticText(this);
 
@@ -48,14 +89,43 @@ public partial class HudWindow : Window
 
         Closed += (_, _) =>
         {
+            if(_macInputOwner!=IntPtr.Zero) { MacNative.ecp_hud_input_close(_macInputOwner);_macInputOwner=IntPtr.Zero; }
+            _closed=true;
+            CancelPresentation();
             _progressTimer.Stop();
         };
+        PointerPressed += (_,e) =>
+        {
+            if (OperatingSystem.IsWindows()) return; // Native HWND owns Windows clicks.
+            _pointerPressedInside=CanCycleOnClick && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
+                && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)));
+        };
+        PointerReleased += (_,e) =>
+        {
+            if (OperatingSystem.IsWindows()) return;
+            bool clicked=_pointerPressedInside && CanCycleOnClick && e.InitialPressMouseButton==MouseButton.Left
+                && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)));
+            _pointerPressedInside=false;
+            if (clicked) { HudClicked?.Invoke(); e.Handled=true; }
+        };
+        _inputTimer.Tick += (_,_) => RefreshMacInput();
+        Closed += (_,_) => _inputTimer.Stop();
+        Root.IsHitTestVisible=true;
         ResetToInitial();
     }
 
     public void ApplySettings(AppSettings settings)
     {
         _settings = settings;
+        if (_closed) return;
+        // Named controls exist immediately after XAML loads; the visual tree does not.
+        FontFamily numeric=new("avares://Avalonia.Fonts.Inter/Assets#Inter, Microsoft YaHei UI, PingFang SC, sans-serif");
+        FontFamily title=numeric;
+        if (!string.IsNullOrWhiteSpace(settings.HudFontFamily))
+            numeric=title=new FontFamily(settings.HudFontFamily);
+        foreach (var text in new[] { TagLineText, PrimaryText, SecondaryText, RightText, RightSuffixText })
+            text.FontFamily=numeric;
+        TitleText.FontFamily=title;
         _animOptions = AnimationOptions.FromSettings(settings);
         GlobalScale.RenderTransform = new ScaleTransform(settings.GlobalScale, settings.GlobalScale);
         Opacity = Math.Clamp(settings.HudOpacity, 0.0, 1.0);
@@ -83,9 +153,10 @@ public partial class HudWindow : Window
         HudRenderData data,
         Func<CancellationToken, Task<HudRenderData>>? liveRefresh = null)
     {
+        if (_closed) return;
         if (IsVisible)
             await HideAnimatedAsync();
-
+        if (_closed) return;
         _persistent = false;
         ApplyWindowLayer(false);
 
@@ -154,7 +225,7 @@ public partial class HudWindow : Window
             if (ReferenceEquals(_cts, localCts))
             {
                 if (!ct.IsCancellationRequested && IsVisible)
-                    Hide();
+                    if (!_editingHighlight) Hide();
                 IsHudBusy = false;
             }
         }
@@ -199,6 +270,7 @@ public partial class HudWindow : Window
         HudRenderData data,
         Func<CancellationToken, Task<HudRenderData>>? liveRefresh = null)
     {
+        if (_closed) return;
         _persistent = true;
         ApplyWindowLayer(true);
 
@@ -275,7 +347,7 @@ public partial class HudWindow : Window
 
     public void UpdatePersistent(HudRenderData data)
     {
-        if (!_persistent) return;
+        if (_closed || !_persistent) return;
 
         ApplyRenderData(data);
         ApplyWindowLayer(true);
@@ -292,9 +364,11 @@ public partial class HudWindow : Window
     public async Task HideAnimatedAsync()
     {
         _cts?.Cancel();
+        _cts=new CancellationTokenSource();
+        var hideCts=_cts;
         _persistent = false;
 
-        if (!IsVisible)
+        if (_closed || !IsVisible)
         {
             IsHudBusy = false;
             return;
@@ -306,13 +380,16 @@ public partial class HudWindow : Window
             // A settings/profile switch always exits from the final C state, so the transition
             // is deterministic: old HUD retracts completely before the next HUD is shown.
             SetPersistentFinalState();
-            await HudAnimations.CloseFromC().RunAsync(ScaleHost);
+            await HudAnimations.CloseFromC().RunAsync(ScaleHost,hideCts.Token);
         }
         catch { }
         finally
         {
-            if (IsVisible) Hide();
-            IsHudBusy = false;
+            if (ReferenceEquals(_cts,hideCts))
+            {
+                if (!_closed && IsVisible && !_editingHighlight) Hide();
+                IsHudBusy = false;
+            }
         }
     }
 
@@ -569,36 +646,15 @@ public partial class HudWindow : Window
         double hudHeightPx = 60d * _settings.GlobalScale * scaling; // 最终可见胶囊高度
         double paddingX = Math.Max(0d, (windowWidthPx - hudWidthPx) / 2d);
         double paddingY = Math.Max(0d, (windowHeightPx - hudHeightPx) / 2d);
-        const double margin = 0d;
 
-        double hudLeft;
-        double hudTop;
-
-        if (_settings.PositionMode == HudPositionMode.CustomCoordinates)
-        {
-            hudLeft = area.X + _settings.HudCustomX;
-            hudTop = area.Y + _settings.HudCustomY;
+        var origin=HudPlacement.VisibleOrigin(_settings,screen.Bounds,screen.WorkingArea,hudWidthPx,hudHeightPx);
+        double hudLeft=origin.X,hudTop=origin.Y;
+        if(_editingHighlight) {
+            // Keep the outline/caption visible at physical monitor edges; restore the saved position on close.
+            double extra=12*_settings.GlobalScale*scaling;
+            hudLeft=Math.Clamp(hudLeft,screen.Bounds.X+extra,Math.Max(screen.Bounds.X+extra,screen.Bounds.Right-hudWidthPx-extra));
+            hudTop=Math.Clamp(hudTop,screen.Bounds.Y+extra,Math.Max(screen.Bounds.Y+extra,screen.Bounds.Bottom-hudHeightPx-extra));
         }
-        else
-        {
-            hudLeft = _settings.HudPosition switch
-            {
-                HudPosition.TopLeft or HudPosition.CenterLeft or HudPosition.BottomLeft => area.X + margin,
-                HudPosition.TopRight or HudPosition.CenterRight or HudPosition.BottomRight => area.X + area.Width - hudWidthPx - margin,
-                _ => area.X + (area.Width - hudWidthPx) / 2d,
-            };
-
-            hudTop = _settings.HudPosition switch
-            {
-                HudPosition.TopLeft or HudPosition.TopCenter or HudPosition.TopRight => area.Y + margin,
-                HudPosition.BottomLeft or HudPosition.BottomCenter or HudPosition.BottomRight => area.Y + area.Height - hudHeightPx - margin,
-                _ => area.Y + (area.Height - hudHeightPx) / 2d,
-            };
-
-            hudLeft += _settings.HudOffsetX;
-            hudTop += _settings.HudOffsetY;
-        }
-
         int windowX = (int)Math.Round(hudLeft - paddingX);
         int windowY = (int)Math.Round(hudTop - paddingY);
         Position = new PixelPoint(windowX, windowY);
@@ -606,7 +662,7 @@ public partial class HudWindow : Window
         // origin explicitly so window-manager clamping does not add that padding as a gap.
         var handle = this.TryGetPlatformHandle();
         if (OperatingSystem.IsMacOS() && handle?.HandleDescriptor is "NSWindow" or "NSView")
-            MacNative.SetHudVerticalOffset(handle.Handle, (hudTop - area.Y - paddingY) / scaling);
+            MacNative.ecp_hud_origin(handle.Handle,windowX,windowY);
     }
 
     private Avalonia.Platform.Screen? ResolveScreen(int monitorIndex)
@@ -652,30 +708,36 @@ public partial class HudWindow : Window
             && screenPoint.Y <= bounds.Y + hotHeight;
     }
 
+    private void RefreshMacInput()
+    {
+        var native=this.TryGetPlatformHandle();
+        if(native?.HandleDescriptor is not ("NSWindow" or "NSView")) return;
+        _macInputOwner=native.Handle;
+        var a=Pill.PointToScreen(new Point(0,0));var b=Pill.PointToScreen(new Point(Pill.Bounds.Width,Pill.Bounds.Height));
+        MacNative.ecp_hud_input(native.Handle,CanCycleOnClick && _persistent && Pill.Opacity>.02 ? 1 : 0,
+            Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y),Topmost ? 1 : 0,_nativeClick);
+    }
     private void EnsureInputHitTest()
     {
         var handle = this.TryGetPlatformHandle();
-        if (handle?.HandleDescriptor is "NSWindow" or "NSView") MacNative.SetHudWindow(handle.Handle, Topmost);
+        if (handle?.HandleDescriptor is "NSWindow" or "NSView") {
+            MacNative.SetHudWindow(handle.Handle, Topmost);
+            RefreshMacInput();
+            if (_persistent && CanCycleOnClick) _inputTimer.Start(); else _inputTimer.Stop();
+        }
     }
 
     private bool IsPointInsideVisibleHud(PixelPoint screenPoint)
     {
-        var screen = ResolveScreen(_settings.MonitorIndex);
-        if (screen is null) return true;
+        if (_closed || !IsVisible || !Pill.IsVisible) return false;
+        var local=Pill.PointToClient(screenPoint);
+        var bounds=new Rect(Pill.Bounds.Size);
+        if (!bounds.Contains(local)) return false;
+        double radius=Math.Min(bounds.Width,bounds.Height)/2;
+        double centerX=Math.Clamp(local.X,radius,bounds.Width-radius);
+        double centerY=bounds.Height/2;
+        double dx=local.X-centerX,dy=local.Y-centerY;
+        return dx*dx+dy*dy <= radius*radius;
 
-        double scaling = screen.Scaling > 0 ? screen.Scaling : 1d;
-        double windowWidthPx = Width * scaling;
-        double windowHeightPx = Height * scaling;
-        double hudWidthPx = 560d * _settings.GlobalScale * scaling;
-        double currentPillHeight = double.IsNaN(Pill.Height) ? 60d : Math.Max(60d, Pill.Height);
-        double hudHeightPx = currentPillHeight * _settings.GlobalScale * scaling;
-        double left = Position.X + (windowWidthPx - hudWidthPx) / 2d;
-        double top = Position.Y + (windowHeightPx - hudHeightPx) / 2d;
-        const double tolerance = 4d;
-
-        return screenPoint.X >= left - tolerance
-            && screenPoint.X <= left + hudWidthPx + tolerance
-            && screenPoint.Y >= top - tolerance
-            && screenPoint.Y <= top + hudHeightPx + tolerance;
     }
 }

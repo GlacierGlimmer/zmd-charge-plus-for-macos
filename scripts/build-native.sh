@@ -7,6 +7,6 @@ case "${1:-$(uname -m)}" in
   *) echo 'Expected osx-arm64 or osx-x64' >&2; exit 1 ;;
 esac
 xcrun clang -arch "$arch" -mmacosx-version-min=13.0 -O2 -Wall -Wextra -Werror \
-  -Wno-deprecated-declarations -fobjc-arc -fvisibility=hidden -dynamiclib native/ecpmac.m \
-  -framework Foundation -framework AppKit -framework IOKit -framework Metal -framework Security \
+  -Wno-deprecated-declarations -fobjc-arc -fvisibility=hidden -dynamiclib native/ecpmac.m native/ecpframes.m \
+  -framework Foundation -framework AppKit -framework IOKit -framework Metal -framework Security -framework ScreenCaptureKit -framework CoreMedia \
   -install_name @rpath/libecpmac.dylib -o native/libecpmac.dylib

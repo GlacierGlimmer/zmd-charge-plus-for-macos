@@ -229,6 +229,16 @@ API int ecp_hud_window(void *handle, int topmost) {
         return window.ignoresMouseEvents ? 1 : 0;
     }
 }
+API int ecp_hud_interactive(void *handle, int interactive) {
+    @autoreleasepool {
+        if (!NSThread.isMainThread || !handle) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if (!window) return 0;
+        window.ignoresMouseEvents=!interactive;
+        return 1;
+    }
+}
 API int ecp_hud_flags(void *handle) {
     @autoreleasepool {
         if (!NSThread.isMainThread || !handle) return 0;
@@ -310,5 +320,78 @@ API char *ecp_keychain_get(const char *account) {
         NSData *data=CFBridgingRelease(result);
         NSString *secret=[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         return secret ? strdup(secret.UTF8String) : NULL;
+    }
+}
+
+
+// Small owned input surface. The much larger animated host always ignores mouse events.
+typedef void (*ECPHudClick)(void);
+@interface ECPHudInputPanel : NSPanel
+@property(nonatomic,assign) ECPHudClick click;
+@property(nonatomic,assign) BOOL armed;
+@end
+@implementation ECPHudInputPanel
+- (BOOL)canBecomeKeyWindow { return NO; }
+- (BOOL)canBecomeMainWindow { return NO; }
+- (BOOL)inside:(NSEvent *)event {
+    NSPoint p=event.locationInWindow; NSSize size=self.contentView.bounds.size;
+    if(p.x<0 || p.y<0 || p.x>size.width || p.y>size.height) return NO;
+    double radius=MIN(size.width,size.height)/2, cx=MAX(radius,MIN(size.width-radius,p.x));
+    return (p.x-cx)*(p.x-cx)+(p.y-size.height/2)*(p.y-size.height/2)<=radius*radius;
+}
+- (void)sendEvent:(NSEvent *)event {
+    if(event.type==NSEventTypeLeftMouseDown) { self.armed=[self inside:event];return; }
+    if(event.type==NSEventTypeLeftMouseUp) { BOOL clicked=self.armed && [self inside:event];self.armed=NO;if(clicked && self.click) self.click();return; }
+    [super sendEvent:event];
+}
+@end
+static NSMutableDictionary<NSValue *,ECPHudInputPanel *> *ecpHudInputs;
+API int ecp_hud_input(void *handle,int enabled,double x,double y,double width,double height,int topmost,ECPHudClick click) {
+    @autoreleasepool {
+        if(!NSThread.isMainThread || !handle) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *owner=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if(!owner) return 0;
+        owner.ignoresMouseEvents=YES;
+        if(!ecpHudInputs) ecpHudInputs=[NSMutableDictionary new];
+        NSValue *key=[NSValue valueWithPointer:handle];
+        ECPHudInputPanel *panel=ecpHudInputs[key];
+        if(!enabled || width<=1 || height<=1 || !owner.visible) { panel.armed=NO;[panel orderOut:nil];return 1; }
+        if(!panel) {
+            panel=[[ECPHudInputPanel alloc] initWithContentRect:NSMakeRect(0,0,1,1) styleMask:NSWindowStyleMaskBorderless | NSWindowStyleMaskNonactivatingPanel backing:NSBackingStoreBuffered defer:NO];
+            panel.opaque=NO;panel.backgroundColor=[NSColor colorWithWhite:0 alpha:0.004];
+            panel.hasShadow=NO;panel.hidesOnDeactivate=NO;panel.releasedWhenClosed=NO;
+            panel.collectionBehavior=owner.collectionBehavior;
+            [owner addChildWindow:panel ordered:NSWindowBelow];ecpHudInputs[key]=panel;
+        }
+        panel.click=click;NSInteger level=topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;BOOL layerChanged=panel.level!=level;if(layerChanged) panel.level=level;
+        double primaryHeight=NSMaxY(NSScreen.screens.firstObject.frame);
+        NSRect frame=NSMakeRect(x,primaryHeight-y-height,width,height);
+        BOOL moved=!NSEqualRects(panel.frame,frame);if(moved) [panel setFrame:frame display:NO];
+        NSPoint mouse=NSEvent.mouseLocation;CGPoint cursor=CGPointMake(mouse.x,primaryHeight-mouse.y);
+        double radius=MIN(width,height)/2,localX=cursor.x-x,localY=cursor.y-y,cx=MAX(radius,MIN(width-radius,localX));
+        BOOL inside=localX>=0 && localY>=0 && localX<=width && localY<=height &&
+            (localX-cx)*(localX-cx)+(localY-height/2)*(localY-height/2)<=radius*radius;
+        panel.ignoresMouseEvents=!(inside || panel.armed);
+        if(!panel.visible || moved || layerChanged) [panel orderWindow:NSWindowBelow relativeTo:owner.windowNumber];return 1;
+    }
+}
+API void ecp_hud_input_close(void *handle) {
+    @autoreleasepool {
+        if(!NSThread.isMainThread || !handle) return;
+        NSValue *key=[NSValue valueWithPointer:handle];ECPHudInputPanel *panel=ecpHudInputs[key];
+        if(panel) { panel.click=NULL;panel.armed=NO;[panel.parentWindow removeChildWindow:panel];[panel orderOut:nil];[panel close];[ecpHudInputs removeObjectForKey:key]; }
+    }
+}
+
+
+API int ecp_hud_origin(void *handle,double x,double y) {
+    @autoreleasepool {
+        if(!NSThread.isMainThread || !handle || !isfinite(x) || !isfinite(y)) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if(!window) return 0;
+        double top=NSMaxY(NSScreen.screens.firstObject.frame);
+        [window setFrameOrigin:NSMakePoint(x,top-y-window.frame.size.height)];return 1;
     }
 }
