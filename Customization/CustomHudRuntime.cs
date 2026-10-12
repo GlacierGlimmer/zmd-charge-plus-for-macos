@@ -697,7 +697,7 @@ public sealed partial class CustomHudRuntime : IDisposable
 
     private void OnHudClicked()
     {
-        if (_disposed || !_appSettings.AlwaysVisible || !_appSettings.ClickToCycle || _editingPreview) return;
+        if (_disposed || !_appSettings.AlwaysVisible || !_appSettings.ClickToCycle) return;
         var queue=ResolveCycleProfiles();
         if (queue.Count<2) return;
         string current=string.IsNullOrEmpty(_manualProfileId)

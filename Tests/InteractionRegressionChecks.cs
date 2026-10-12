@@ -69,8 +69,17 @@ internal static class InteractionRegressionChecks
         string version=typeof(HudWindow).Assembly.GetName().Version!.ToString(3);
         check(window.Title.Contains("v"+version) && window.Title.EndsWith("（Endministrator Mode）")==ProcessPrivileges.IsElevated,"Settings title reflects effective process privileges in the current locale.");
         check(hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Opening Settings with multiple HUDs highlights the primary automatically.");
+        ClickHud(hud,runtime);
+        await Task.Delay(850);
+        check(hud.FindControl<TextBlock>("PrimaryText")!.Text=="LIVE1" && hud.IsEditingHighlighted,"The selected primary HUD still cycles while Settings keeps its highlight visible.");
         var choice=Field<ComboBox>(window,"_instanceChoice");choice.SelectedIndex=1;await Task.Delay(800);
         check(child.Hud.IsEditingHighlighted && !hud.IsEditingHighlighted,"Selecting an instance moves the persistent highlight without requiring Locate.");
+        ClickHud(child.Hud,child.Runtime);
+        await Task.Delay(850);
+        check(child.Hud.FindControl<TextBlock>("PrimaryText")!.Text==(OperatingSystem.IsWindows()?"LIVE2":"LIVE1") && child.Hud.IsEditingHighlighted,"The selected secondary HUD cycles its own queue while the editor is open.");
+        var revision=Field<CancellationTokenSource>(child.Runtime,"_revision");
+        await runtime.HighlightInstanceAsync("secondary","Secondary");
+        check(ReferenceEquals(revision,Field<CancellationTokenSource>(child.Runtime,"_revision")),"Highlighting the same instance again does not cancel a live transition or sample.");
         var hint=Field<TextBlock>(child.Hud,"_editingHint");
         check(hint.Text==LocalizationManager.Text("当前正在设置","Currently editing"),"The lower-left highlight caption is localized.");
         var sampling=window.FindControl<NumericUpDown>("SamplingIntervalBox")!;check(sampling.IsEnabled,"Sampling stays editable while the secondary HUD is selected.");
@@ -108,6 +117,7 @@ internal static class InteractionRegressionChecks
         runtime.Dispose();hud.Close();await Task.Delay(100);
         Console.WriteLine("PASS: shared multi-HUD interaction, editing lifetime, warning aggregation, privilege title and absolute placement");
     }
+    private static void ClickHud(HudWindow hud,CustomHudRuntime runtime) => typeof(CustomHudRuntime).GetMethod("OnHudClicked",Private)!.Invoke(runtime,null);
     [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr h,out uint pid);
     [DllImport("user32.dll")] private static extern IntPtr WindowFromPoint(PixelPoint point);
     [DllImport("user32.dll")] private static extern bool ScreenToClient(IntPtr h,ref PixelPoint point);

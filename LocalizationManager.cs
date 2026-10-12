@@ -72,6 +72,7 @@ public static class LocalizationManager
         ["波纹强度"] = "Ripple Strength",
         ["波纹幅度"] = "Ripple Spread",
         ["终末地风格状态栏 HUD"] = "Endfield-style Status HUD",
+        ["构建日期  2026.10.12"] = "Build  2026.10.12",
         ["检查更新"] = "Check Updates",
         ["当前版本：v0.1.3"] = "Current: v0.1.3",
         ["最新版本：尚未获取"] = "Latest: not checked",
