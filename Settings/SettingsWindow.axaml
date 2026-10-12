@@ -164,7 +164,7 @@
                         <NumericUpDown x:Name="OffsetYBox" Minimum="-10000" Maximum="10000" Increment="1"/>
                       </StackPanel>
                     </Grid>
-                    <TextBlock Text="X 向右为正，Y 向下为正。" FontSize="11" Foreground="#6F6F74"/>
+                    <TextBlock Text="X 向右为正，Y 向下为正。切换预设位置会将 X/Y 微调归零。" FontSize="11" Foreground="#6F6F74"/>
                   </StackPanel>
                 </Border>
 

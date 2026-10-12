@@ -114,6 +114,8 @@ internal static class InteractionRegressionChecks
         window.Close();await Task.Delay(200);
         check(!hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Closing Settings clears every editing highlight.");
 
+        await PositionRegressionChecks.Run(hud,runtime,check);
+
         var a=new HudProfile { Id="bad-a",Name="Unavailable A",PrimaryTemplate="{unsupported.one}",ProgressVariable="=50" };
         var b=new HudProfile { Id="bad-b",Name="Unavailable B",PrimaryTemplate="{unsupported.two}",ProgressVariable="=50" };
         var empty=new Dictionary<string,object?>();

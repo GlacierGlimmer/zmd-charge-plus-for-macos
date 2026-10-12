@@ -61,7 +61,7 @@ public static class LocalizationManager
         ["预设位置"] = "Preset",
         ["X 微调 / pt"] = "X Offset / pt",
         ["Y 微调 / pt"] = "Y Offset / pt",
-        ["X 向右为正，Y 向下为正。"] = "+X right, +Y down.",
+        ["X 向右为正，Y 向下为正。切换预设位置会将 X/Y 微调归零。"] = "+X right, +Y down. Changing the preset resets both offsets to zero.",
         ["X 坐标 / pt"] = "X / pt",
         ["Y 坐标 / pt"] = "Y / pt",
         ["尺寸与动画"] = "Size & Animation",
