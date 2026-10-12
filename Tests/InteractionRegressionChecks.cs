@@ -15,7 +15,7 @@ internal static class InteractionRegressionChecks
     private static T Field<T>(object o,string name)=>(T)o.GetType().GetField(name,Private)!.GetValue(o)!;
     internal static void Standalone(Action<bool,string> check)
     {
-        using var finish=new CancellationTokenSource(TimeSpan.FromSeconds(35));Exception? failure=null;
+        using var finish=new CancellationTokenSource(TimeSpan.FromSeconds(180));Exception? failure=null;
         Avalonia.Threading.Dispatcher.UIThread.Post(async ()=> { try { await Run(check); } catch(Exception ex) { failure=ex; } finally { finish.Cancel(); } });
         Avalonia.Threading.Dispatcher.UIThread.MainLoop(finish.Token);
         if(failure is not null) throw failure;
@@ -115,6 +115,7 @@ internal static class InteractionRegressionChecks
         check(!hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Closing Settings clears every editing highlight.");
 
         await PositionRegressionChecks.Run(hud,runtime,check);
+        await MultiHudLayerChecks.Run(check);
 
         var a=new HudProfile { Id="bad-a",Name="Unavailable A",PrimaryTemplate="{unsupported.one}",ProgressVariable="=50" };
         var b=new HudProfile { Id="bad-b",Name="Unavailable B",PrimaryTemplate="{unsupported.two}",ProgressVariable="=50" };
