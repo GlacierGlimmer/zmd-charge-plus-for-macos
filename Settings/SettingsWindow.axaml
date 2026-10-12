@@ -251,7 +251,7 @@
                   <TextBlock x:Name="AboutArchitectureText" Text="macOS" FontSize="12" Foreground="#8E8E94" Margin="0,1,0,0"/>
                   <StackPanel Orientation="Horizontal" Spacing="18" Margin="0,7,0,0">
                     <TextBlock x:Name="AboutVersionText" Text="v0.1.3" FontSize="13" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-                    <TextBlock Text="构建日期  2026.10.12" FontSize="13" Foreground="#D2D2D6"/>
+                    <TextBlock x:Name="BuildDateText" Text="构建日期  2026.10.12" FontSize="13" Foreground="#D2D2D6"/>
                   </StackPanel>
                 </StackPanel>
 

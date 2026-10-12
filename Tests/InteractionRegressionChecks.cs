@@ -66,6 +66,7 @@ internal static class InteractionRegressionChecks
             check(child.Hud.FindControl<TextBlock>("PrimaryText")!.Text=="LIVE1" && hud.FindControl<TextBlock>("PrimaryText")!.Text=="LIVE0","Clicking the secondary HUD switches its own queue without switching the primary.");
         }
         var window=new SettingsWindow(settings,hud,runtime);window.Show();await Task.Delay(600);
+        check(window.FindControl<TextBlock>("BuildDateText")!.Text==LocalizationManager.Text("构建日期  2026.10.12","Build  2026.10.12"),"The actual About control displays the current 2026.10.12 build date in the selected language.");
         string version=typeof(HudWindow).Assembly.GetName().Version!.ToString(3);
         check(window.Title.Contains("v"+version) && window.Title.EndsWith("（Endministrator Mode）")==ProcessPrivileges.IsElevated,"Settings title reflects effective process privileges in the current locale.");
         check(hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Opening Settings with multiple HUDs highlights the primary automatically.");
@@ -80,6 +81,17 @@ internal static class InteractionRegressionChecks
         var revision=Field<CancellationTokenSource>(child.Runtime,"_revision");
         await runtime.HighlightInstanceAsync("secondary","Secondary");
         check(ReferenceEquals(revision,Field<CancellationTokenSource>(child.Runtime,"_revision")),"Highlighting the same instance again does not cancel a live transition or sample.");
+        // Queue callbacks can arrive while a close animation is still running,
+        // including a complete wrap back to the last displayed profile.
+        string beforeRapid=child.Hud.FindControl<TextBlock>("PrimaryText")!.Text!;
+        typeof(CustomHudRuntime).GetMethod("OnHudClicked",Private)!.Invoke(child.Runtime,null);
+        await Task.Delay(60);
+        typeof(CustomHudRuntime).GetMethod("OnHudClicked",Private)!.Invoke(child.Runtime,null);
+        typeof(CustomHudRuntime).GetMethod("OnHudClicked",Private)!.Invoke(child.Runtime,null);
+        await Task.Delay(1000);
+        var scale=child.Hud.FindControl<Grid>("ScaleHost")!.RenderTransform!.Value;
+        check(child.Hud.FindControl<TextBlock>("PrimaryText")!.Text==beforeRapid && child.Hud.IsVisible && Math.Abs(scale.M11-1)<.001 && child.Hud.FindControl<Border>("Pill")!.Opacity>.99,
+            "Rapid clicks during an editing transition recover a fully visible capsule even when the queue wraps to the old profile.");
         var hint=Field<TextBlock>(child.Hud,"_editingHint");
         check(hint.Text==LocalizationManager.Text("当前正在设置","Currently editing"),"The lower-left highlight caption is localized.");
         var sampling=window.FindControl<NumericUpDown>("SamplingIntervalBox")!;check(sampling.IsEnabled,"Sampling stays editable while the secondary HUD is selected.");

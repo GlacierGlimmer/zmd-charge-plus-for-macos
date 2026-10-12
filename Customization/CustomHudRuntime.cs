@@ -27,6 +27,9 @@ public sealed partial class CustomHudRuntime : IDisposable
     {
         var previous=_revision;
         _revision=new CancellationTokenSource();
+        // An interrupted close/summon no longer represents a completed
+        // persistent presentation, even when its old profile ID is unchanged.
+        if (_hud.IsHudBusy) _persistentShown=false;
         previous.Cancel(); previous.Dispose();
         _hud.CancelPresentation();
     }
