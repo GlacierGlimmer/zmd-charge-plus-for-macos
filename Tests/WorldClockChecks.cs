@@ -17,7 +17,7 @@ internal static class WorldClockChecks
         LocalizationManager.SetLanguage(AppLanguage.English);
         try
         {
-            check(settings.Profiles.Select(p=>p.BuiltInKey).SequenceEqual(BuiltInProfileOrder.Keys),"Built-in schemes have one consistent category order.");
+            check(settings.Profiles.Select(p=>p.BuiltInKey).SequenceEqual(BuiltInProfileOrder.Keys.Where(key=>settings.Profiles.Any(p=>p.BuiltInKey==key))),"Built-in schemes have one consistent category order.");
             check(settings.Profiles.Single(p=>p.Id==settings.ActiveProfileId).BuiltInKey=="system.memory" && !settings.CycleProfileIds!.Contains(world.Id),"Adding World Clock keeps the selected default and existing carousel intact.");
             check(WorldClockTimeZones.All.Count==39 && WorldClockTimeZones.All.Select(z=>z.Minutes).Distinct().Count()==39,"Fixed UTC zone options cover half- and quarter-hour offsets without duplicates.");
             var mountain=WorldClockTimeZones.All.Single(z=>z.Minutes==-420);

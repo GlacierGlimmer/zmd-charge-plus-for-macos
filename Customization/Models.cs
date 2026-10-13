@@ -126,7 +126,7 @@ public sealed record CustomHudSettings
     public static List<HudProfile> CreateDefaultProfiles() => OperatingSystem.IsMacOS()
         ? MacVariableCatalog.AdaptProfiles(CreatePlatformProfiles()) : CreatePlatformProfiles();
 
-    internal static List<HudProfile> CreatePlatformProfiles() => new()
+    internal static List<HudProfile> CreatePlatformProfiles() => new List<HudProfile>()
     {
         new()
         {
