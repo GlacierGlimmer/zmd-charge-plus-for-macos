@@ -55,7 +55,7 @@ public static class VariableLocalization
         if (!LocalizationManager.IsEnglish)
             return item;
 
-        string name = HumanizeKey(item.Key);
+        string name = item.Key=="time.utc_offset" ? "UTC Offset" : HumanizeKey(item.Key);
         string category = CategoryMap.TryGetValue(item.Category, out var mappedCategory) ? mappedCategory : HumanizeWords(item.Category);
         string type = item.ValueType switch
         {
@@ -74,7 +74,9 @@ public static class VariableLocalization
                                      .Replace(" 或 ", " or ", StringComparison.Ordinal)
                                      .Replace(" 等", " etc.", StringComparison.Ordinal);
 
-        string description = BuildDescription(item.Key, name, type, unit);
+        string description = item.Key=="time.utc_offset"
+            ? "Current local UTC offset; World Clock uses the selected fixed UTC offset."
+            : BuildDescription(item.Key, name, type, unit);
         if (item.Key == "gpu.recommended_working_set_bytes")
             description = "Metal's recommended maximum working-set budget. This is neither VRAM capacity nor current GPU memory usage.";
         if (item.Key is "memory.used_bytes" or "memory.available_bytes" or "memory.usage")

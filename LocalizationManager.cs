@@ -103,6 +103,8 @@ public static class LocalizationManager
         ["此方案需要先在“数据源 → DeepSeek API”中配置 DeepSeek API Key；峰谷时段也可在该数据源中设置。未配置 API Key 时，余额相关数据无法获取。"] = "Configure the DeepSeek API key under Data Sources → DeepSeek API first. Peak/off-peak windows are set there too. Balance data is unavailable without a key.",
         ["目标时间模式"] = "Target-time Mode",
         ["关闭时显示当天已过进度；开启后显示距离下一个每日目标时间的剩余比例。"] = "Off: show today's elapsed progress. On: show the remaining share until the next daily target time.",
+        ["UTC 时区"] = "UTC time zone",
+       ["使用固定 UTC 偏移，不自动跟随夏令时。目标时间也按所选时区计算。"] = "Uses a fixed UTC offset without daylight-saving changes. The daily target uses this zone too.",
         ["每日目标时间"] = "Daily Target",
         ["GPU 设备"] = "GPU Device",
         ["检测到多个 GPU 时，选择此方案要显示的图形处理器。"] = "Choose the GPU used by this profile when multiple adapters are detected.",

@@ -114,6 +114,7 @@ internal static class InteractionRegressionChecks
         window.Close();await Task.Delay(200);
         check(!hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Closing Settings clears every editing highlight.");
 
+        WorldClockChecks.Editor(check);
         await PositionRegressionChecks.Run(hud,runtime,check);
         await MultiHudLayerChecks.Run(check);
 
