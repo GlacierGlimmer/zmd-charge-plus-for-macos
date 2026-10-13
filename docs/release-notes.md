@@ -1,21 +1,42 @@
-Endfield Charge Plus For MacOS v0.1.3（源码待发布）。
+# ECP For MacOS v0.1.3
 
-新增：同步 HTTP／JSON、轮播、颜色规则、热区与 2030 年 DeepSeek 日历修复；版本仅由用户要求调整。
+正式版 · v0.1.2 → v0.1.3 · 2026-10-13
 
+## 简体中文：本次变化
 
-修复首次使用时“保存并应用”失败：当登录启动关闭且 `~/Library/LaunchAgents` 尚不存在时，按未注册登录启动处理，不再因删除不存在的 plist 而中断保存。无需手动创建目录。已存在的 ECP 启动项仍可正常移除；权限错误等真实异常仍会提示。
+- 新增可自定义数据采样间隔，多个 HUD 共用采样服务，避免重复采集；调整设置时保留各实例自己的配置。
+- 新增「实验性功能 → 多实例 HUD」：每个 HUD 可独立选择显示器、方案、位置、字体、缩放与显示层。设置窗口存在且有多个 HUD 时，正在编辑的实例持续显示边框和「当前正在设置」提示。
+- 修复多实例切换、关闭设置、删除实例时的状态与生命周期；各实例的常驻置顶／桌面层独立恢复。修复点击遮罩干扰、刷新闪烁及透明背景变黑。
+- 新增并修正常驻点击 HUD 切换方案：只响应 HUD 本体点击，对所有实例有效；按被点击实例的轮播队列及动画切换，点击后重新计时。无需开启自动轮播。
+- 修复字体选择不生效；增加工作区与屏幕绝对位置预设，切换锚点清除残留微调，避免 Y 意外保留 80。
+- 新增实际显示器／窗口 FPS 变量与方案、有效目标选择及满量程 FPS 设置；清除已失效的目标。无法获取的数据汇总到一个提示框，不以刷新率或虚假零值代替。
+- 设置窗口标题显示当前版本；实际提升权限后追加「（Endministrator Mode）」；中英文界面保持一致。
+- 新增「时间 - 世界时钟」，39 个中英文固定 UTC 偏移选项，保留原有目标时间模式；内置方案按系统、时间、探测、DeepSeek 等类别排序，保留用户轮播顺序。
+- DeepSeek 时段按官方通知与北京时间判断，周末和中国法定节假日为低谷；内置日历至 2030 年并支持后台更新。未公布年份只使用已确定的法定日期，不假定调休安排。
+- 修复托盘／菜单栏入口、配置目录与启动项处理，并按本平台实际能力筛选变量；不保留无真实读取实现的占位值。
 
-新增隔离用户目录下实际点击“保存并应用”、配置落盘、HUD 应用、重复保存和备份的回归检查，ARM64 与 Intel x64 均执行。
+## English: changes since v0.1.2
 
-- **主版本：osx-arm64.dmg**，适用于 M1 / M2 / M3 / M4 / M5 等 Apple Silicon Mac。
-- **Intel 版本：osx-x64.dmg**。两种安装包均自包含 .NET，无需另装运行时。
-- macOS 13+；打开 DMG 后把应用拖入 Applications，再启动。
-- 菜单栏驻留、点击穿透 HUD、中英双语、方案管理、时间、网络探测、HTTP/JSON、DeepSeek。
-- 原生 Mach / sysctl / IOPowerSources / APFS / Metal 数据。变量按实际检测能力筛选。
-- 移除 Windows 专属变量及无法可靠采集的 GPU 使用率、温度、风扇、实时 CPU 频率等项目。
-- API Key 存入 macOS 登录钥匙串；配置目录为 `~/Library/Application Support/EndfieldChargePlusForMacOS`。
-- 更新检查只使用本仓库中与当前架构匹配的正式 DMG。
+- Add configurable sampling intervals shared by all HUDs, with independent instance settings.
+- Add Experimental features / Multiple HUDs with per-instance monitor, profile, position, font, scale and layer. The selected HUD stays outlined and labelled while Settings is open.
+- Fix instance lifecycle, layer restoration, click masks, refresh flicker and black transparency backgrounds.
+- Enable persistent-HUD click cycling for every instance. Only the visible capsule accepts clicks; each instance uses its own rotation order and transition, and resets its timer after a click. Automatic rotation can remain off.
+- Fix font application and stale position offsets; add work-area and absolute-screen anchors.
+- Add real display/window FPS profiles, current target lists and configurable full-scale FPS. Aggregate unavailable variables into one dialog; never substitute refresh rate or fabricated zeroes.
+- Show the version in Settings titles and append “（Endministrator Mode）” only for elevated sessions in both languages.
+- Add World clock with 39 bilingual fixed UTC offsets and the existing target-time modes. Group built-ins by category without rewriting saved rotation queues.
+- Use DeepSeek’s official Beijing-time schedule, excluding weekends and Chinese statutory holidays. Include calendars through 2030 plus validated background updates; unannounced years do not invent compensating-workday arrangements.
 
-默认包为 **ad-hoc 签名，未经过 Apple Developer ID 签名及公证**。首次启动可能需要在“系统设置 → 隐私与安全性”中为此应用选择“仍要打开”。请核对同名 `.sha256` 文件；无需关闭 Gatekeeper 或 SIP。
+## 运行与兼容性 / Requirements and compatibility
 
-CI 会在 Apple Silicon 和 Intel macOS 运行环境分别执行原生采集、逐变量读取、方案渲染、界面、DMG 挂载、启动和单实例检查。CI 覆盖范围不代表每一代 Mac 或每个 macOS 版本都经过实机测试。
+macOS 13+，Apple Silicon 与 Intel；实际 FPS 使用 ScreenCaptureKit，需要屏幕录制权限。DMG 使用 ad-hoc 签名，尚未经 Apple Developer ID 签名／公证。固定 UTC 偏移不自动切换夏令时。
+
+macOS 13+, Apple Silicon and Intel. ScreenCaptureKit FPS needs Screen Recording permission. DMGs are ad-hoc signed, without Apple Developer ID signing or notarization. UTC offsets do not switch daylight-saving time automatically.
+
+## 验证 / Validation
+
+两种架构均已在原生 macOS CI 完成采集、方案、GUI、首次启动、DMG 挂载与运行验证；DeepSeek 日历 201 项检查通过。具体机型、刘海屏、多显示器和权限组合仍受设备影响。
+
+每个平台单独提供 SHA-256 校验文件。Use the platform-specific SHA256SUMS file to verify downloaded assets.
+
+[完整源码变化 / Source comparison](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/compare/v0.1.2...v0.1.3)

@@ -1,6 +1,8 @@
 # Endfield Charge Plus For MacOS
 
-Current source version: **v0.1.3** (not published in Releases). Version changes require an explicit user request; see [version policy](docs/VERSIONING.md).
+See this repository’s [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases) for current downloads and per-version changes. This README covers installation and general usage.
+
+Multiple HUDs, custom fonts and sampling intervals, persistent-click profile cycling, real FPS, World clock and grouped built-ins; see Settings and the [change log](docs/release-notes.md).
 
 [简体中文](README.md) · **English** | macOS 13+ | Apple Silicon / Intel
 

@@ -31,6 +31,7 @@ internal static class MacSharedKeys
         "system.uptime_text",
         "system.user_name",
         "system.utc_offset_hours",
+        "time.utc_offset",
         "time.current",
         "time.current_12h",
         "time.date",

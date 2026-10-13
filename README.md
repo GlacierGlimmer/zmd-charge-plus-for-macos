@@ -1,6 +1,8 @@
 # Endfield Charge Plus For MacOS
 
-当前源码版本：**v0.1.3**（尚未发布 Releases）。版本只在用户明确要求时修改，见[版本约定](docs/VERSIONING.md)。
+下载与每版更新说明请查看本仓库 [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases)。README 保留通用安装和使用说明。
+
+多实例 HUD、自定义字体与采样间隔、常驻点击轮播、实际 FPS、世界时钟及按类别排列的内置方案；详见软件设置与 [更新说明](docs/release-notes.md)。
 
 **简体中文** · [English](README.en.md) | macOS 13+ | Apple Silicon / Intel
 
@@ -22,14 +24,11 @@ Android 仓库已建立；可下载版本以其 Releases 页面为准。
 
 从[本仓库 Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases)下载：
 
-| 安装包 | 适用设备 |
-| --- | --- |
-| **EndfieldChargePlusForMacOS-osx-arm64.dmg（以 Releases 实际文件名为准）** | **主版本**：M1 / M2 / M3 / M4 / M5 等 Apple Silicon |
-| EndfieldChargePlusForMacOS-osx-x64.dmg（以 Releases 实际文件名为准） | Intel Mac |
+请按设备选择 Apple Silicon 或 Intel；资源名称、校验文件与逐版更新说明以 Releases 为准。
 
 打开 DMG，把 **Endfield Charge Plus For MacOS.app** 拖到 **Applications** 后启动。包内自带 .NET 运行时。应用在菜单栏驻留，关闭设置窗口后继续运行，通过菜单栏退出。
 
-默认发布使用 ad-hoc 签名，**未经 Apple Developer ID 签名和公证**。核实官方下载来源及 SHA-256 后，如系统阻止打开，在“系统设置 → 隐私与安全性”中为此应用选择“仍要打开”。无需关闭 Gatekeeper / SIP。校验命令：`shasum -a 256 -c <安装包文件名>.sha256`。
+默认发布使用 ad-hoc 签名，**未经 Apple Developer ID 签名和公证**。核实官方下载来源及 SHA-256 后，如系统阻止打开，在“系统设置 → 隐私与安全性”中为此应用选择“仍要打开”。无需关闭 Gatekeeper / SIP。校验命令：`shasum -a 256 -c SHA256SUMS-MacOS.txt`。
 
 ## macOS 适配
 
