@@ -16,6 +16,11 @@ dotnet publish EndfieldChargePlus.csproj -c Release -r "$rid" --self-contained t
   -p:Version="$version" -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=false \
   -p:DebugType=none -p:DebugSymbols=false -p:PublishTrimmed=false -o "$app/Contents/MacOS"
 cp native/libecpmac.dylib "$app/Contents/MacOS/"
+# Text resources belong outside the executable tree before strict bundle signing.
+if [[ -d "$app/Contents/MacOS/licenses" ]]; then
+  mv "$app/Contents/MacOS/licenses" "$app/Contents/Resources/licenses"
+fi
+test -s "$app/Contents/Resources/licenses/NotoSerifTibetan-OFL.txt"
 chmod 755 "$app/Contents/MacOS/EndfieldChargePlus"
 python3 - "$app" "$version" "$arch" <<'PY'
 import sys,plistlib,pathlib

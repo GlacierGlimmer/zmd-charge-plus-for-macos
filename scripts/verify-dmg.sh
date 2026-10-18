@@ -11,6 +11,7 @@ trap 'hdiutil detach "$mount" >/dev/null || true' EXIT
 app="$mount/Endfield Charge Plus For MacOS.app"
 test -L "$mount/Applications"
 codesign --verify --deep --strict "$app"
+test -s "$app/Contents/Resources/licenses/NotoSerifTibetan-OFL.txt"
 file "$app/Contents/MacOS/EndfieldChargePlus"
 "$app/Contents/MacOS/EndfieldChargePlus" --autostart >"artifacts/audit/bundle-launch.log" 2>&1 &
 pid=$!
