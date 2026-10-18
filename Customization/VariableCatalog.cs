@@ -539,10 +539,12 @@ public static class VariableCatalog
         return int.MaxValue;
     }
 
-    public static IReadOnlyList<VariableDefinition> AllBuiltIns => MacVariableCatalog.Build(StaticBuiltIns.Concat(AdvancedBuiltIns));
+    private static IReadOnlyList<VariableDefinition> PlatformBuiltIns => MacVariableCatalog.Build(StaticBuiltIns.Concat(AdvancedBuiltIns));
 
     internal static IEnumerable<VariableDefinition> PlatformIndependentDefinitions => StaticBuiltIns.Concat(AdvancedBuiltIns);
 
+    public static IReadOnlyList<VariableDefinition> AllBuiltIns=>PlatformBuiltIns.Concat(HardwareTelemetryCatalog.Definitions).Concat(HardwareStatusVariables.All).GroupBy(d=>d.Key,StringComparer.OrdinalIgnoreCase).Select(g=>g.First()).ToArray();
+    internal static IReadOnlyList<VariableDefinition> VisibleBuiltIns=>AllBuiltIns.Where(d=>!HardwareVariableCompatibility.IsDuplicate(d.Key)).ToArray();
     public static VariableDefinition? Find(string key) =>
         AllBuiltIns.FirstOrDefault(x => string.Equals(x.Key, key, StringComparison.OrdinalIgnoreCase));
 

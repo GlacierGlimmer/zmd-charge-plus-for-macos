@@ -42,5 +42,5 @@ internal static class Program
     }
     public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().UsePlatformDetect()
         .With(new MacOSPlatformOptions { ShowInDock=false, DisableDefaultApplicationMenuItems=true })
-        .WithInterFont().LogToTrace();
+        .With(LocalizationManager.FontOptions).WithInterFont().LogToTrace();
 }

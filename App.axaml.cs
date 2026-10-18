@@ -1,4 +1,5 @@
 using System.IO.Pipes;
+using EndfieldChargePlus.Interop;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -14,6 +15,7 @@ namespace EndfieldChargePlus;
 public partial class App : Application
 {
     private HudWindow? _hud;
+    private DesktopGlobalHotkey? _hudHotkey;
     private CustomHudRuntime? _runtime;
     private TrayIcon? _tray;
     private SettingsWindow? _settingsWindow;
@@ -28,6 +30,7 @@ public partial class App : Application
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var settings = SettingsManager.Load();
             LocalizationManager.Initialize(settings.UiLanguage);
+            GlobalAppearance.SetPreferences(settings.GlobalFontScale,settings.GlobalUiScale);
             try { StartupManager.Apply(settings.StartWithWindows); }
             catch (Exception ex) { AppLog.Error("Could not refresh launch at login.", ex); }
             _hud = new HudWindow();
@@ -35,6 +38,13 @@ public partial class App : Application
             _runtime = new CustomHudRuntime(_hud);
             _runtime.ApplySettings(settings);
             _runtime.Start();
+            try {
+                _hudHotkey=new DesktopGlobalHotkey(()=> {
+                    if(_settingsWindow?.IsRecordingHudHotkey!=true && _runtime is not null)_=_runtime.ToggleUserVisibilityAsync();
+                });
+                if(!_hudHotkey.TryUpdate(settings.HudToggleHotkey))AppLog.Warn("The HUD shortcut could not be registered on this desktop session.");
+            } catch(Exception ex) {AppLog.Error("Unable to initialize the HUD shortcut.",ex);}
+
             if (!Program.IsAutoStart) desktop.MainWindow = CreateSettings(settings);
             SetupMenu();
             LocalizationManager.LanguageChanged += SetupMenu;
@@ -49,7 +59,7 @@ public partial class App : Application
             {
                 LocalizationManager.LanguageChanged -= SetupMenu;
                 _activation.Cancel();
-                _tray?.Dispose(); _runtime?.Dispose(); _hud?.Close();
+                _hudHotkey?.Dispose();_tray?.Dispose(); _runtime?.Dispose(); _hud?.Close();
             };
         }
         base.OnFrameworkInitializationCompleted();
@@ -57,6 +67,7 @@ public partial class App : Application
     private SettingsWindow CreateSettings(AppSettings settings)
     {
         var window = new SettingsWindow(settings, _hud!, _runtime!);
+        window.AttachHudHotkey(_hudHotkey);
         _settingsWindow = window;
         window.Closed += (_, _) => { if (ReferenceEquals(_settingsWindow, window)) _settingsWindow = null; };
         return window;
