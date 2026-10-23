@@ -38,8 +38,8 @@
         </Button>
 
         <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" Margin="10,0,0,0">
-          <Button x:Name="OpenSettingsFolderBtn" Content="配置文件夹" Height="38" MinWidth="100" Padding="14,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-          <Button x:Name="SaveBtn" Content="保存并应用" Height="38" MinWidth="108" Padding="16,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#C6CA4C" Foreground="#171719" FontWeight="SemiBold"/>
+          <Button x:Name="OpenSettingsFolderBtn" Content="配置文件夹" MinHeight="38" MinWidth="100" Padding="14,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+          <Button x:Name="SaveBtn" Content="保存并应用" MinHeight="38" MinWidth="108" Padding="16,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#C6CA4C" Foreground="#171719" FontWeight="SemiBold"/>
         </StackPanel>
       </Grid>
     </Border>
@@ -97,7 +97,7 @@
                   <TextBlock Grid.Column="1" Text="常驻状态" FontSize="11" Foreground="#85858B" Margin="0,0,18,4" TextWrapping="Wrap"/>
                   <TextBlock Grid.Column="2" Text="显示层级" FontSize="11" Foreground="#85858B" Margin="0,0,0,4" TextWrapping="Wrap"/>
                   <ToggleSwitch x:Name="AlwaysVisibleSwitch" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,18,0"/>
-                  <ComboBox x:Name="PersistentLayerCombo" Grid.Row="1" Grid.Column="2" Height="34"/>
+                  <ComboBox x:Name="PersistentLayerCombo" Grid.Row="1" Grid.Column="2" MinHeight="34"/>
                 </Grid>
               </StackPanel>
             </Border>
@@ -146,11 +146,11 @@
                 <Grid ColumnDefinitions="*,*">
                   <StackPanel Spacing="4" Margin="0,0,6,0">
                     <TextBlock Text="目标显示器" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                    <ComboBox x:Name="MonitorCombo" Height="34"/>
+                    <ComboBox x:Name="MonitorCombo" MinHeight="34"/>
                   </StackPanel>
                   <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
                     <TextBlock Text="定位方式" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                    <ComboBox x:Name="PositionModeCombo" Height="34"/>
+                    <ComboBox x:Name="PositionModeCombo" MinHeight="34"/>
                   </StackPanel>
                 </Grid>
 
@@ -159,7 +159,7 @@
                     <Grid ColumnDefinitions="*,150,150">
                       <StackPanel Spacing="4" Margin="0,0,8,0">
                         <TextBlock Text="预设位置" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                        <ComboBox x:Name="PositionCombo" Height="34"/>
+                        <ComboBox x:Name="PositionCombo" MinHeight="34"/>
                       </StackPanel>
                       <StackPanel Grid.Column="1" Spacing="4" Margin="8,0">
                         <TextBlock Text="X 微调 / px" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
@@ -193,7 +193,7 @@
               <StackPanel Spacing="14">
                 <Grid ColumnDefinitions="*,Auto">
                   <TextBlock Text="尺寸与动画" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                  <Button x:Name="ResetSizeAnimationBtn" Grid.Column="1" Content="恢复默认" Height="32" MinWidth="86" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="ResetSizeAnimationBtn" Grid.Column="1" Content="恢复默认" MinHeight="32" MinWidth="86" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </Grid>
                 <Grid ColumnDefinitions="*,*,*,*,*">
                   <StackPanel Spacing="4" Margin="0,0,5,0">
@@ -303,15 +303,15 @@
 
                   <TextBlock Grid.Row="1" Text="本项目 GitHub" FontSize="12" Foreground="#8E8E94" VerticalAlignment="Center" Margin="0,0,16,10" TextWrapping="Wrap"/>
                   <TextBlock Grid.Row="1" Grid.Column="1" Text="github.com/GlacierGlimmer/zmd-charge-plus-for-macos" FontSize="13" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,10" TextWrapping="Wrap"/>
-                  <Button x:Name="OpenProjectGithubBtn" Grid.Row="1" Grid.Column="2" Content="打开" Height="30" MinWidth="66" Padding="10,4" Margin="8,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="OpenProjectGithubBtn" Grid.Row="1" Grid.Column="2" Content="打开" MinHeight="30" MinWidth="66" Padding="10,4" Margin="8,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
                   <TextBlock Grid.Row="2" Text="原项目 GitHub" FontSize="12" Foreground="#8E8E94" VerticalAlignment="Center" Margin="0,0,16,10" TextWrapping="Wrap"/>
                   <TextBlock Grid.Row="2" Grid.Column="1" Text="github.com/QinAnze/zmd-charge" FontSize="13" Foreground="White" VerticalAlignment="Center" Margin="0,0,0,10" TextWrapping="Wrap"/>
-                  <Button x:Name="OpenUpstreamBtn" Grid.Row="2" Grid.Column="2" Content="打开" Height="30" MinWidth="66" Padding="10,4" Margin="8,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="OpenUpstreamBtn" Grid.Row="2" Grid.Column="2" Content="打开" MinHeight="30" MinWidth="66" Padding="10,4" Margin="8,0,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
                   <TextBlock Grid.Row="3" Text="项目网站" FontSize="12" Foreground="#8E8E94" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,16,0"/>
                   <TextBlock Grid.Row="3" Grid.Column="1" Text="zmd-bar.x-neko.com" FontSize="13" Foreground="White" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                  <Button x:Name="OpenWebsiteBtn" Grid.Row="3" Grid.Column="2" Content="打开" Height="30" MinWidth="66" Padding="10,4" Margin="8,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="OpenWebsiteBtn" Grid.Row="3" Grid.Column="2" Content="打开" MinHeight="30" MinWidth="66" Padding="10,4" Margin="8,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </Grid>
               </StackPanel>
             </Border>
@@ -320,11 +320,11 @@
               <StackPanel Spacing="12">
                 <TextBlock Text="配置与维护" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                 <WrapPanel Orientation="Horizontal">
-                  <Button x:Name="ExportSettingsBtn" Content="导出配置" Height="34" MinWidth="92" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="ImportSettingsBtn" Content="导入配置" Height="34" MinWidth="92" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="BackupSettingsBtn" Content="备份当前配置" Height="34" MinWidth="112" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="OpenLogsFolderBtn" Content="日志文件夹" Height="34" MinWidth="98" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="ResetAllSettingsBtn" Content="恢复全部默认" Height="34" MinWidth="112" Padding="14,5" Margin="0,0,0,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="ExportSettingsBtn" Content="导出配置" MinHeight="34" MinWidth="92" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="ImportSettingsBtn" Content="导入配置" MinHeight="34" MinWidth="92" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="BackupSettingsBtn" Content="备份当前配置" MinHeight="34" MinWidth="112" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="OpenLogsFolderBtn" Content="日志文件夹" MinHeight="34" MinWidth="98" Padding="14,5" Margin="0,0,8,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="ResetAllSettingsBtn" Content="恢复全部默认" MinHeight="34" MinWidth="112" Padding="14,5" Margin="0,0,0,8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </WrapPanel>
                 <TextBlock x:Name="MaintenanceStatusText" Text="" FontSize="12" Foreground="#C6CA4C" TextWrapping="Wrap"/>
               </StackPanel>

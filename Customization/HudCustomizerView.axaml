@@ -14,18 +14,18 @@
                   <TextBlock Text="方案管理" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                   <TextBlock Text="选择当前显示方案。内置方案修改后会另存为新方案，原预设保持不变。" FontSize="12" Foreground="#85858B" TextWrapping="Wrap"/>
                 </StackPanel>
-                <Button x:Name="PreviewBtn" Grid.Column="1" Content="预览当前方案" Height="38" MinWidth="124" Padding="16,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#C6CA4C" Foreground="#171719" FontWeight="SemiBold" CornerRadius="7"/>
+                <Button x:Name="PreviewBtn" Grid.Column="1" Content="预览当前方案" MinHeight="38" MinWidth="124" Padding="16,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#C6CA4C" Foreground="#171719" FontWeight="SemiBold" CornerRadius="7"/>
               </Grid>
 
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Spacing="4" Margin="0,0,14,0">
                   <TextBlock Text="当前方案" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                  <ComboBox x:Name="ProfileCombo" Height="36" MinWidth="520" HorizontalAlignment="Stretch"/>
+                  <ComboBox x:Name="ProfileCombo" MinHeight="36" MinWidth="520" HorizontalAlignment="Stretch"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
-                  <Button x:Name="AddProfileBtn" Content="新建" Height="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="SaveProfileBtn" Content="保存" Height="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                  <Button x:Name="DeleteProfileBtn" Content="删除" Height="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="AddProfileBtn" Content="新建" MinHeight="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="SaveProfileBtn" Content="保存" MinHeight="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                  <Button x:Name="DeleteProfileBtn" Content="删除" MinHeight="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                 </StackPanel>
               </Grid>
 
@@ -41,7 +41,7 @@
                 <StackPanel Spacing="12">
                   <StackPanel x:Name="WorldClockOptions" Spacing="4" IsVisible="False">
                     <TextBlock Text="UTC 时区" Foreground="#C6CA4C" TextWrapping="Wrap"/>
-                    <ComboBox x:Name="WorldClockZoneCombo" Height="36"/>
+                    <ComboBox x:Name="WorldClockZoneCombo" MinHeight="36"/>
                     <TextBlock Text="使用固定 UTC 偏移，不自动跟随夏令时。目标时间也按所选时区计算。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   </StackPanel>
                 <Grid ColumnDefinitions="*,Auto,240">
@@ -82,7 +82,7 @@
                     <TextBlock Text="检测到多个 GPU 时，选择此方案要显示的图形处理器。" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                     <TextBlock x:Name="GpuAdapterStatusText" FontSize="11" Foreground="#6F6F74" Margin="0,3,0,0" TextWrapping="Wrap"/>
                   </StackPanel>
-                  <ComboBox x:Name="GpuAdapterCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
+                  <ComboBox x:Name="GpuAdapterCombo" Grid.Column="1" MinHeight="36" VerticalAlignment="Center"/>
                 </Grid>
               </Border>
 
@@ -93,7 +93,7 @@
                       <TextBlock Text="网络显示单位" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="Mbps：按兆比特每秒显示；KB/s / MB/s：根据速度大小自动切换。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <ComboBox x:Name="NetworkDisplayUnitCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="NetworkDisplayUnitCombo" Grid.Column="1" MinHeight="36" VerticalAlignment="Center"/>
                   </Grid>
 
                   <Border Height="1" Background="#303034"/>
@@ -103,7 +103,7 @@
                       <TextBlock Text="百分比计算方式" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="使用系统全部有效网络接口的流量。可按总吞吐量、仅下载、仅上传或上下行较大值计算右侧百分比。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <ComboBox x:Name="NetworkPercentModeCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="NetworkPercentModeCombo" Grid.Column="1" MinHeight="36" VerticalAlignment="Center"/>
                   </Grid>
 
                   <Border Height="1" Background="#303034"/>
@@ -119,7 +119,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2" Spacing="4" Margin="8,0,0,0">
                       <TextBlock Text="单位" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                      <ComboBox x:Name="NetworkReferenceUnitCombo" Height="36"/>
+                      <ComboBox x:Name="NetworkReferenceUnitCombo" MinHeight="36"/>
                     </StackPanel>
                   </Grid>
                 </StackPanel>
@@ -142,7 +142,7 @@
                       <TextBlock Text="检测协议" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="ICMP 使用标准 Ping；TCP 测量端口连接延迟；UDP 会发送探测数据并等待目标服务响应。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <ComboBox x:Name="ProbeProtocolCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
+                    <ComboBox x:Name="ProbeProtocolCombo" Grid.Column="1" MinHeight="36" VerticalAlignment="Center"/>
                   </Grid>
 
                   <Border Height="1" Background="#303034"/>
@@ -166,7 +166,7 @@
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="8,0,0,0">
                       <TextBlock Text="动画模式" FontSize="12" Foreground="#85858B" TextWrapping="Wrap"/>
-                      <ComboBox x:Name="AnimationModeCombo" Height="36"/>
+                      <ComboBox x:Name="AnimationModeCombo" MinHeight="36"/>
                       <TextBlock Text="简洁：直接展开最终 HUD，适合频繁查看。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap" Margin="0,3,0,0"/>
                       <TextBlock Text="完整：包含标题、波纹与形态切换，再进入最终 HUD。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                     </StackPanel>
@@ -208,7 +208,7 @@
                       <StackPanel Spacing="5">
                         <Grid ColumnDefinitions="Auto,140,*" VerticalAlignment="Center">
                           <TextBlock Text="轮播动画" FontSize="12" Foreground="#E6E6E8" VerticalAlignment="Center" TextWrapping="Wrap"/>
-                          <ComboBox x:Name="CycleAnimationModeCombo" Grid.Column="1" Height="36" Margin="14,0,0,0" VerticalAlignment="Center"/>
+                          <ComboBox x:Name="CycleAnimationModeCombo" Grid.Column="1" MinHeight="36" Margin="14,0,0,0" VerticalAlignment="Center"/>
                         </Grid>
                         <TextBlock Text="开启自动轮播后，以这里的动画为准，忽略各方案自身的动画模式。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                         <TextBlock Text="简洁：收回上一项后，快速唤出下一项。" FontSize="12" Foreground="#C6CA4C" TextWrapping="Wrap"/>
@@ -218,8 +218,8 @@
                       <Border Height="1" Background="#303034"/>
 
                       <Grid ColumnDefinitions="*,Auto">
-                        <ComboBox x:Name="CycleProfileSourceCombo" Height="36" Margin="0,0,10,0"/>
-                        <Button x:Name="CycleAddBtn" Grid.Column="1" Content="添加" Height="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        <ComboBox x:Name="CycleProfileSourceCombo" MinHeight="36" Margin="0,0,10,0"/>
+                        <Button x:Name="CycleAddBtn" Grid.Column="1" Content="添加" MinHeight="36" MinWidth="72" Padding="14,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                       </Grid>
 
                       <Grid ColumnDefinitions="*,Auto">
@@ -227,9 +227,9 @@
                           <ListBox x:Name="CycleProfileList" MinHeight="152" MaxHeight="220"/>
                         </Border>
                         <StackPanel Grid.Column="1" Spacing="8" VerticalAlignment="Top">
-                          <Button x:Name="CycleRemoveBtn" Content="删除" Height="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                          <Button x:Name="CycleMoveUpBtn" Content="上移" Height="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                          <Button x:Name="CycleMoveDownBtn" Content="下移" Height="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                          <Button x:Name="CycleRemoveBtn" Content="删除" MinHeight="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                          <Button x:Name="CycleMoveUpBtn" Content="上移" MinHeight="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                          <Button x:Name="CycleMoveDownBtn" Content="下移" MinHeight="34" MinWidth="72" Padding="12,5" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </StackPanel>
                       </Grid>
                       <TextBlock x:Name="CycleQueueStatusText" Text="" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
@@ -334,11 +334,11 @@
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="4" Margin="0,0,6,0">
                   <TextBlock Text="左侧图标" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                  <ComboBox x:Name="LeftIconCombo" Height="32"/>
+                  <ComboBox x:Name="LeftIconCombo" MinHeight="32"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
                   <TextBlock Text="右侧图标" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
-                  <ComboBox x:Name="RightIconCombo" Height="32"/>
+                  <ComboBox x:Name="RightIconCombo" MinHeight="32"/>
                 </StackPanel>
               </Grid>
             </StackPanel>
@@ -373,7 +373,7 @@
               <TextBlock Text="按功能分类；分类内优先显示常用状态与实时指标，再显示详细信息。支持按名称、变量名或分类查找。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
             </StackPanel>
             <TextBox x:Name="VariableSearchBox" Grid.Row="1" Watermark="搜索：CPU 使用率 / cpu.usage" Margin="0,12,0,8"/>
-            <ComboBox x:Name="VariableCategoryCombo" Grid.Row="2" Height="36" MinWidth="260" HorizontalAlignment="Stretch" Margin="0,0,0,18"/>
+            <ComboBox x:Name="VariableCategoryCombo" Grid.Row="2" MinHeight="36" MinWidth="260" HorizontalAlignment="Stretch" Margin="0,0,0,18"/>
             <ListBox x:Name="VariableList" Grid.Row="3" MinHeight="240" Margin="0,4,0,0">
               <ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" TextWrapping="Wrap"/></DataTemplate></ListBox.ItemTemplate>
             </ListBox>
