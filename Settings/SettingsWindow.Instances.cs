@@ -46,7 +46,8 @@ public partial class SettingsWindow
         var editButton = InstanceText(new Button(),"定位并编辑所选 HUD", "Locate and edit selected HUD");
         var add = InstanceText(new Button { Name="AddHudInstanceButton" },"新增 HUD", "Add HUD");
         var remove = InstanceText(new Button(),"删除所选实例", "Remove selected instance");
-        var buttons = new StackPanel { Orientation=Orientation.Horizontal, Spacing=10 };
+        var buttons = new WrapPanel { Orientation=Orientation.Horizontal };
+        foreach(var button in new[]{add,remove,editButton})button.Margin=new Thickness(0,0,10,8);
         buttons.Children.Add(add); buttons.Children.Add(remove); buttons.Children.Add(editButton);
         ExperimentalPanel.Children.Add(InstanceText(new TextBlock { FontSize=18 },"多实例 HUD", "Multiple HUD instances"));
         ExperimentalPanel.Children.Add(InstanceText(new TextBlock { TextWrapping=TextWrapping.Wrap },

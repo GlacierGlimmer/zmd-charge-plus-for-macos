@@ -23,7 +23,7 @@ public sealed record AnimationOptions
         BounceStrength = Math.Clamp(s.BounceStrength, 0d, 0.5d),
         RippleIntensity = Math.Clamp(s.RippleIntensity, 0d, 2d),
         RippleSpread = Math.Clamp(s.RippleSpread, 0.5d, 1.5d),
-        FontHeightFactor = Math.Max(1,GlobalAppearance.NormalizeScale(s.GlobalFontScale)),
+        FontHeightFactor = Math.Max(1,GlobalAppearance.NormalizeFontScale(s.GlobalFontScale)),
     };
 }
 

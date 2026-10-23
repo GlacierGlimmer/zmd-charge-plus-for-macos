@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 
 namespace EndfieldChargePlus;
 
@@ -283,6 +284,12 @@ public static partial class LocalizationManager
                     if (box.Watermark is string watermark) box.Watermark = TranslateControlLiteral(box,"Watermark",watermark);
                     break;
                 case TextBlock text when text.Text is not null:
+                    // A string Content/Header owns its generated caption. Writing
+                    // that TextBlock directly breaks the presenter's binding and
+                    // can leave it showing a previous language or an ambiguous key.
+                    if(text.GetVisualParent() is Avalonia.Controls.Presenters.ContentPresenter presenter
+                        && ReferenceEquals(presenter.Child,text) && presenter.Content is string)
+                        break;
                     text.Text = TranslateControlLiteral(text,"Text",text.Text);
                     break;
                 case ContentControl content when content.Content is string s:
@@ -290,5 +297,13 @@ public static partial class LocalizationManager
                     break;
             }
         }
+        if(root.GetVisualRoot() is Window {IsVisible:true})
+            Avalonia.Threading.Dispatcher.UIThread.Post(()=>
+            {
+                if(!root.IsEffectivelyVisible)return;
+                foreach(var layout in root.GetVisualDescendants().OfType<Control>().Reverse())
+                    layout.InvalidateMeasure();
+                root.InvalidateMeasure();
+            },Avalonia.Threading.DispatcherPriority.Loaded);
     }
 }

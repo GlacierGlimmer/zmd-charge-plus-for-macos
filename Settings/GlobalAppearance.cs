@@ -28,12 +28,14 @@ internal static class GlobalAppearance
     private static readonly ConditionalWeakTable<ColumnDefinition,OriginalColumn> Columns=new();
     private static readonly ConditionalWeakTable<Window,WindowState> Windows=new();
     private static double _font=1,_ui=1;
+    internal static (double Font,double Ui) CurrentScales => (_font,_ui);
     private static Avalonia.Threading.DispatcherTimer? _windowWatcher;
-    public static double NormalizeScale(double value)=>double.IsFinite(value) ? Math.Clamp(value,.75,2) : 1;
+    public static double NormalizeFontScale(double value)=>double.IsFinite(value) ? Math.Clamp(value,.8,1.25) : 1;
+    public static double NormalizeUiScale(double value)=>double.IsFinite(value) ? Math.Clamp(value,.8,1.5) : 1;
 
     public static void Apply(Window window,double fontScale,double uiScale)
     {
-        fontScale=NormalizeScale(fontScale);uiScale=NormalizeScale(uiScale);
+        fontScale=NormalizeFontScale(fontScale);uiScale=NormalizeUiScale(uiScale);
         if(window is SettingsWindow)SetPreferences(fontScale,uiScale);
         if(!Windows.TryGetValue(window,out var state))
         {
@@ -69,7 +71,7 @@ internal static class GlobalAppearance
 
     internal static void SetPreferences(double font,double ui)
     {
-        _font=NormalizeScale(font);_ui=NormalizeScale(ui);
+        _font=NormalizeFontScale(font);_ui=NormalizeUiScale(ui);
         if(_windowWatcher is not null)return;
         _windowWatcher=new Avalonia.Threading.DispatcherTimer {Interval=TimeSpan.FromMilliseconds(200)};
         _windowWatcher.Tick+=(_,_)=>{

@@ -13,10 +13,10 @@ public sealed class UserManualView : UserControl
     internal TextBox SearchBox {get;}=new(){Name="ManualSearch",Margin=new Thickness(0,10,0,12)};
     internal ListBox ChapterList {get;}=new(){Name="ManualChapterList",Background=Brushes.Transparent,BorderThickness=new Thickness(0)};
     private readonly TextBlock _navTitle=new(){FontSize=16,FontWeight=FontWeight.SemiBold,Foreground=Brush.Parse("#C6CA4C")};
-    private readonly TextBlock _navCount=new(){FontSize=11,Foreground=Brushes.Gray,Margin=new Thickness(0,10,0,0)};
+    private readonly TextBlock _navCount=new(){FontSize=11,TextWrapping=TextWrapping.Wrap,Foreground=Brushes.Gray,Margin=new Thickness(0,10,0,0)};
     private readonly TextBlock _title=new(){FontSize=25,FontWeight=FontWeight.SemiBold,TextWrapping=TextWrapping.Wrap};
     private readonly TextBlock _summary=new(){FontSize=13,LineHeight=20,TextWrapping=TextWrapping.Wrap,Foreground=Brush.Parse("#A9A9B0")};
-    private readonly TextBlock _location=new(){FontSize=11,Foreground=Brush.Parse("#C6CA4C")};
+    private readonly TextBlock _location=new(){FontSize=11,TextWrapping=TextWrapping.Wrap,Foreground=Brush.Parse("#C6CA4C")};
     private readonly WrapPanel _sectionLinks=new(){Orientation=Orientation.Horizontal};
     private readonly StackPanel _body=new(){Spacing=14};
     private readonly ScrollViewer _scroll=new(){Name="ManualReadingScroll",VerticalScrollBarVisibility=Avalonia.Controls.Primitives.ScrollBarVisibility.Auto};
@@ -42,9 +42,9 @@ public sealed class UserManualView : UserControl
         var navBorder=new Border{Background=Brush.Parse("#222224"),BorderBrush=Brush.Parse("#343438"),BorderThickness=new Thickness(1),CornerRadius=new CornerRadius(10),Padding=new Thickness(14),Child=nav};
         var header=new StackPanel{Spacing=8,Margin=new Thickness(0,2,0,12)};
         header.Children.Add(_location);header.Children.Add(_title);header.Children.Add(_summary);header.Children.Add(_sectionLinks);
-        var footer=new Grid{ColumnDefinitions=new("*,Auto,Auto"),Margin=new Thickness(0,12,0,0)};
+        var footer=new WrapPanel{Orientation=Orientation.Horizontal,HorizontalAlignment=HorizontalAlignment.Right,Margin=new Thickness(0,12,0,0)};
         _clearSearch.HorizontalAlignment=HorizontalAlignment.Left;footer.Children.Add(_clearSearch);
-        Grid.SetColumn(_previous,1);_previous.Margin=new Thickness(8,0,8,0);footer.Children.Add(_previous);Grid.SetColumn(_next,2);footer.Children.Add(_next);
+        _previous.Margin=new Thickness(8,0,8,0);footer.Children.Add(_previous);footer.Children.Add(_next);
         _scroll.Content=_body;
         var reading=new Grid{RowDefinitions=new("Auto,*,Auto")};reading.Children.Add(header);Grid.SetRow(_scroll,1);reading.Children.Add(_scroll);Grid.SetRow(footer,2);reading.Children.Add(footer);
         var layout=new Grid{ColumnDefinitions=new("226,14,*"),Margin=new Thickness(4,12,4,4)};
@@ -93,7 +93,7 @@ public sealed class UserManualView : UserControl
         _previous.IsEnabled=index>0;_next.IsEnabled=index<UserManualContent.Chapters.Count-1;
         foreach(var block in chapter.Blocks)
         {
-            var jump=new Button{Content=block.Title.Value,FontSize=11,Padding=new Thickness(9,5),Margin=new Thickness(0,2,6,2)};
+            var jump=new Button{Content=new TextBlock{Text=block.Title.Value,TextWrapping=TextWrapping.Wrap},FontSize=11,Padding=new Thickness(9,5),Margin=new Thickness(0,2,6,2)};
             jump.Click+=(_,_)=>ScrollToSection(block.Id);_sectionLinks.Children.Add(jump);
             var card=new StackPanel{Spacing=11};
             card.Children.Add(new TextBlock{Text=block.Title.Value,FontSize=16,FontWeight=FontWeight.SemiBold,Foreground=Brush.Parse("#E5E5EA"),TextWrapping=TextWrapping.Wrap});
@@ -102,8 +102,8 @@ public sealed class UserManualView : UserControl
                 int step=0;
                 foreach(var text in block.Body.Value.Split('\n',StringSplitOptions.RemoveEmptyEntries))
                 {
-                    var row=new Grid{ColumnDefinitions=new("26,*")};
-                    row.Children.Add(new TextBlock{Text=(++step).ToString("00"),FontSize=12,FontWeight=FontWeight.Bold,Foreground=Brush.Parse("#C6CA4C"),Margin=new Thickness(0,2,6,0)});
+                    var row=new Grid{ColumnDefinitions=new("Auto,*")};
+                    row.Children.Add(new TextBlock{Text=(++step).ToString("00"),MinWidth=20,FontSize=12,FontWeight=FontWeight.Bold,Foreground=Brush.Parse("#C6CA4C"),Margin=new Thickness(0,2,6,0)});
                     var paragraph=Paragraph(text);Grid.SetColumn(paragraph,1);row.Children.Add(paragraph);card.Children.Add(row);
                 }
             }

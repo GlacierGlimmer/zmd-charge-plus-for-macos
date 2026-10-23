@@ -11,15 +11,15 @@
             <StackPanel Spacing="14">
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Spacing="3" Margin="0,0,18,0">
-                  <TextBlock Text="方案管理" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-                  <TextBlock Text="选择当前显示方案。内置方案修改后会另存为新方案，原预设保持不变。" FontSize="12" Foreground="#85858B"/>
+                  <TextBlock Text="方案管理" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
+                  <TextBlock Text="选择当前显示方案。内置方案修改后会另存为新方案，原预设保持不变。" FontSize="12" Foreground="#85858B" TextWrapping="Wrap"/>
                 </StackPanel>
                 <Button x:Name="PreviewBtn" Grid.Column="1" Content="预览当前方案" Height="38" MinWidth="124" Padding="16,7" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#C6CA4C" Foreground="#171719" FontWeight="SemiBold" CornerRadius="7"/>
               </Grid>
 
               <Grid ColumnDefinitions="*,Auto">
                 <StackPanel Spacing="4" Margin="0,0,14,0">
-                  <TextBlock Text="当前方案" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="当前方案" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <ComboBox x:Name="ProfileCombo" Height="36" MinWidth="520" HorizontalAlignment="Stretch"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
@@ -31,7 +31,7 @@
 
               <Border x:Name="DeepSeekOptionsHintPanel" Background="#1E1E20" BorderBrush="#3A3A3E" BorderThickness="1" CornerRadius="8" Padding="14" IsVisible="False">
                 <StackPanel Spacing="4">
-                  <TextBlock Text="DeepSeek API 数据源" FontSize="12" FontWeight="SemiBold" Foreground="#C6CA4C"/>
+                  <TextBlock Text="DeepSeek API 数据源" FontSize="12" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                   <TextBlock Text="此方案需要先在“数据管理 → 数据源配置 → DeepSeek API”中配置 DeepSeek API Key；峰谷时段也可在该数据源中设置。未配置 API Key 时，余额相关数据无法获取。" FontSize="12" Foreground="#D2D2D6" TextWrapping="Wrap"/>
                 </StackPanel>
               </Border>
@@ -40,18 +40,18 @@
               <Border x:Name="TimeOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
                 <StackPanel Spacing="12">
                   <StackPanel x:Name="WorldClockOptions" Spacing="4" IsVisible="False">
-                    <TextBlock Text="UTC 时区" Foreground="#C6CA4C"/>
+                    <TextBlock Text="UTC 时区" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                     <ComboBox x:Name="WorldClockZoneCombo" Height="36"/>
                     <TextBlock Text="使用固定 UTC 偏移，不自动跟随夏令时。目标时间也按所选时区计算。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   </StackPanel>
                 <Grid ColumnDefinitions="*,Auto,240">
                   <StackPanel Spacing="2" Margin="0,0,16,0">
-                    <TextBlock Text="目标时间模式" FontSize="12" Foreground="#E6E6E8"/>
+                    <TextBlock Text="目标时间模式" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                     <TextBlock Text="关闭时显示当天已过进度；开启后显示距离下一个每日目标时间的剩余比例。" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                   </StackPanel>
                   <ToggleSwitch x:Name="TimeTargetSwitch" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,24,0"/>
                   <StackPanel Grid.Column="2" Spacing="4">
-                    <TextBlock Text="每日目标时间" FontSize="11" Foreground="#85858B"/>
+                    <TextBlock Text="每日目标时间" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     <TextBox x:Name="TimeTargetBox" Watermark="10:00:00"/>
                   </StackPanel>
                 </Grid>
@@ -60,17 +60,17 @@
 
               <Border x:Name="FrameOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
                 <StackPanel Spacing="8">
-                  <TextBlock Text="帧率采集目标" Foreground="#C6CA4C"/>
+                  <TextBlock Text="帧率采集目标" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                   <StackPanel x:Name="FrameDisplayOptions" Spacing="6">
-                  <TextBlock Text="目标显示器"/>
+                  <TextBlock Text="目标显示器" TextWrapping="Wrap"/>
                   <ComboBox x:Name="FrameDisplayTargetCombo"/>
                 </StackPanel>
                 <StackPanel x:Name="FrameWindowOptions" Spacing="6">
-                  <TextBlock Text="目标窗口"/>
+                  <TextBlock Text="目标窗口" TextWrapping="Wrap"/>
                   <ComboBox x:Name="FrameWindowTargetCombo"/>
                 </StackPanel>
                   <Button x:Name="RefreshFrameTargetsBtn" Content="刷新窗口／显示器列表"/>
-                  <TextBlock Text="100% 对应帧率 / FPS" Foreground="#85858B"/>
+                  <TextBlock Text="100% 对应帧率 / FPS" Foreground="#85858B" TextWrapping="Wrap"/>
                   <NumericUpDown x:Name="FrameFullScaleBox" Minimum="1" Maximum="1000" Value="120" Increment="1"/>
                   <TextBlock x:Name="FrameCaptureHint" TextWrapping="Wrap" Foreground="#85858B"/>
                 </StackPanel>
@@ -78,9 +78,9 @@
               <Border x:Name="GpuOptionsPanel" Background="#1E1E20" CornerRadius="8" Padding="14" IsVisible="False">
                 <Grid ColumnDefinitions="*,420">
                   <StackPanel Spacing="2" Margin="0,0,18,0">
-                    <TextBlock Text="GPU 设备" FontSize="12" Foreground="#E6E6E8"/>
-                    <TextBlock Text="检测到多个 GPU 时，选择此方案要显示的图形处理器。" FontSize="11" Foreground="#77777D"/>
-                    <TextBlock x:Name="GpuAdapterStatusText" FontSize="11" Foreground="#6F6F74" Margin="0,3,0,0"/>
+                    <TextBlock Text="GPU 设备" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
+                    <TextBlock Text="检测到多个 GPU 时，选择此方案要显示的图形处理器。" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="GpuAdapterStatusText" FontSize="11" Foreground="#6F6F74" Margin="0,3,0,0" TextWrapping="Wrap"/>
                   </StackPanel>
                   <ComboBox x:Name="GpuAdapterCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
                 </Grid>
@@ -90,7 +90,7 @@
                 <StackPanel Spacing="12">
                   <Grid ColumnDefinitions="*,320">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="网络显示单位" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="网络显示单位" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="Mbps：按兆比特每秒显示；KB/s / MB/s：根据速度大小自动切换。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ComboBox x:Name="NetworkDisplayUnitCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
@@ -100,7 +100,7 @@
 
                   <Grid ColumnDefinitions="*,320">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="百分比计算方式" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="百分比计算方式" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="使用系统全部有效网络接口的流量。可按总吞吐量、仅下载、仅上传或上下行较大值计算右侧百分比。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ComboBox x:Name="NetworkPercentModeCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
@@ -110,15 +110,15 @@
 
                   <Grid ColumnDefinitions="*,180,150">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="100% 对应网络速度" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="100% 对应网络速度" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="当前所选百分比模式的速度达到这里设定的值时显示 100%；计算前统一换算为 Byte/s。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="0,0,8,0">
-                      <TextBlock Text="数值" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="数值" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <NumericUpDown x:Name="NetworkReferenceValueBox" Minimum="0.001" Maximum="1000000" Increment="1" FormatString="0.###"/>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Spacing="4" Margin="8,0,0,0">
-                      <TextBlock Text="单位" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="单位" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <ComboBox x:Name="NetworkReferenceUnitCombo" Height="36"/>
                     </StackPanel>
                   </Grid>
@@ -129,7 +129,7 @@
                 <StackPanel Spacing="12">
                   <Grid ColumnDefinitions="*,420">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="检测地址" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="检测地址" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="支持 IPv4、IPv6 或域名。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <TextBox x:Name="PingTargetBox" Grid.Column="1" Watermark="例如：1.1.1.1、2606:4700:4700::1111 或 example.com" VerticalAlignment="Center"/>
@@ -139,7 +139,7 @@
 
                   <Grid ColumnDefinitions="*,420">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="检测协议" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="检测协议" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="ICMP 使用标准 Ping；TCP 测量端口连接延迟；UDP 会发送探测数据并等待目标服务响应。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <ComboBox x:Name="ProbeProtocolCombo" Grid.Column="1" Height="36" VerticalAlignment="Center"/>
@@ -149,7 +149,7 @@
 
                   <Grid ColumnDefinitions="*,420">
                     <StackPanel Spacing="2" Margin="0,0,18,0">
-                      <TextBlock Text="检测端口" FontSize="12" Foreground="#E6E6E8"/>
+                      <TextBlock Text="检测端口" FontSize="12" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                       <TextBlock Text="TCP / UDP 使用该端口；ICMP 不使用端口。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     </StackPanel>
                     <NumericUpDown x:Name="ProbePortBox" Grid.Column="1" Minimum="1" Maximum="65535" Increment="1" FormatString="0" VerticalAlignment="Center"/>
@@ -161,11 +161,11 @@
                 <StackPanel Spacing="10">
                   <Grid ColumnDefinitions="*,300">
                     <StackPanel Spacing="4" Margin="0,0,8,0">
-                      <TextBlock Text="方案名称" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="方案名称" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <TextBox x:Name="ProfileNameBox" Watermark="例如：我的服务器 - 在线状态"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="8,0,0,0">
-                      <TextBlock Text="动画模式" FontSize="12" Foreground="#85858B"/>
+                      <TextBlock Text="动画模式" FontSize="12" Foreground="#85858B" TextWrapping="Wrap"/>
                       <ComboBox x:Name="AnimationModeCombo" Height="36"/>
                       <TextBlock Text="简洁：直接展开最终 HUD，适合频繁查看。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap" Margin="0,3,0,0"/>
                       <TextBlock Text="完整：包含标题、波纹与形态切换，再进入最终 HUD。" FontSize="13" Foreground="#C6CA4C" TextWrapping="Wrap"/>
@@ -173,8 +173,8 @@
                   </Grid>
 
                   <StackPanel Spacing="2">
-                    <TextBlock x:Name="ProfileKindText" Text="" FontSize="12" Foreground="#BDBDC2"/>
-                    <TextBlock Text="选择框中的方案即当前使用方案；始终保持一个方案被选中。" FontSize="11" Foreground="#6F6F74"/>
+                    <TextBlock x:Name="ProfileKindText" Text="" FontSize="12" Foreground="#BDBDC2" TextWrapping="Wrap"/>
+                    <TextBlock Text="选择框中的方案即当前使用方案；始终保持一个方案被选中。" FontSize="11" Foreground="#6F6F74" TextWrapping="Wrap"/>
                   </StackPanel>
 
                   <StackPanel Spacing="6">
@@ -186,8 +186,8 @@
                     <StackPanel Spacing="12">
                       <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Spacing="2" Margin="0,0,18,0">
-                          <TextBlock Text="自动轮播" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8"/>
-                          <TextBlock Text="开启后按照下方轮播队列的顺序循环切换方案。" FontSize="11" Foreground="#85858B"/>
+                          <TextBlock Text="自动轮播" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8" TextWrapping="Wrap"/>
+                          <TextBlock Text="开启后按照下方轮播队列的顺序循环切换方案。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                         </StackPanel>
                         <ToggleSwitch x:Name="AutoCycleSwitch" Grid.Column="1" VerticalAlignment="Center"/>
                       </Grid>
@@ -196,18 +196,18 @@
 
                       <Grid ColumnDefinitions="*,160">
                         <StackPanel Spacing="2" Margin="0,0,18,0">
-                          <TextBlock Text="轮播队列" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8"/>
+                          <TextBlock Text="轮播队列" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8" TextWrapping="Wrap"/>
                           <TextBlock Text="从上到下依次切换，到达末尾后回到第一项。队列只引用当前存在的方案。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Spacing="4">
-                          <TextBlock Text="轮播间隔 / 秒" FontSize="11" Foreground="#85858B"/>
+                          <TextBlock Text="轮播间隔 / 秒" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                           <NumericUpDown x:Name="CycleSecondsBox" Minimum="3" Maximum="3600" Increment="1" Value="10"/>
                         </StackPanel>
                       </Grid>
 
                       <StackPanel Spacing="5">
                         <Grid ColumnDefinitions="Auto,140,*" VerticalAlignment="Center">
-                          <TextBlock Text="轮播动画" FontSize="12" Foreground="#E6E6E8" VerticalAlignment="Center"/>
+                          <TextBlock Text="轮播动画" FontSize="12" Foreground="#E6E6E8" VerticalAlignment="Center" TextWrapping="Wrap"/>
                           <ComboBox x:Name="CycleAnimationModeCombo" Grid.Column="1" Height="36" Margin="14,0,0,0" VerticalAlignment="Center"/>
                         </Grid>
                         <TextBlock Text="开启自动轮播后，以这里的动画为准，忽略各方案自身的动画模式。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
@@ -245,19 +245,19 @@
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18,16">
             <StackPanel Spacing="16">
               <StackPanel Spacing="3">
-                <TextBlock Text="显示内容" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-                <TextBlock Text="左侧显示主体信息，右侧显示百分比、进度或状态类数据。" FontSize="11" Foreground="#85858B"/>
+                <TextBlock Text="显示内容" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
+                <TextBlock Text="左侧显示主体信息，右侧显示百分比、进度或状态类数据。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
               </StackPanel>
 
               <StackPanel Spacing="8">
-                <TextBlock Text="标题阶段" FontSize="12" FontWeight="SemiBold" Foreground="#B7B7BC"/>
+                <TextBlock Text="标题阶段" FontSize="12" FontWeight="SemiBold" Foreground="#B7B7BC" TextWrapping="Wrap"/>
                 <Grid ColumnDefinitions="*,*">
                   <StackPanel Spacing="4" Margin="0,0,6,0">
-                    <TextBlock Text="上行文字" FontSize="11" Foreground="#85858B"/>
+                    <TextBlock Text="上行文字" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     <TextBox x:Name="TaglineBox" Watermark="/// SYSTEM MONITOR"/>
                   </StackPanel>
                   <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                    <TextBlock Text="主标题" FontSize="11" Foreground="#85858B"/>
+                    <TextBlock Text="主标题" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                     <TextBox x:Name="TitleBox" Watermark="系统状态"/>
                   </StackPanel>
                 </Grid>
@@ -267,18 +267,18 @@
                 <StackPanel Spacing="9">
                   <Grid ColumnDefinitions="*,Auto">
                     <StackPanel Spacing="2">
-                      <TextBlock Text="左侧主体信息" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8"/>
-                      <TextBlock Text="容量、当前频率、速率、余额、当前时间等主要信息。" FontSize="11" Foreground="#77777D"/>
+                      <TextBlock Text="左侧主体信息" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8" TextWrapping="Wrap"/>
+                      <TextBlock Text="容量、当前频率、速率、余额、当前时间等主要信息。" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="主值" FontSize="11" Foreground="#68686D" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="主值" FontSize="11" Foreground="#68686D" VerticalAlignment="Center" TextWrapping="Wrap"/>
                   </Grid>
                   <Grid ColumnDefinitions="*,*">
                     <StackPanel Spacing="4" Margin="0,0,6,0">
-                      <TextBlock Text="主值" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="主值" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <TextBox x:Name="PrimaryBox" AcceptsReturn="True" MinHeight="68" TextWrapping="Wrap" Watermark="{}{memory.used_bytes|gb:1}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                      <TextBlock Text="次值 / 补充文字" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="次值 / 补充文字" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <TextBox x:Name="SecondaryBox" AcceptsReturn="True" MinHeight="68" TextWrapping="Wrap" Watermark="/{memory.total_bytes|gb:1} GB"/>
                     </StackPanel>
                   </Grid>
@@ -289,18 +289,18 @@
                 <StackPanel Spacing="9">
                   <Grid ColumnDefinitions="*,Auto">
                     <StackPanel Spacing="2">
-                      <TextBlock Text="右侧状态值" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8"/>
-                      <TextBlock Text="使用率、剩余比例、已过进度等状态信息，并可与圆环联动。" FontSize="11" Foreground="#77777D"/>
+                      <TextBlock Text="右侧状态值" FontSize="12" FontWeight="SemiBold" Foreground="#E6E6E8" TextWrapping="Wrap"/>
+                      <TextBlock Text="使用率、剩余比例、已过进度等状态信息，并可与圆环联动。" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="1" Text="状态值" FontSize="11" Foreground="#68686D" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="状态值" FontSize="11" Foreground="#68686D" VerticalAlignment="Center" TextWrapping="Wrap"/>
                   </Grid>
                   <Grid ColumnDefinitions="*,150">
                     <StackPanel Spacing="4" Margin="0,0,6,0">
-                      <TextBlock Text="状态值" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="状态值" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <TextBox x:Name="RightBox" AcceptsReturn="True" MinHeight="68" TextWrapping="Wrap" Watermark="{}{cpu.usage|0}"/>
                     </StackPanel>
                     <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                      <TextBlock Text="后缀" FontSize="11" Foreground="#85858B"/>
+                      <TextBlock Text="后缀" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                       <TextBox x:Name="RightSuffixBox" Watermark="%"/>
                     </StackPanel>
                   </Grid>
@@ -316,28 +316,28 @@
 
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18,16">
             <StackPanel Spacing="14">
-              <TextBlock Text="图标与进度环" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
+              <TextBlock Text="图标与进度环" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
               <Grid ColumnDefinitions="*,120,120">
                 <StackPanel Spacing="4" Margin="0,0,8,0">
-                  <TextBlock Text="进度变量" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="进度变量" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <TextBox x:Name="ProgressVariableBox" Watermark="cpu.usage 或 = (cpu.usage + gpu.usage) / 2"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="4" Margin="8,0">
-                  <TextBlock Text="最小值" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="最小值" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <NumericUpDown x:Name="ProgressMinBox" Minimum="-1000000000" Maximum="1000000000" Value="0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Spacing="4" Margin="8,0,0,0">
-                  <TextBlock Text="最大值" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="最大值" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <NumericUpDown x:Name="ProgressMaxBox" Minimum="-1000000000" Maximum="1000000000" Value="100"/>
                 </StackPanel>
               </Grid>
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="4" Margin="0,0,6,0">
-                  <TextBlock Text="左侧图标" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="左侧图标" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <ComboBox x:Name="LeftIconCombo" Height="32"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="4" Margin="6,0,0,0">
-                  <TextBlock Text="右侧图标" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="右侧图标" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <ComboBox x:Name="RightIconCombo" Height="32"/>
                 </StackPanel>
               </Grid>
@@ -346,14 +346,14 @@
 
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18,16">
             <StackPanel Spacing="12">
-              <TextBlock Text="颜色" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
+              <TextBlock Text="颜色" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
               <Grid ColumnDefinitions="240,*">
                 <StackPanel Spacing="4" Margin="0,0,10,0">
-                  <TextBlock Text="默认强调色" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="默认强调色" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <TextBox x:Name="AccentColorBox" Watermark="#C6CA4C"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="4" Margin="10,0,0,0">
-                  <TextBlock Text="条件变色 · 每行：变量 运算符 数值 =&gt; 颜色" FontSize="11" Foreground="#85858B"/>
+                  <TextBlock Text="条件变色 · 每行：变量 运算符 数值 =&gt; 颜色" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                   <TextBox x:Name="ColorRulesBox" AcceptsReturn="True" MinHeight="72" TextWrapping="Wrap" Watermark="cpu.usage &gt;= 90 =&gt; #FF4D4F&#10;cpu.usage &gt;= 75 =&gt; #FFB84D"/>
                 </StackPanel>
               </Grid>
@@ -369,12 +369,14 @@
         <Border Grid.Column="0" Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="16" Margin="0,0,6,0">
           <Grid RowDefinitions="Auto,Auto,Auto,*">
             <StackPanel Spacing="3">
-              <TextBlock Text="变量库" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-              <TextBlock Text="按功能分类；分类内优先显示常用状态与实时指标，再显示详细信息。支持按名称、变量名或分类查找。" FontSize="11" Foreground="#85858B"/>
+              <TextBlock Text="变量库" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
+              <TextBlock Text="按功能分类；分类内优先显示常用状态与实时指标，再显示详细信息。支持按名称、变量名或分类查找。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
             </StackPanel>
             <TextBox x:Name="VariableSearchBox" Grid.Row="1" Watermark="搜索：CPU 使用率 / cpu.usage" Margin="0,12,0,8"/>
             <ComboBox x:Name="VariableCategoryCombo" Grid.Row="2" Height="36" MinWidth="260" HorizontalAlignment="Stretch" Margin="0,0,0,18"/>
-            <ListBox x:Name="VariableList" Grid.Row="3" MinHeight="240" Margin="0,4,0,0"/>
+            <ListBox x:Name="VariableList" Grid.Row="3" MinHeight="240" Margin="0,4,0,0">
+              <ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" TextWrapping="Wrap"/></DataTemplate></ListBox.ItemTemplate>
+            </ListBox>
           </Grid>
         </Border>
 
@@ -383,14 +385,14 @@
             <StackPanel Spacing="16">
               <StackPanel Spacing="4">
                 <TextBlock x:Name="VariableDetailName" Text="选择一个变量" FontSize="18" FontWeight="SemiBold" Foreground="#F1F1F2" TextWrapping="Wrap"/>
-                <TextBlock x:Name="VariableDetailCategory" Text="" FontSize="11" Foreground="#C6CA4C"/>
+                <TextBlock x:Name="VariableDetailCategory" Text="" FontSize="11" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                 <TextBlock x:Name="VariableDetailDescription" Text="从左侧列表选择变量后，这里会显示变量含义和使用建议。" FontSize="12" Foreground="#9B9BA1" TextWrapping="Wrap" Margin="0,4,0,0"/>
               </StackPanel>
 
               <Border Height="1" Background="#343438"/>
 
               <StackPanel Spacing="5">
-                <TextBlock Text="变量名" FontSize="11" Foreground="#85858B"/>
+                <TextBlock Text="变量名" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                 <Grid ColumnDefinitions="*,Auto">
                   <TextBox x:Name="VariableKeyBox" IsReadOnly="True" FontFamily="Consolas, Cascadia Mono, monospace"/>
                   <Button x:Name="CopyVariableKeyBtn" Grid.Column="1" Content="复制变量名" MinHeight="34" MinWidth="102" Padding="12,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="8,0,0,0"/>
@@ -398,7 +400,7 @@
               </StackPanel>
 
               <StackPanel Spacing="5">
-                <TextBlock Text="模板写法" FontSize="11" Foreground="#85858B"/>
+                <TextBlock Text="模板写法" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                 <Grid ColumnDefinitions="*,Auto">
                   <TextBox x:Name="VariableTemplateBox" IsReadOnly="True" FontFamily="Consolas, Cascadia Mono, monospace"/>
                   <Button x:Name="CopyVariableTemplateBtn" Grid.Column="1" Content="复制模板" MinHeight="34" MinWidth="102" Padding="12,6" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="8,0,0,0"/>
@@ -408,27 +410,27 @@
               <Grid ColumnDefinitions="*,*">
                 <Border Background="#1E1E20" CornerRadius="8" Padding="14" Margin="0,0,6,0">
                   <StackPanel Spacing="7">
-                    <TextBlock Text="数据属性" FontSize="12" FontWeight="SemiBold" Foreground="#DADADC"/>
+                    <TextBlock Text="数据属性" FontSize="12" FontWeight="SemiBold" Foreground="#DADADC" TextWrapping="Wrap"/>
                     <Grid ColumnDefinitions="90,*">
-                      <TextBlock Text="类型" FontSize="11" Foreground="#77777D"/>
+                      <TextBlock Text="类型" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                       <TextBlock x:Name="VariableTypeText" Grid.Column="1" FontSize="11" Foreground="#B8B8BD" TextWrapping="Wrap"/>
                     </Grid>
                     <Grid ColumnDefinitions="90,*">
-                      <TextBlock Text="单位" FontSize="11" Foreground="#77777D"/>
+                      <TextBlock Text="单位" FontSize="11" Foreground="#77777D" TextWrapping="Wrap"/>
                       <TextBlock x:Name="VariableUnitText" Grid.Column="1" FontSize="11" Foreground="#B8B8BD" TextWrapping="Wrap"/>
                     </Grid>
                   </StackPanel>
                 </Border>
                 <Border Grid.Column="1" Background="#1E1E20" CornerRadius="8" Padding="14" Margin="6,0,0,0">
                   <StackPanel Spacing="7">
-                    <TextBlock Text="使用建议" FontSize="12" FontWeight="SemiBold" Foreground="#DADADC"/>
+                    <TextBlock Text="使用建议" FontSize="12" FontWeight="SemiBold" Foreground="#DADADC" TextWrapping="Wrap"/>
                     <TextBlock x:Name="VariableUseText" FontSize="11" Foreground="#B8B8BD" TextWrapping="Wrap"/>
                   </StackPanel>
                 </Border>
               </Grid>
 
               <StackPanel Spacing="5">
-                <TextBlock Text="常用格式" FontSize="11" Foreground="#85858B"/>
+                <TextBlock Text="常用格式" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
                 <TextBlock x:Name="VariableFormatsText" FontSize="12" Foreground="#B8B8BD" TextWrapping="Wrap"/>
               </StackPanel>
             </StackPanel>
@@ -443,16 +445,16 @@
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <StackPanel Spacing="14">
               <StackPanel Spacing="4">
-                <TextBlock Text="DeepSeek API" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
-                <TextBlock Text="配置余额查询与峰谷时段。API Key 使用 Windows 当前用户加密存储。" FontSize="11" Foreground="#85858B"/>
+                <TextBlock Text="DeepSeek API" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
+                <TextBlock Text="配置余额查询与峰谷时段。API Key 使用 Windows 当前用户加密存储。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
               </StackPanel>
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="5" Margin="0,0,6,0">
-                  <TextBlock Text="API 密钥" FontSize="12" Foreground="#A0A0A6"/>
+                  <TextBlock Text="API 密钥" FontSize="12" Foreground="#A0A0A6" TextWrapping="Wrap"/>
                   <TextBox x:Name="DeepSeekKeyBox" PasswordChar="●" Watermark="sk-..."/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="5" Margin="6,0,0,0">
-                  <TextBlock Text="DeepSeek 官方高峰窗口（北京时间）" FontSize="12" Foreground="#A0A0A6"/>
+                  <TextBlock Text="DeepSeek 官方高峰窗口（北京时间）" FontSize="12" Foreground="#A0A0A6" TextWrapping="Wrap"/>
                   <TextBox IsReadOnly="True" x:Name="DeepSeekWindowsBox" Watermark="09:00-12:00;14:00-18:00"/>
                   <TextBlock Text="周一至周五，排除中国节假日；周末补班仍为低谷。" TextWrapping="Wrap" FontSize="11" Foreground="#A0A0A6"/>
                 </StackPanel>
@@ -463,7 +465,7 @@
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <Grid RowDefinitions="Auto,*,Auto">
               <StackPanel Spacing="4">
-                <TextBlock Text="HTTP / JSON" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
+                <TextBlock Text="HTTP / JSON" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
                 <TextBlock Text="将 GET JSON 字段映射为 custom.source.variable；Header 可引用环境变量。" FontSize="11" Foreground="#85858B" TextWrapping="Wrap"/>
               </StackPanel>
               <TextBox x:Name="HttpSourcesJsonBox" Grid.Row="1" AcceptsReturn="True" MinHeight="390" Margin="0,14,0,10" FontFamily="Consolas, Cascadia Mono, monospace" FontSize="11" TextWrapping="NoWrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
@@ -478,7 +480,7 @@
         <StackPanel Margin="4,12,4,18" Spacing="12">
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <StackPanel Spacing="12">
-              <TextBlock Text="事件呼出" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C"/>
+              <TextBlock Text="事件呼出" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
               <TextBlock Text="仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。" TextWrapping="Wrap" FontSize="12" Foreground="#A0A0A6"/>
               <ListBox x:Name="TriggerList" Height="160"/>
               <StackPanel Orientation="Horizontal" Spacing="8">
@@ -490,28 +492,28 @@
           <Border x:Name="TriggerEditorPanel" Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <StackPanel Spacing="12">
               <CheckBox x:Name="TriggerEnabledCheck" Content="启用这条规则"/>
-              <TextBlock Text="规则名称"/>
+              <TextBlock Text="规则名称" TextWrapping="Wrap"/>
               <TextBox x:Name="TriggerNameBox"/>
-              <TextBlock Text="监视变量"/>
+              <TextBlock Text="监视变量" TextWrapping="Wrap"/>
               <TextBox x:Name="TriggerVariableBox" Watermark="cpu.usage / probe.loss_percent"/>
               <TextBlock Text="变量可从变量库复制。网络探测沿用队列中网络包探测方案的目标和协议；没有该方案时使用当前方案。" TextWrapping="Wrap" FontSize="11" Foreground="#85858B"/>
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="6" Margin="0,0,12,0">
-                  <TextBlock Text="触发条件模式"/>
+                  <TextBlock Text="触发条件模式" TextWrapping="Wrap"/>
                   <ComboBox x:Name="TriggerModeCombo"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="6">
-                  <TextBlock Text="规则运算符"/>
+                  <TextBlock Text="规则运算符" TextWrapping="Wrap"/>
                   <ComboBox x:Name="TriggerOperatorCombo"/>
                 </StackPanel>
               </Grid>
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="6" Margin="0,0,12,0">
-                  <TextBlock Text="触发阈值"/>
+                  <TextBlock Text="触发阈值" TextWrapping="Wrap"/>
                   <NumericUpDown x:Name="TriggerValueBox" Minimum="-1000000000000" Maximum="1000000000000" Increment="1"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Spacing="6">
-                  <TextBlock Text="触发冷却 / 秒"/>
+                  <TextBlock Text="触发冷却 / 秒" TextWrapping="Wrap"/>
                   <NumericUpDown x:Name="TriggerCooldownBox" Minimum="1" Maximum="86400" Increment="1"/>
                 </StackPanel>
               </Grid>

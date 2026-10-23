@@ -158,8 +158,8 @@ public static class SettingsManager
         {
             HudOpacity = Math.Clamp(settings.HudOpacity, 0.10, 1.0),
             GlobalScale=double.IsFinite(settings.GlobalScale) ? Math.Clamp(settings.GlobalScale,0.4,1.4) : AppSettings.DefaultGlobalScale,
-            GlobalFontScale=GlobalAppearance.NormalizeScale(settings.GlobalFontScale),
-            GlobalUiScale=GlobalAppearance.NormalizeScale(settings.GlobalUiScale),
+            GlobalFontScale=GlobalAppearance.NormalizeFontScale(settings.GlobalFontScale),
+            GlobalUiScale=GlobalAppearance.NormalizeUiScale(settings.GlobalUiScale),
             SamplingIntervalSeconds = double.IsFinite(settings.SamplingIntervalSeconds) ? Math.Clamp(settings.SamplingIntervalSeconds, 0.1, 60) : 1,
             HudInstances = (settings.HudInstances ?? new()).Where(i => i is not null).Take(15)
                 .GroupBy(i => i.Id).Select(g => g.First()).Select(i => i with {

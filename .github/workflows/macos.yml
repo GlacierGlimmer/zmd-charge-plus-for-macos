@@ -43,6 +43,11 @@ jobs:
         run: |
           test_home=$(mktemp -d "$RUNNER_TEMP/ecp-test-home.XXXXXX")
           HOME="$test_home" ECP_TEST_HOME="$test_home" dotnet Tests/bin/Release/net8.0/EndfieldChargePlus.PlatformTests.dll --settings-save-only
+      - name: Test language switches and supported UI scales
+        timeout-minutes: 8
+        env:
+          ECP_LAYOUT_OUTPUT: ${{ github.workspace }}/artifacts/audit/language-layout
+        run: dotnet run --project Tests/LanguageLayoutTests.csproj -c Release
       - name: Build DMG
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then

@@ -128,9 +128,9 @@ public partial class HudWindow : Window
             text.FontFamily=numeric;
         TitleText.FontFamily=title;
         _animOptions = AnimationOptions.FromSettings(settings);
-        double scale=settings.GlobalScale*GlobalAppearance.NormalizeScale(settings.GlobalUiScale);
+        double scale=settings.GlobalScale*GlobalAppearance.NormalizeUiScale(settings.GlobalUiScale);
         GlobalScale.RenderTransform = new ScaleTransform(scale,scale);
-        double fontScale=GlobalAppearance.NormalizeScale(settings.GlobalFontScale);
+        double fontScale=GlobalAppearance.NormalizeFontScale(settings.GlobalFontScale);
         TagLineText.FontSize=9*fontScale;TitleText.FontSize=26*fontScale;
         PrimaryText.FontSize=26*fontScale;SecondaryText.FontSize=14*fontScale;
         RightText.FontSize=22*fontScale;RightSuffixText.FontSize=13*fontScale;
@@ -654,7 +654,7 @@ public partial class HudWindow : Window
 
         var area = screen.WorkingArea;
         double scaling = screen.Scaling > 0 ? screen.Scaling : 1d;
-        double desiredScale=_settings.GlobalScale*GlobalAppearance.NormalizeScale(_settings.GlobalUiScale);
+        double desiredScale=_settings.GlobalScale*GlobalAppearance.NormalizeUiScale(_settings.GlobalUiScale);
         double fitWidth=Math.Max(1,area.Width/scaling-32)/(_contentWidth+24);
         double fitHeight=Math.Max(1,area.Height/scaling-32)/(90*_animOptions.FontHeightFactor+24);
         double actualScale=Math.Max(.05,Math.Min(desiredScale,Math.Min(fitWidth,fitHeight)));
