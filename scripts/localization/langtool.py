@@ -788,18 +788,15 @@ def audit(report_path: pathlib.Path | None = None) -> int:
         # drift for maintainers; the shipped .lang files remain authoritative.
         legacy = language_json(code)
         if legacy:
+            try:
+                _, _, values = parse_lang(code)
+            except SystemExit:
+                values = []
             mismatches = 0
             for index, key in enumerate(canonical_keys):
                 if key not in legacy:
                     continue
                 expected = legacy.get(key, "")
-                value_path = lang_path(code)
-                if not value_path.is_file():
-                    break
-                try:
-                    _, _, values = parse_lang(code)
-                except SystemExit:
-                    break
                 actual = values[index] if index < len(values) else ""
                 expected_encoded = "" if expected is None else escape(str(expected))
                 if actual != expected_encoded:
