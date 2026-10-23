@@ -18,6 +18,7 @@ internal static class GlobalAppearance
     private sealed class WindowState
     {
         public required LayoutTransformControl Transform;
+        public required ScrollViewer Viewport;
         public required Control Root;
         public double FontScale=1,UiScale=1,MinWidth,MinHeight;
         public bool Applying,Scheduled;
@@ -40,9 +41,11 @@ internal static class GlobalAppearance
             window.Content=null;
             var transform=new LayoutTransformControl { Child=content };
             // At large scales, both axes remain reachable on a small display.
-            window.Content=new ScrollViewer { Content=transform,
+            var viewport=new ScrollViewer { Content=transform,Padding=new Avalonia.Thickness(0),
+                HorizontalContentAlignment=HorizontalAlignment.Stretch,VerticalContentAlignment=VerticalAlignment.Stretch,
                 HorizontalScrollBarVisibility=ScrollBarVisibility.Auto,VerticalScrollBarVisibility=ScrollBarVisibility.Auto };
-            state=new WindowState { Transform=transform,Root=content,
+            window.Content=viewport;
+            state=new WindowState { Transform=transform,Viewport=viewport,Root=content,
                 MinWidth=Math.Max(content.MinWidth,window.MinWidth-32-content.Margin.Left-content.Margin.Right),
                 MinHeight=Math.Max(content.MinHeight,window.MinHeight-32-content.Margin.Top-content.Margin.Bottom) };
             Windows.Add(window,state);
@@ -85,11 +88,17 @@ internal static class GlobalAppearance
         {
             if(window.ClientSize.Width>0 && window.ClientSize.Height>0)
             {
+                // Use the actual viewport, including scrollbar space when present.
+                // Reserving 16 pixels unconditionally centered the settings root
+                // inside the client area and introduced an unwanted 8-pixel frame.
+                double width=state.Viewport.Viewport.Width,height=state.Viewport.Viewport.Height;
+                if(!double.IsFinite(width) || width<=0)width=window.ClientSize.Width;
+                if(!double.IsFinite(height) || height<=0)height=window.ClientSize.Height;
                 state.Root.Width=Math.Max(state.MinWidth*Math.Max(1,state.FontScale),
-                    (window.ClientSize.Width-16)/state.UiScale-state.Root.Margin.Left-state.Root.Margin.Right);
+                    width/state.UiScale-state.Root.Margin.Left-state.Root.Margin.Right);
                 state.Root.Height=state.Root is StackPanel || state.Root is Border {Child:StackPanel}
                     ? double.NaN : Math.Max(state.MinHeight,
-                        (window.ClientSize.Height-16)/state.UiScale-state.Root.Margin.Top-state.Root.Margin.Bottom);
+                        height/state.UiScale-state.Root.Margin.Top-state.Root.Margin.Bottom);
             }
             foreach(var c in window.GetVisualDescendants().OfType<Control>())
             {

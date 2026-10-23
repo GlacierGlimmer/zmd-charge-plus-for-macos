@@ -8,7 +8,7 @@ namespace EndfieldChargePlus;
 
 public sealed record AppLanguageInfo(AppLanguage Language,string Code,string NativeName,string EnglishName,bool RightToLeft=false,string Region="",string LanguageWord="Language",string? MinecraftCode=null)
 {
-    public string DisplayName=>string.IsNullOrEmpty(Region) ? NativeName : $"{NativeName} ({Region})";
+    public string DisplayName=>NativeName;
     public override string ToString()=>DisplayName;
 }
 
@@ -35,7 +35,7 @@ public static partial class LocalizationManager
         new AppLanguageInfo(AppLanguage.German,"de-DE","Deutsch","German"),
         new AppLanguageInfo(AppLanguage.French,"fr-FR","Français","French"),
         new AppLanguageInfo(AppLanguage.Spanish,"es-ES","Español","Spanish"),
-        new AppLanguageInfo(AppLanguage.Portuguese,"pt-BR","Português (Brasil)","Portuguese"),
+        new AppLanguageInfo(AppLanguage.Portuguese,"pt-BR","Português","Portuguese"),
         new AppLanguageInfo(AppLanguage.Russian,"ru-RU","Русский","Russian"),
         new AppLanguageInfo(AppLanguage.Arabic,"ar-SA","العربية","Arabic",true),
         new AppLanguageInfo(AppLanguage.Hindi,"hi-IN","हिन्दी","Hindi"),

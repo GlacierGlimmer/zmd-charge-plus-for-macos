@@ -1749,7 +1749,7 @@
   "Screen off": "화면 꺼짐 시 샘플링",
   "Search by name, key, or category; select a variable for details.": "이름, 변수 이름 또는 분류로 검색하세요. 변수를 선택하면 전체 설명을 확인할 수 있습니다.",
   "Search chapters or keys": "장, 변수 또는 사용법 검색",
-  "Search languages, regions or language codes": "언어, 지역 또는 언어 코드 검색",
+  "Search languages, regions or language codes": "언어 검색",
   "Search name, source ID or variable": "이름, 소스 ID, 변수 검색",
   "Search variables": "변수 검색",
   "Search: CPU usage / cpu.usage": "검색: CPU 사용률 / cpu.usage",

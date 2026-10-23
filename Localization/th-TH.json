@@ -1749,7 +1749,7 @@
   "Screen off": "หน้าจอปิด",
   "Search by name, key, or category; select a variable for details.": "ค้นหาด้วยชื่อ คีย์ หรือหมวด เลือกตัวแปรเพื่อดูรายละเอียด",
   "Search chapters or keys": "ค้นหาบทหรือชื่อตัวแปร",
-  "Search languages, regions or language codes": "ค้นหาภาษา ภูมิภาค หรือรหัสภาษา",
+  "Search languages, regions or language codes": "ค้นหาภาษา",
   "Search name, source ID or variable": "ค้นหาชื่อ ID แหล่งข้อมูล หรือตัวแปร",
   "Search variables": "ค้นหาตัวแปร",
   "Search: CPU usage / cpu.usage": "ค้นหา: การใช้ CPU / cpu.usage",

@@ -65,7 +65,7 @@ internal sealed class LanguageSelectionWindow : Window
     private void Refresh()
     {
         Title=_heading.Text="Language / "+LocalizationManager.CurrentLanguage.LanguageWord;
-        _search.Watermark=T("搜索语言、地区或语言代码","Search languages, regions or language codes");
+        _search.Watermark=T("搜索语言","Search languages, regions or language codes");
         AutomationProperties.SetName(_search,_search.Watermark?.ToString());
         _appearance.Content=new TextBlock {Text=T("全局字体大小和UI缩放","Global font size and UI scale"),TextWrapping=TextWrapping.Wrap,TextAlignment=TextAlignment.Center};
         _done.Content=T("完成","Done");

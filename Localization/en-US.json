@@ -1715,7 +1715,7 @@
   "Search by name, key or category under Data Management → Variable Library. Select a variable to see its meaning, type, unit and formats. Copy Variable Key is useful for rings and rules; Copy Template includes braces for text fields.": "Search by name, key or category under Data Management → Variable Library. Select a variable to see its meaning, type, unit and formats. Copy Variable Key is useful for rings and rules; Copy Template includes braces for text fields.",
   "Search by name, key, or category; select a variable for details.": "Search by name, key, or category; select a variable for details.",
   "Search chapters or keys": "Search chapters or keys",
-  "Search languages, regions or language codes": "Search languages, regions or language codes",
+  "Search languages, regions or language codes": "Search languages",
   "Search name, source ID or variable": "Search name, source ID or variable",
   "Search variables": "Search variables",
   "Search: CPU usage / cpu.usage": "Search: CPU usage / cpu.usage",

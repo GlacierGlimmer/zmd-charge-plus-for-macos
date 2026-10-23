@@ -6,7 +6,7 @@
       "id": 0,
       "code": "zh-CN",
       "nativeName": "简体中文",
-      "region": "中国大陆",
+      "region": "",
       "languageWord": "语言",
       "minecraftCode": "zh_cn",
       "rightToLeft": false
@@ -15,7 +15,7 @@
       "id": 1,
       "code": "en-US",
       "nativeName": "English",
-      "region": "United States",
+      "region": "",
       "languageWord": "Language",
       "minecraftCode": "en_us",
       "rightToLeft": false
@@ -24,7 +24,7 @@
       "id": 2,
       "code": "zh-TW",
       "nativeName": "繁體中文",
-      "region": "台灣",
+      "region": "",
       "languageWord": "語言",
       "minecraftCode": "zh_tw",
       "rightToLeft": false
@@ -33,7 +33,7 @@
       "id": 3,
       "code": "ja-JP",
       "nativeName": "日本語",
-      "region": "日本",
+      "region": "",
       "languageWord": "言語",
       "minecraftCode": "ja_jp",
       "rightToLeft": false
@@ -42,7 +42,7 @@
       "id": 4,
       "code": "ko-KR",
       "nativeName": "한국어",
-      "region": "대한민국",
+      "region": "",
       "languageWord": "언어",
       "minecraftCode": "ko_kr",
       "rightToLeft": false
@@ -51,7 +51,7 @@
       "id": 5,
       "code": "de-DE",
       "nativeName": "Deutsch",
-      "region": "Deutschland",
+      "region": "",
       "languageWord": "Sprache",
       "minecraftCode": "de_de",
       "rightToLeft": false
@@ -60,7 +60,7 @@
       "id": 6,
       "code": "fr-FR",
       "nativeName": "Français",
-      "region": "France",
+      "region": "",
       "languageWord": "Langue",
       "minecraftCode": "fr_fr",
       "rightToLeft": false
@@ -69,7 +69,7 @@
       "id": 7,
       "code": "es-ES",
       "nativeName": "Español",
-      "region": "España",
+      "region": "",
       "languageWord": "Idioma",
       "minecraftCode": "es_es",
       "rightToLeft": false
@@ -78,7 +78,7 @@
       "id": 8,
       "code": "pt-BR",
       "nativeName": "Português",
-      "region": "Brasil",
+      "region": "",
       "languageWord": "Idioma",
       "minecraftCode": "pt_br",
       "rightToLeft": false
@@ -87,7 +87,7 @@
       "id": 9,
       "code": "ru-RU",
       "nativeName": "Русский",
-      "region": "Россия",
+      "region": "",
       "languageWord": "Язык",
       "minecraftCode": "ru_ru",
       "rightToLeft": false
@@ -96,7 +96,7 @@
       "id": 10,
       "code": "ar-SA",
       "nativeName": "العربية",
-      "region": "العالم العربي",
+      "region": "",
       "languageWord": "اللغة",
       "minecraftCode": "ar_sa",
       "rightToLeft": true
@@ -105,7 +105,7 @@
       "id": 11,
       "code": "hi-IN",
       "nativeName": "हिंदी",
-      "region": "भारत",
+      "region": "",
       "languageWord": "भाषा",
       "minecraftCode": "hi_in",
       "rightToLeft": false
@@ -114,7 +114,7 @@
       "id": 12,
       "code": "bn-BD",
       "nativeName": "বাংলা",
-      "region": "বাংলাদেশ",
+      "region": "",
       "languageWord": "ভাষা",
       "rightToLeft": false
     },
@@ -122,7 +122,7 @@
       "id": 13,
       "code": "ur-PK",
       "nativeName": "اردو",
-      "region": "پاکستان",
+      "region": "",
       "languageWord": "زبان",
       "rightToLeft": true
     },
@@ -130,7 +130,7 @@
       "id": 14,
       "code": "id-ID",
       "nativeName": "Bahasa Indonesia",
-      "region": "Indonesia",
+      "region": "",
       "languageWord": "Bahasa",
       "minecraftCode": "id_id",
       "rightToLeft": false
@@ -139,7 +139,7 @@
       "id": 15,
       "code": "vi-VN",
       "nativeName": "Tiếng Việt",
-      "region": "Việt Nam",
+      "region": "",
       "languageWord": "Ngôn ngữ",
       "minecraftCode": "vi_vn",
       "rightToLeft": false
@@ -148,7 +148,7 @@
       "id": 16,
       "code": "th-TH",
       "nativeName": "ไทย",
-      "region": "ประเทศไทย",
+      "region": "",
       "languageWord": "ภาษา",
       "minecraftCode": "th_th",
       "rightToLeft": false
@@ -157,7 +157,7 @@
       "id": 17,
       "code": "tr-TR",
       "nativeName": "Türkçe",
-      "region": "Türkiye",
+      "region": "",
       "languageWord": "Dil",
       "minecraftCode": "tr_tr",
       "rightToLeft": false
@@ -166,7 +166,7 @@
       "id": 18,
       "code": "it-IT",
       "nativeName": "Italiano",
-      "region": "Italia",
+      "region": "",
       "languageWord": "Lingua",
       "minecraftCode": "it_it",
       "rightToLeft": false
@@ -175,10 +175,11 @@
       "id": 19,
       "code": "fa-IR",
       "nativeName": "فارسی",
-      "region": "ايران",
+      "region": "",
       "languageWord": "زبان",
       "minecraftCode": "fa_ir",
       "rightToLeft": true
     }
-  ]
+  ],
+  "languageScope": "global-language; legacy resource codes are compatibility identifiers, not country restrictions"
 }

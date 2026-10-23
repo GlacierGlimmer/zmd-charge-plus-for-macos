@@ -1715,7 +1715,7 @@ Ekran kapalıyken örnekleme
 Ad, anahtar veya kategoride arama yapın Veri yönetimi → Değişken kitaplığı altında. Bir değişkenin anlamını, türünü, birimini ve biçimlerini görmek için seçin. Copy Variable Key yüzükler ve kurallar için yararlıdır; Copy Template metin alanları için bağlamaları içerir.
 İşleve göre: önce durum ve canlı değerler, sonra ayrıntılar. Ad, anahtar veya kategoriyle arayın.
 Bölüm veya anahtar ara
-Dil, bölge veya dil kodu ara
+Dil ara
 Ad, kaynak kimliği veya değişken ara
 Değişken ara
 Ara: CPU kullanımı / cpu.usage

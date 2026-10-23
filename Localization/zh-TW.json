@@ -1715,7 +1715,7 @@
   "Search by name, key or category under Data Management → Variable Library. Select a variable to see its meaning, type, unit and formats. Copy Variable Key is useful for rings and rules; Copy Template includes braces for text fields.": "在“資料管理 → 變數庫”按名稱、變數名或分類搜尋。選擇后查看含義、類型、單位和格式建議。“復制變數名”適合圓環變數或觸發規則；“復制模板”得到帶花括號的寫法，適合文字區域。",
   "Search by name, key, or category; select a variable for details.": "按名稱、變數名或分類查找，選擇變數后查看完整說明。",
   "Search chapters or keys": "搜尋章節、變數或用法",
-  "Search languages, regions or language codes": "搜尋語言、地區或語言代碼",
+  "Search languages, regions or language codes": "搜尋語言",
   "Search name, source ID or variable": "搜尋名稱、來源 ID 或變數",
   "Search variables": "搜尋變數",
   "Search: CPU usage / cpu.usage": "搜尋：CPU 使用率 / cpu.usage",

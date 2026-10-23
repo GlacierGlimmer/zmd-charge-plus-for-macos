@@ -1715,7 +1715,7 @@ Erfassung bei ausgeschaltetem Bildschirm
 Suchen Sie unter Datenverwaltung → Variablen nach Name, Schlüssel oder Kategorie. Wählen Sie eine Variable, um Bedeutung, Typ, Einheit und Formate zu sehen. Das Kopieren des Variablenschlüssels eignet sich für Ringe und Regeln; Vorlage kopieren enthält die geschweiften Klammern für Textfelder.
 Suchen Sie nach Name, Variablenschlüssel oder Kategorie. Wählen Sie eine Variable, um ihre vollständige Beschreibung zu lesen.
 Kapitel, Variablen oder Verwendung suchen
-Sprachen, Regionen oder Sprachcodes suchen
+Sprachen suchen
 Name, Quell-ID oder Variable suchen
 Variablen suchen
 Suche: CPU-Auslastung / cpu.usage
