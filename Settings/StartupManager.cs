@@ -1,7 +1,16 @@
 using System.Xml.Linq;
 namespace EndfieldChargePlus.Settings;
+public sealed record StartupApplyResult(bool Succeeded,bool IsEnabled,bool IsPackaged=false,string State="Native");
 public static class StartupManager
 {
+    public static bool IsPackaged=>false;
+    public static Task<StartupApplyResult> ReadStatusAsync()=>Task.FromResult(new StartupApplyResult(true,File.Exists(AutostartPath)));
+    public static Task<StartupApplyResult> ApplyAsync(bool enabled)
+    {
+        Apply(enabled);
+        return Task.FromResult(new StartupApplyResult(File.Exists(AutostartPath)==enabled,File.Exists(AutostartPath)));
+    }
+
     internal const string Label = "com.glacierglimmer.endfieldchargeplus.macos";
     internal static string AutostartPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "LaunchAgents", Label + ".plist");
     internal static string BuildPlist(string executable) => new XDocument(

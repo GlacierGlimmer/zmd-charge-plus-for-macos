@@ -28,8 +28,8 @@ public sealed record HudProfile
 
     public string TaglineTemplate { get; init; } = "/// SYSTEM MONITOR";
     public string TitleTemplate { get; init; } = "系统状态";
-    public string PrimaryTemplate { get; init; } = "{cpu.logical_processors}";
-    public string SecondaryTemplate { get; init; } = " CPU";
+    public string PrimaryTemplate { get; init; } = "{cpu.frequency_ghz|0.00}";
+    public string SecondaryTemplate { get; init; } = " GHz";
     public string RightTemplate { get; init; } = "{cpu.usage|0}";
     public string RightSuffix { get; init; } = "%";
 
@@ -93,9 +93,9 @@ public sealed record CustomHudSettings
     // Ordered profile IDs used by automatic cycling. Null means a legacy settings file
     // that predates the explicit cycle queue; the normalizer migrates that case once.
     public List<string>? CycleProfileIds { get; init; } = null;
-    // Simple | Full. When AutoCycle is enabled this overrides each profile's own
+    // Simple | Full | Roll. When AutoCycle is enabled this overrides each profile's own
     // AnimationMode for transitions between queue entries.
-    public string CycleAnimationMode { get; init; } = "Simple";
+    public string CycleAnimationMode { get; init; } = "Roll";
     public string ActiveProfileId { get; init; } = "";
 
     public string DeepSeekApiKeyProtected { get; init; } = "";
@@ -103,6 +103,7 @@ public sealed record CustomHudSettings
 
     public List<HudProfile> Profiles { get; init; } = new();
     public List<CustomHttpSource> HttpSources { get; init; } = new();
+    public List<HudTriggerRule> Triggers { get; init; } = new();
 
     public static CustomHudSettings CreateDefault()
     {
@@ -119,14 +120,13 @@ public sealed record CustomHudSettings
                 .Where(p => !p.BuiltInKey.EndsWith("-fps",StringComparison.OrdinalIgnoreCase))
                 .Select(p => p.Id)
                 .ToList(),
-            CycleAnimationMode = "Simple"
+            CycleAnimationMode = "Roll"
         };
     }
 
-    public static List<HudProfile> CreateDefaultProfiles() => OperatingSystem.IsMacOS()
-        ? MacVariableCatalog.AdaptProfiles(CreatePlatformProfiles()) : CreatePlatformProfiles();
+    public static List<HudProfile> CreateDefaultProfiles()=>MacVariableCatalog.AdaptProfiles(CreatePlatformProfiles());
 
-    internal static List<HudProfile> CreatePlatformProfiles() => new List<HudProfile>()
+    internal static List<HudProfile> CreatePlatformProfiles() => new List<HudProfile>
     {
         new()
         {
@@ -158,8 +158,8 @@ public sealed record CustomHudSettings
             AnimationMode = "Full",
             TaglineTemplate = "/// CPU",
             TitleTemplate = "CPU",
-            PrimaryTemplate = "{cpu.logical_processors}",
-            SecondaryTemplate = " CPU",
+            PrimaryTemplate = "{cpu.frequency_ghz|0.00}",
+            SecondaryTemplate = " GHz",
             RightTemplate = "{cpu.usage|0}",
             RightSuffix = "%",
             ProgressVariable = "cpu.usage",

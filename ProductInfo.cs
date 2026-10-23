@@ -1,8 +1,23 @@
 namespace EndfieldChargePlus;
 internal static class ProductInfo
 {
+    internal const string BuildDate = "2026.10.23";
     internal const string MacName = "Endfield Charge Plus For MacOS";
-    internal const string Name = MacName;
+    internal static string Name
+    {
+        get
+        {
+            try
+            {
+                var localized=LocalizationManager.PlatformTitle;
+                return string.IsNullOrWhiteSpace(localized) ? MacName : localized;
+            }
+            catch
+            {
+                return MacName;
+            }
+        }
+    }
     internal const string Repository = "https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos";
     internal static string Brand(string value) => value
         .Replace(MacName, "Endfield Charge Plus", StringComparison.Ordinal)

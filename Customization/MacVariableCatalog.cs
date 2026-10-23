@@ -39,6 +39,7 @@ internal static class MacVariableCatalog
     }
     internal static bool Supports(string key)
     {
+        if(key.StartsWith("sensor.",StringComparison.OrdinalIgnoreCase) || key.StartsWith("hardware.",StringComparison.OrdinalIgnoreCase))return true;
         if (key.StartsWith("custom.", StringComparison.OrdinalIgnoreCase)) return true;
         if (MacSharedKeys.Keys.Contains(key) || UiKeys.Contains(key) || Detected.Contains(key)) return true;
         if (!VariableCatalog.PlatformIndependentDefinitions.Any(d => d.Key.Equals(key, StringComparison.OrdinalIgnoreCase))) return false;
@@ -54,7 +55,7 @@ internal static class MacVariableCatalog
             ("memory.free_bytes", "空闲物理内存", "内存", "Byte", "数值", "Mach free_count × 系统页大小。"),
             ("memory.active_bytes", "活跃内存", "内存", "Byte", "数值", "Mach active_count × 系统页大小。"),
             ("memory.inactive_bytes", "非活跃内存", "内存", "Byte", "数值", "Mach inactive_count × 系统页大小。"),
-            ("memory.wired_bytes", "联动内存", "内存", "Byte", "数值", "Mach wire_count × 系统页大小。"),
+            ("memory.wired_bytes", "锁定内存", "内存", "Byte", "数值", "Mach wire_count × 系统页大小。"),
             ("memory.swap_total_bytes", "交换空间总量", "内存", "Byte", "数值", "sysctl vm.swapusage，随系统动态分配。"),
             ("memory.swap_used_bytes", "已用交换空间", "内存", "Byte", "数值", "sysctl vm.swapusage 实际已用值。"),
             ("memory.swap_available_bytes", "可用交换空间", "内存", "Byte", "数值", "sysctl vm.swapusage 实际可用值。"),
@@ -91,6 +92,57 @@ internal static class MacVariableCatalog
             ? d.Description.Replace("Windows", "macOS").Replace("Eastern Standard Time", "America/New_York").Replace("China Standard Time", "Asia/Shanghai")
             : $"{d.Name}。数据来源：{source}。";
     }
+    internal static string LocalizedName(VariableDefinition item,string fallback)=>item.Key switch {
+        "memory.free_bytes"=>LocalizationManager.Text("空闲物理内存","Free Physical Memory"),
+        "memory.active_bytes"=>LocalizationManager.Text("活跃内存","Active Memory"),
+        "memory.inactive_bytes"=>LocalizationManager.Text("非活跃内存","Inactive Memory"),
+        "memory.wired_bytes"=>LocalizationManager.Text("锁定内存","Wired Memory"),
+        "memory.swap_total_bytes"=>LocalizationManager.Text("交换空间总量","Total Swap Space"),
+        "memory.swap_used_bytes"=>LocalizationManager.Text("已用交换空间","Used Swap Space"),
+        "memory.swap_available_bytes"=>LocalizationManager.Text("可用交换空间","Available Swap Space"),
+        "disk.system.available_bytes"=>LocalizationManager.Text("用户可用磁盘空间","User-Available Disk Space"),
+        "battery.time_to_full_seconds"=>LocalizationManager.Text("充满剩余时间","Time Until Full Charge"),
+        "gpu.unified_memory"=>LocalizationManager.Text("统一内存架构","Unified Memory Architecture"),
+        "gpu.recommended_working_set_bytes"=>LocalizationManager.Text("Metal 建议工作集上限","Metal Recommended Working Set Limit"),
+        "gpu.low_power"=>LocalizationManager.Text("低功耗 GPU","Low-Power GPU"),
+        "gpu.removable"=>LocalizationManager.Text("可移除 GPU","Removable GPU"),
+        _=>fallback};
+
+    // Keep platform collection details independent of the generic Windows
+    // description keys; those keys intentionally share short metric names.
+    internal static string LocalizedDescription(VariableDefinition item,string name,string fallback)
+    {
+        if(item.Key.StartsWith("sensor.") || item.Key.StartsWith("hardware.") || item.Key.StartsWith("custom."))return fallback;
+        if(item.Key.StartsWith("time.") || item.Key.StartsWith("deepseek."))return fallback.Replace("Windows","macOS").Replace("Eastern Standard Time","America/New_York").Replace("China Standard Time","Asia/Shanghai");
+        string? exact=item.Key switch {
+            "memory.free_bytes"=>LocalizationManager.Text("Mach free_count × 系统页大小。","Mach free_count multiplied by the system page size."),
+            "memory.active_bytes"=>LocalizationManager.Text("Mach active_count × 系统页大小。","Mach active_count multiplied by the system page size."),
+            "memory.inactive_bytes"=>LocalizationManager.Text("Mach inactive_count × 系统页大小。","Mach inactive_count multiplied by the system page size."),
+            "memory.wired_bytes"=>LocalizationManager.Text("Mach wire_count × 系统页大小。","Mach wire_count multiplied by the system page size."),
+            "memory.swap_total_bytes"=>LocalizationManager.Text("sysctl vm.swapusage，随系统动态分配。","Total swap from sysctl vm.swapusage, dynamically allocated by the system."),
+            "memory.swap_used_bytes"=>LocalizationManager.Text("sysctl vm.swapusage 实际已用值。","Actual used swap from sysctl vm.swapusage."),
+            "memory.swap_available_bytes"=>LocalizationManager.Text("sysctl vm.swapusage 实际可用值。","Actual available swap from sysctl vm.swapusage."),
+            "disk.system.available_bytes"=>LocalizationManager.Text("APFS Data 卷 statfs f_bavail，不含系统保留空间。","statfs f_bavail for the APFS Data volume, excluding system-reserved space."),
+            "battery.time_to_full_seconds"=>LocalizationManager.Text("IOPowerSources 充电时间估计，仅系统提供估计时显示。","IOPowerSources charging-time estimate, shown only when the system supplies an estimate."),
+            "gpu.unified_memory"=>LocalizationManager.Text("Metal hasUnifiedMemory，不将统一内存当作独立显存。","Metal hasUnifiedMemory. Unified memory is not counted as dedicated video memory."),
+            "gpu.recommended_working_set_bytes"=>LocalizationManager.Text("Metal recommendedMaxWorkingSetSize；是预算，不是显存容量或 GPU 已用内存。","Metal recommendedMaxWorkingSetSize: a budget, not video memory capacity or GPU memory usage."),
+            "gpu.low_power"=>LocalizationManager.Text("Metal isLowPower。","Low-power device state from Metal isLowPower."),
+            "gpu.removable"=>LocalizationManager.Text("Metal isRemovable。","Removable device state from Metal isRemovable."),
+            _=>null};
+        if(exact is not null)return exact;
+        string source=item.Key.Split('.')[0] switch {
+            "cpu"=>LocalizationManager.Text("Mach CPU tick 差分或 sysctl","Differences in Mach CPU ticks or sysctl"),
+            "memory"=>LocalizationManager.Text("Mach VM / sysctl；已用 = active + wired + compressed，可用 = 总量减已用，并非内存压力","Mach VM / sysctl; used = active + wired + compressed, available = total minus used; this is not memory pressure"),
+            "disk"=>LocalizationManager.Text("APFS Data 卷 statfs；容量包含同一 APFS 容器共享空间","statfs for the APFS Data volume; capacity includes space shared within the same APFS container"),
+            "battery"=>LocalizationManager.Text("IOPowerSources；无内置电池时移除，仅在系统提供数据时列出","IOPowerSources; omitted without a built-in battery and listed only when the system provides data"),
+            "gpu"=>LocalizationManager.Text("Metal 设备信息；不提供系统未公开的全局 GPU 使用率、温度和显存占用","Metal device information; global GPU usage, temperature and video memory usage are unavailable when not exposed by the system"),
+            "network"=>LocalizationManager.Text("macOS en* 物理接口 64 位计数器差分，排除 VPN/loopback 重复流量；或已实现的公网查询及方案计算","Differences in 64-bit counters for macOS en* physical interfaces, excluding duplicate VPN/loopback traffic; or implemented public-IP queries and profile calculations"),
+            "display"=>LocalizationManager.Text("CoreGraphics 原生像素分辨率 / AppKit Retina backingScaleFactor；桌面坐标使用逻辑点，DPI 为 96 × 缩放比例","CoreGraphics native pixel resolution / AppKit Retina backingScaleFactor; desktop coordinates use logical points and DPI is 96 multiplied by the scale factor"),
+            "clipboard"=>LocalizationManager.Text("macOS 剪贴板；更新时间为 ECP 最近观察到内容变化的时刻","macOS clipboard; update time is when ECP last observed a content change"),
+            _=>LocalizationManager.Text("macOS / .NET 或本方案实际配置与查询结果","macOS / .NET or the actual configuration and query results for this profile")};
+        return LocalizationManager.Formatted($"{name}。数据来源：{source}。",$"{name}. Data source: {source}.");
+    }
+
     internal static List<HudProfile> AdaptProfiles(IEnumerable<HudProfile> source)
     {
         var result = new List<HudProfile>();

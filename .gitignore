@@ -44,3 +44,7 @@ native/*.dylib
 
 # Isolated official-period regression output
 **/obj-period/
+
+# Local Python tooling caches
+__pycache__/
+*.py[cod]
