@@ -70,7 +70,7 @@ Color de acento
 Número de interfaces de red activas
 Perfil activo
 Perfil activo
-Solo funciona cuando Siempre visible está desactivado. Una regla que se cumple muestra el siguiente elemento de la lista de rotación, o el perfil actual si la lista está vacía. La primera muestra y la recuperación de datos ausentes solo establecen la referencia.
+Solo funciona cuando Siempre visible está desactivado. Una regla que se cumple muestra el siguiente elemento de la lista de rotación, o el perfil actual si la lista está vacía. La primera muestra y la recuperación de datos ausentes solo establecen la referencia. Las solicitudes de la zona activa tienen prioridad; la zona y las reglas avanzan por la cola de forma independiente. El muestreo continúa mientras se muestra el HUD con los intervalos globales y de cada fuente. Los eventos detectados durante una operación se agrupan y conservan.
 ActivityManager.MemoryInfo.lowMemory: el sistema indica escasez de memoria.
 Tasa de cambio del contador de fotogramas compuestos reales de SurfaceFlinger con ROOT; no es la frecuencia de actualización. No está disponible si no se pueden distinguir varios monitores.
 Estado real de recopilación y motivo de indisponibilidad.
@@ -202,7 +202,7 @@ Abajo a la izquierda
 Abajo a la derecha
 Rebote
 Buenos Aires, Brasilia
-Compilación 2026.10.23
+Compilación 2026.10.24
 Compilación {0}
 Crear una lista de rotación
 Fecha de compilación
@@ -1148,7 +1148,7 @@ Incluye un resumen del dispositivo, sus capacidades, permisos y configuración q
 Ajustes independientes y compartidos
 Sensores individuales y resúmenes
 Información
-La primera muestra y la primera tras recuperar los datos establecen una referencia sin mostrar el HUD. Cada regla tiene su propia espera entre activaciones; una condición de umbral mantenida puede activarse de nuevo al terminar esa espera. Las reglas que se cumplen muestran el siguiente elemento de la lista de esa instancia, o el perfil activo si está vacía. Las reglas solo funcionan en el modo temporal.
+La primera muestra y la primera tras recuperar los datos establecen una referencia sin mostrar el HUD. Cada regla tiene su propia espera entre activaciones; una condición de umbral mantenida puede activarse de nuevo al terminar esa espera. Las reglas que se cumplen muestran el siguiente elemento de la lista de esa instancia, o el perfil activo si está vacía. Las reglas solo funcionan en el modo temporal. Las solicitudes de la zona activa tienen prioridad; la zona y las reglas avanzan por la cola de forma independiente. El muestreo continúa mientras se muestra el HUD con los intervalos globales y de cada fuente. Los eventos detectados durante una operación se agrupan y conservan.
 Insertar variable
 Examina las lecturas reales y resuelve problemas de controladores.
 Examinar, buscar, copiar y exportar
@@ -1386,7 +1386,7 @@ Todavía no hay entradas de registro.
 No se encontraron capítulos
 No hay variables coincidentes.
 No hay una red disponible actualmente.
-No se ha encontrado una versión publicada ni una etiqueta.
+No se ha encontrado ninguna versión publicada.
 Todavía no hay reglas.
 Todavía no se ha recopilado ninguna muestra.
 Todavía no se ha cargado ningún perfil.
@@ -1804,7 +1804,7 @@ Estado: Error de comprobación
 Estado: GitHub…
 Estado: versión local más nueva que en línea
 Estado: error de red ({0})
-Estado: sin versión/etiqueta; el repositorio quizá no sea público
+Estado: no se ha encontrado ninguna versión publicada; es posible que el repositorio aún no sea público
 Estado: Sin comprobar
 Estado: versión encontrada, formato no comparable
 Estado: actualizado

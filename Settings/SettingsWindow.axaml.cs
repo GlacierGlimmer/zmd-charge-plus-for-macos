@@ -63,7 +63,7 @@ public partial class SettingsWindow : Window
 
         public string StatusText => Status switch
         {
-            UpdateStatusKind.NoRemoteVersion => LocalizationManager.Text("状态：未获取到 Release / 标签，仓库可能尚未公开", "Status: no release/tag found; the repository may not be public yet"),
+            UpdateStatusKind.NoRemoteVersion => LocalizationManager.Text("状态：未找到已发布版本，仓库可能尚未公开", "Status: no release/tag found; the repository may not be public yet"),
             UpdateStatusKind.Uncomparable => LocalizationManager.Text("状态：已获取线上版本，但版本号格式无法比较", "Status: remote version found, but its format cannot be compared"),
             UpdateStatusKind.UpdateAvailable => LocalizationManager.Text("状态：发现新版本", "Status: update available"),
             UpdateStatusKind.UpToDate => LocalizationManager.Text("状态：当前已是最新版本", "Status: up to date"),
@@ -695,8 +695,6 @@ public partial class SettingsWindow : Window
         try
         {
             string? latestTag = await TryGetLatestReleaseTagAsync();
-            if (string.IsNullOrWhiteSpace(latestTag))
-                latestTag = await TryGetLatestTagAsync();
 
             if (string.IsNullOrWhiteSpace(latestTag))
             {
@@ -785,42 +783,8 @@ public partial class SettingsWindow : Window
         UpdateStatusText.Text = result.StatusText;
     }
 
-    private static async Task<string?> TryGetLatestReleaseTagAsync()
-    {
-        using HttpResponseMessage response = await UpdateHttpClient.GetAsync(
-            "https://api.github.com/repos/GlacierGlimmer/zmd-charge-plus-for-macos/releases/latest");
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-            return null;
-
-        response.EnsureSuccessStatusCode();
-        await using Stream stream = await response.Content.ReadAsStreamAsync();
-        using JsonDocument json = await JsonDocument.ParseAsync(stream);
-        return json.RootElement.TryGetProperty("tag_name", out JsonElement tag)
-            ? tag.GetString()
-            : null;
-    }
-
-    private static async Task<string?> TryGetLatestTagAsync()
-    {
-        using HttpResponseMessage response = await UpdateHttpClient.GetAsync(
-            "https://api.github.com/repos/GlacierGlimmer/zmd-charge-plus/tags?per_page=1");
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-            return null;
-
-        response.EnsureSuccessStatusCode();
-        await using Stream stream = await response.Content.ReadAsStreamAsync();
-        using JsonDocument json = await JsonDocument.ParseAsync(stream);
-        JsonElement root = json.RootElement;
-        if (root.ValueKind != JsonValueKind.Array || root.GetArrayLength() == 0)
-            return null;
-
-        JsonElement first = root[0];
-        return first.TryGetProperty("name", out JsonElement name)
-            ? name.GetString()
-            : null;
-    }
+    private static Task<string?> TryGetLatestReleaseTagAsync()
+        => GitHubReleaseUpdate.FetchTagAsync(UpdateHttpClient);
 
     private static string NormalizeVersionTag(string tag)
     {

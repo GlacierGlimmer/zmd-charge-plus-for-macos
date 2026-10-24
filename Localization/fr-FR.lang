@@ -70,7 +70,7 @@ Couleur d’accent
 Nombre d’interfaces réseau actives
 Profil actif
 Profil actif
-Actif uniquement lorsque « Toujours visible » est désactivé. Une règle satisfaite affiche le prochain élément de la liste de défilement, ou le profil actuel si la liste est vide. Le premier relevé et le premier relevé après rétablissement des données servent uniquement de référence.
+Actif uniquement lorsque « Toujours visible » est désactivé. Une règle satisfaite affiche le prochain élément de la liste de défilement, ou le profil actuel si la liste est vide. Le premier relevé et le premier relevé après rétablissement des données servent uniquement de référence. Les demandes de zone active sont prioritaires ; la zone et les règles avancent indépendamment dans la file. La collecte continue pendant l’affichage du HUD selon les intervalles globaux et ceux des sources. Les événements détectés pendant une opération sont regroupés et conservés.
 ActivityManager.MemoryInfo.lowMemory : le système signale un manque de mémoire.
 Taux de variation du compteur réel d’images composées de SurfaceFlinger avec ROOT, et non fréquence de rafraîchissement. Indisponible si plusieurs écrans ne peuvent pas être distingués.
 État réel de la collecte et raison de l’indisponibilité.
@@ -202,7 +202,7 @@ En bas à gauche
 En bas à droite
 Rebond
 Buenos Aires, Brasilia
-Compilation 2026.10.23
+Compilation 2026.10.24
 Compilation {0}
 Créer une file de défilement
 Date de compilation
@@ -1148,7 +1148,7 @@ Comprend un résumé de l’appareil, des capacités, des autorisations et de la
 Réglages indépendants et partagés
 Capteurs individuels et synthèses
 Information
-Les premiers échantillons et ceux qui suivent une reprise des données établissent une référence sans faire apparaître le HUD. Chaque règle possède son propre délai ; un seuil toujours atteint peut déclencher de nouveau une fois ce délai écoulé. Une règle satisfaite affiche l'élément suivant de la file de l'instance, ou le profil actif si la file est vide. Les règles fonctionnent uniquement en mode temporaire.
+Les premiers échantillons et ceux qui suivent une reprise des données établissent une référence sans faire apparaître le HUD. Chaque règle possède son propre délai ; un seuil toujours atteint peut déclencher de nouveau une fois ce délai écoulé. Une règle satisfaite affiche l'élément suivant de la file de l'instance, ou le profil actif si la file est vide. Les règles fonctionnent uniquement en mode temporaire. Les demandes de zone active sont prioritaires ; la zone et les règles avancent indépendamment dans la file. La collecte continue pendant l’affichage du HUD selon les intervalles globaux et ceux des sources. Les événements détectés pendant une opération sont regroupés et conservés.
 Insérer une variable
 Examinez les mesures réelles et résolvez les problèmes de pilotes.
 Examiner, rechercher, copier et exporter
@@ -1386,7 +1386,7 @@ Aucune entrée de journal pour le moment.
 Aucun chapitre trouvé
 Aucune variable correspondante.
 Aucun réseau n’est actuellement disponible.
-Aucune version publiée ni étiquette trouvée.
+Aucune version publiée trouvée.
 Aucune règle pour le moment.
 Aucun échantillon n’a encore été recueilli.
 Aucun profil n’est encore chargé.
@@ -1804,7 +1804,7 @@ Calcul de l’état
 État : connexion à GitHub pour rechercher des mises à jour…
 État : version locale plus récente qu’en ligne
 État : requête réseau échouée ({0})
-État : aucune version/étiquette ; dépôt peut-être privé
+État : aucune version publiée trouvée ; le dépôt n’est peut-être pas encore public
 État : pas encore vérifié
 État : version trouvée mais format non comparable
 État : à jour

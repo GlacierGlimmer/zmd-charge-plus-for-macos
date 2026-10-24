@@ -481,7 +481,7 @@
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <StackPanel Spacing="12">
               <TextBlock Text="事件呼出" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
-              <TextBlock Text="仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。" TextWrapping="Wrap" FontSize="12" Foreground="#A0A0A6"/>
+              <TextBlock Text="仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。鼠标热区优先响应；热区和规则各自推进队列。HUD 展示期间仍按全局与数据源设置的间隔采样，忙碌时检测到的触发会合并保留。" TextWrapping="Wrap" FontSize="12" Foreground="#A0A0A6"/>
               <ListBox x:Name="TriggerList" Height="160"/>
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <Button x:Name="AddTriggerBtn" Content="添加规则"/>
@@ -495,7 +495,11 @@
               <TextBlock Text="规则名称" TextWrapping="Wrap"/>
               <TextBox x:Name="TriggerNameBox"/>
               <TextBlock Text="监视变量" TextWrapping="Wrap"/>
-              <TextBox x:Name="TriggerVariableBox" Watermark="cpu.usage / probe.loss_percent"/>
+              <Grid ColumnDefinitions="*,Auto">
+                <TextBox x:Name="TriggerVariableBox" Watermark="cpu.usage / probe.loss_percent"/>
+                <Button Grid.Column="1" x:Name="CheckTriggerVariableBtn" Content="刷新" Margin="8,0,0,0"/>
+              </Grid>
+              <TextBlock x:Name="TriggerValidationText" IsVisible="False" TextWrapping="Wrap" FontSize="12"/>
               <TextBlock Text="变量可从变量库复制。网络探测沿用队列中网络包探测方案的目标和协议；没有该方案时使用当前方案。" TextWrapping="Wrap" FontSize="11" Foreground="#85858B"/>
               <Grid ColumnDefinitions="*,*">
                 <StackPanel Spacing="6" Margin="0,0,12,0">

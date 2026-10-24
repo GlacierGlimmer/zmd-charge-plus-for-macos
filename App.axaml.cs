@@ -19,6 +19,8 @@ public partial class App : Application
     private CustomHudRuntime? _runtime;
     private TrayIcon? _tray;
     private SettingsWindow? _settingsWindow;
+    private readonly UpdateReminderPresenter _updateReminder = new();
+    private bool _exiting;
     private IClassicDesktopStyleApplicationLifetime? _desktop;
     private readonly CancellationTokenSource _activation = new();
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
@@ -57,8 +59,10 @@ public partial class App : Application
             _ = CheckUpdatesAsync();
             desktop.Exit += (_, _) =>
             {
+                _exiting = true;
                 LocalizationManager.LanguageChanged -= SetupMenu;
                 _activation.Cancel();
+                _updateReminder.Close();
                 _hudHotkey?.Dispose();_tray?.Dispose(); _runtime?.Dispose(); _hud?.Close();
             };
         }
@@ -110,7 +114,12 @@ public partial class App : Application
     private async Task CheckUpdatesAsync()
     {
         var result = await SettingsWindow.CheckForUpdatesAsync();
-        await Dispatcher.UIThread.InvokeAsync(() => _settingsWindow?.ApplyUpdateCheckResult(result));
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            if (_exiting) return;
+            _settingsWindow?.ApplyUpdateCheckResult(result);
+            _updateReminder.Present(result);
+        });
     }
     private void StartActivationListener()
     {

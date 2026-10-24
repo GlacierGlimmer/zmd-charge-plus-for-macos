@@ -70,7 +70,7 @@ Vurgu rengi
 Etkin ağ arabirimi sayısı
 Etkin profil
 Etkin profil
-Sürekli görünüm kapalıyken çalışır. Kural sonraki öğeyi, liste boşsa mevcut profili çağırır. İlk ve geri dönen örnekler yalnız temel oluşturur.
+Sürekli görünüm kapalıyken çalışır. Kural sonraki öğeyi, liste boşsa mevcut profili çağırır. İlk ve geri dönen örnekler yalnız temel oluşturur. Etkin bölge istekleri önceliklidir; bölge ve kurallar kuyrukta birbirinden bağımsız ilerler. HUD gösterilirken genel ve veri kaynağı aralıklarına göre örnekleme sürer. Meşgulken algılanan olaylar birleştirilip saklanır.
 ActivityManager.MemoryInfo.lowMemory: sistem bellek sıkışıklığı bildiriyor.
 ROOT ile SurfaceFlinger gerçek birleştirilmiş kare sayacının değişim hızı; yenileme hızı değildir. Birden fazla ekran ayırt edilemiyorsa kullanılamaz.
 Gerçek toplama durumu ve kullanılamama nedeni.
@@ -202,7 +202,7 @@ Sol alt
 Sağ alt
 Sekme
 Buenos Aires, Brasilia
-Derleme 2026.10.23
+Derleme 2026.10.24
 Derleme {0}
 Bir karusel kuyruk oluşturun
 Derleme tarihi
@@ -1148,7 +1148,7 @@ Geliştiriciyle paylaşılabilecek cihaz, yetenek, izin ve yapılandırma bilgil
 Bağımsız ve paylaşılan ayarlar
 Bireysel sensörler ve özetler
 Bilgi
-İlk ve geri alınan örnekler ortaya çıkmadan bir başlangıç çizgisi oluşturur. Her kuralın kendi soğutma süresi vardır; süresi dolduğunda devamlı bir eşiğin tekrar tetiklenebileceği bir sınır vardır. Uygunlaşan kurallar, bu örneğin kuyrukundaki bir sonraki öğeyi veya boş bir kuyruk için aktif profilü çağırır. Kurallar sadece geçici modda çalışır.
+İlk ve geri alınan örnekler ortaya çıkmadan bir başlangıç çizgisi oluşturur. Her kuralın kendi soğutma süresi vardır; süresi dolduğunda devamlı bir eşiğin tekrar tetiklenebileceği bir sınır vardır. Uygunlaşan kurallar, bu örneğin kuyrukundaki bir sonraki öğeyi veya boş bir kuyruk için aktif profilü çağırır. Kurallar sadece geçici modda çalışır. Etkin bölge istekleri önceliklidir; bölge ve kurallar kuyrukta birbirinden bağımsız ilerler. HUD gösterilirken genel ve veri kaynağı aralıklarına göre örnekleme sürer. Meşgulken algılanan olaylar birleştirilip saklanır.
 Değişken ekle
 Gerçek okumaları kontrol edin ve sürücü sorunlarını çözün.
 Denetleme, arama, kopyalama ve ihracat
@@ -1386,7 +1386,7 @@ Henüz günlük kaydı yok.
 Eşleşen bölüm yok
 Eşleşen değişken yok.
 Şu anda kullanılabilir ağ yok.
-Yayımlanmış sürüm veya etiket bulunamadı.
+Yayımlanmış sürüm bulunamadı.
 Henüz kural yok.
 Henüz örnek toplanmadı.
 Henüz profil yüklenmedi.
@@ -1804,7 +1804,7 @@ Durum: Denetim başarısız
 Durum: GitHub…
 Durum: yerel sürüm çevrimiçinden yeni
 Durum: ağ isteği başarısız ({0})
-Durum: sürüm/etiket yok; depo herkese açık olmayabilir
+Durum: yayımlanmış sürüm bulunamadı; depo henüz herkese açık olmayabilir
 Durum: Denetlenmedi
 Durum: sürüm bulundu ama biçimi karşılaştırılamıyor
 Durum: güncel

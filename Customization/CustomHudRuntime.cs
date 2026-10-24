@@ -17,6 +17,7 @@ public sealed partial class CustomHudRuntime : IDisposable
     private readonly bool _ownsVariables;
     private readonly string _warningScope=Guid.NewGuid().ToString("N");
     private readonly DispatcherTimer _timer;
+    private readonly DispatcherTimer _observationTimer;
     private readonly SemaphoreSlim _operation = new(1,1);
     private CancellationTokenSource _revision = new();
     private CancellationToken _activeToken;
@@ -91,7 +92,9 @@ public sealed partial class CustomHudRuntime : IDisposable
         _hud.HudClicked += OnHudClicked;
         // 100 ms：用于屏幕顶边热点检测和墙钟秒边界同步。重型指标仍按需采样。
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
-        _timer.Tick += (_, _) => { ObserveHotZone();_ = RunSerializedAsync(TickAsync); };
+        _timer.Tick += (_, _) => { _ = RunSerializedAsync(TickAsync); };
+        _observationTimer=new DispatcherTimer { Interval=TimeSpan.FromMilliseconds(100) };
+        _observationTimer.Tick+=(_,_)=>{ObserveHotZone();_ = ObserveTriggerRulesAsync();};
         _hud.Closed += OnHudClosed;
     }
 
@@ -212,9 +215,10 @@ public sealed partial class CustomHudRuntime : IDisposable
     {
         if (_disposed || _running) return;
         _running=true;
+        _observationTimer.Start();
         RunSerializedAsync(RunStartupPresentationAsync,wait:true);
     }
-    public void Stop() { _running=false; _timer.Stop(); CancelRevision(); }
+    public void Stop() { _running=false; _timer.Stop();_observationTimer.Stop(); CancelRevision();ResetTriggerRules(); }
 
     private async Task RunStartupPresentationAsync()
     {
@@ -337,6 +341,9 @@ public sealed partial class CustomHudRuntime : IDisposable
             return;
         }
 
+        // Direct pointer interaction takes precedence over repeatable background rules.
+        if(await TryShowHotZoneAsync())return;
+
         PollDeepSeekPeriodTransition();
         if (_pendingDeepSeekPeriodTransition && !_hud.IsHudBusy && Volatile.Read(ref _busy) == 0)
         {
@@ -351,7 +358,10 @@ public sealed partial class CustomHudRuntime : IDisposable
             _pendingDeepSeekPeriodTransition = false;
         }
 
-        if(await TickTriggerRulesAsync()) return;
+        bool cycleDue=_settings.AutoCycle && DateTime.UtcNow>=_nextPersistentCycle;
+        // Alternate due automatic rotation and rules so a sustained threshold
+        // cannot keep automatic rotation permanently waiting either.
+        if((!cycleDue || !_lastTransientWasRule) && await TickTriggerRulesAsync())return;
 
         // Each transient carousel entry follows its normal show/hold/hide lifecycle.
         // A busy animation delays the next entry instead of skipping queued profiles.
@@ -363,23 +373,12 @@ public sealed partial class CustomHudRuntime : IDisposable
             {
                 int next = (_profileIndex + 1) % queue.Count;
                 _nextPersistentCycle = DateTime.UtcNow.AddSeconds(Math.Clamp(_settings.CycleSeconds, 3, 3600));
-                if (await TriggerTransientProfileAsync(ApplyCycleAnimationMode(queue[next]))) _profileIndex = next;
+                if (await TriggerTransientProfileAsync(ApplyCycleAnimationMode(queue[next]))) {_profileIndex = next;_lastTransientWasRule=false;}
                 return;
             }
         }
 
-        if (!_hotZone.Ready(Environment.TickCount64,_appSettings.HotZoneDwellMilliseconds) || _hud.IsHudBusy || Volatile.Read(ref _busy) != 0)
-            return;
-
-        var hotQueue=ResolveCycleProfiles();
-        int hotNext=_appSettings.HotZoneAdvanceQueue && hotQueue.Count>0 ? (_eventCycleIndex+1)%hotQueue.Count : -1;
-        var active = hotNext<0 ? ResolveActiveProfile() : ApplyCycleAnimationMode(hotQueue[hotNext]);
-        if (active is null)
-            return;
-
-        _hotZone.Presented();
-        if (await TriggerTransientProfileAsync(active)) { if(hotNext>=0)_eventCycleIndex=hotNext; }
-        else _hotZone.Reset();
+        await TickTriggerRulesAsync();
     }
 
     private void ObserveHotZone()
@@ -746,7 +745,7 @@ public sealed partial class CustomHudRuntime : IDisposable
     {
         if (_disposed) return;
         _disposed=true; _running=false;
-        _timer.Stop(); _revision.Cancel(); _hud.CancelPresentation();
+        _timer.Stop();_observationTimer.Stop(); _revision.Cancel(); _hud.CancelPresentation();
         ProfileDataWarnings.Forget(_warningScope);
         _hud.HudClicked -= OnHudClicked;
         _hud.Closed -= OnHudClosed;

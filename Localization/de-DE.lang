@@ -70,7 +70,7 @@ Standard-Akzentfarbe
 Anzahl aktiver Netzwerkschnittstellen
 Aktives Profil
 Aktives Profil
-Nur ohne Daueranzeige. Passende Regeln rufen den nächsten Listeneintrag auf, bei leerer Liste das aktuelle Profil. Erste und wiederhergestellte Werte bilden nur die Vergleichsbasis.
+Nur ohne Daueranzeige. Passende Regeln rufen den nächsten Listeneintrag auf, bei leerer Liste das aktuelle Profil. Erste und wiederhergestellte Werte bilden nur die Vergleichsbasis. Hotzone-Anfragen haben Vorrang; Hotzone und Regeln durchlaufen die Warteschlange unabhängig voneinander. Auch während der HUD-Anzeige wird in den globalen und datenquellenspezifischen Intervallen weiter erfasst. Erkannte Ereignisse werden bei laufender Anzeige zusammengefasst und vorgemerkt.
 ActivityManager.MemoryInfo.lowMemory: Das System meldet knappen Arbeitsspeicher.
 Änderungsrate des tatsächlichen SurfaceFlinger-Zählers für zusammengesetzte Frames mit ROOT, keine Bildwiederholfrequenz. Nicht verfügbar, wenn mehrere Bildschirme nicht zugeordnet werden können.
 Tatsächlicher Erfassungsstatus und Grund der Nichtverfügbarkeit.
@@ -202,7 +202,7 @@ Unten links
 Unten rechts
 Rückprallstärke
 Buenos Aires, Brasília
-Build 2026.10.23
+Build 2026.10.24
 Build {0}
 Eine Wechselwarteschlange erstellen
 Erstellungsdatum
@@ -1148,7 +1148,7 @@ Enthält eine Zusammenfassung von Gerät, Funktionen, Berechtigungen und Konfigu
 Unabhängige und gemeinsame Einstellungen
 Einzelne Sensoren und Zusammenfassungen
 Information
-Die erste Messung und die erste Messung nach der Wiederherstellung von Daten legen nur einen Ausgangswert fest, ohne das HUD einzublenden. Jede Regel hat eine eigene Wartezeit. Eine dauerhaft erfüllte Schwellenwertbedingung kann danach erneut auslösen. Passende Regeln rufen den nächsten Eintrag in der Warteschlange dieser Instanz auf; bei leerer Warteschlange wird das aktive Profil verwendet. Regeln funktionieren nur im vorübergehenden Modus.
+Die erste Messung und die erste Messung nach der Wiederherstellung von Daten legen nur einen Ausgangswert fest, ohne das HUD einzublenden. Jede Regel hat eine eigene Wartezeit. Eine dauerhaft erfüllte Schwellenwertbedingung kann danach erneut auslösen. Passende Regeln rufen den nächsten Eintrag in der Warteschlange dieser Instanz auf; bei leerer Warteschlange wird das aktive Profil verwendet. Regeln funktionieren nur im vorübergehenden Modus. Hotzone-Anfragen haben Vorrang; Hotzone und Regeln durchlaufen die Warteschlange unabhängig voneinander. Auch während der HUD-Anzeige wird in den globalen und datenquellenspezifischen Intervallen weiter erfasst. Erkannte Ereignisse werden bei laufender Anzeige zusammengefasst und vorgemerkt.
 Variable einfügen
 Prüfen Sie echte Messwerte und beheben Sie Treiberprobleme.
 Prüfen, suchen, kopieren und exportieren
@@ -1386,7 +1386,7 @@ Noch keine Protokolleinträge.
 Keine passenden Kapitel
 Keine passende Variable.
 Derzeit ist kein Netzwerk verfügbar.
-Keine veröffentlichte Version oder kein Tag gefunden.
+Keine veröffentlichte Version gefunden.
 Noch keine Regeln.
 Es wurde noch kein Messwert erfasst.
 Noch kein Profil geladen.
@@ -1804,7 +1804,7 @@ Status: Fehler beim Prüfen auf Aktualisierungen
 Status: Verbindung zu GitHub wird zur Updateprüfung hergestellt…
 Status: lokale Version neuer als online
 Status: Netzwerkanfrage fehlgeschlagen ({0})
-Status: kein Release/Tag; Repository möglicherweise nicht öffentlich
+Status: Keine veröffentlichte Version gefunden; das Repository ist möglicherweise noch nicht öffentlich
 Status: Nicht geprüft
 Status: Onlineversion gefunden, Format nicht vergleichbar
 Status: aktuell

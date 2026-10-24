@@ -70,7 +70,7 @@ Colore di risalto
 Numero di interfacce di rete attive
 Profilo attivo
 Profilo attivo
-Attivo solo quando Sempre visibile è disattivato. Una regola soddisfatta richiama il prossimo elemento della sequenza, oppure il profilo attuale se la sequenza è vuota. Il primo campione e il primo dopo il ripristino dei dati stabiliscono solo il riferimento.
+Attivo solo quando Sempre visibile è disattivato. Una regola soddisfatta richiama il prossimo elemento della sequenza, oppure il profilo attuale se la sequenza è vuota. Il primo campione e il primo dopo il ripristino dei dati stabiliscono solo il riferimento. Le richieste della zona attiva hanno priorità; zona e regole avanzano nella coda in modo indipendente. Il campionamento continua durante la visualizzazione dell’HUD secondo gli intervalli globali e delle fonti. Gli eventi rilevati durante un’operazione vengono raggruppati e conservati.
 ActivityManager.MemoryInfo.lowMemory: il sistema segnala memoria insufficiente.
 Velocità di variazione del contatore effettivo dei fotogrammi composti da SurfaceFlinger con ROOT; non è la frequenza di aggiornamento. Non disponibile se non è possibile distinguere più schermi.
 Stato reale della raccolta e motivo dell’indisponibilità.
@@ -202,7 +202,7 @@ In basso a sinistra
 In basso a destra
 Rimbalzo
 Buenos Aires, Brasilia
-Build 2026.10.23
+Build 2026.10.24
 Build {0}
 Costruisci una coda di carousel
 Data di compilazione
@@ -1148,7 +1148,7 @@ Comprende un riepilogo di dispositivo, capacità, permessi e configurazione, con
 Impostazioni indipendenti e condivise
 I singoli sensori e i riassunti
 Informazioni
-I campioni iniziali e recuperati stabiliscono una linea di riferimento senza apparire.Ogni regola ha il suo cooldown; una soglia sostenuta può essere attivata di nuovo dopo la scadenza.Le regole di abbinamento richiamano il prossimo elemento nella coda di quell'istanza, o il profilo attivo per una coda vuota.Le regole funzionano solo in modalità transitorio.
+I campioni iniziali e recuperati stabiliscono una linea di riferimento senza apparire.Ogni regola ha il suo cooldown; una soglia sostenuta può essere attivata di nuovo dopo la scadenza.Le regole di abbinamento richiamano il prossimo elemento nella coda di quell'istanza, o il profilo attivo per una coda vuota.Le regole funzionano solo in modalità transitorio. Le richieste della zona attiva hanno priorità; zona e regole avanzano nella coda in modo indipendente. Il campionamento continua durante la visualizzazione dell’HUD secondo gli intervalli globali e delle fonti. Gli eventi rilevati durante un’operazione vengono raggruppati e conservati.
 Inserisci variabile
 Controllare le letture reali e risolvere i problemi del driver.
 Ispezionare, cercare, copiare ed esportare
@@ -1386,7 +1386,7 @@ Nessuna voce nel registro.
 Nessun capitolo trovato
 Nessuna variabile corrispondente.
 Al momento non è disponibile alcuna rete.
-Nessuna versione pubblicata o etichetta trovata.
+Nessuna versione pubblicata trovata.
 Nessuna regola presente.
 Non è stato ancora raccolto alcun campione.
 Nessun profilo ancora caricato.
@@ -1804,7 +1804,7 @@ Stato: si è verificato un errore durante la ricerca di aggiornamenti
 Stato: connessione a GitHub per cercare aggiornamenti…
 Stato: versione locale più recente di quella online
 Stato: richiesta di rete fallita ({0})
-Stato: nessuna versione/tag; il repository potrebbe essere privato
+Stato: nessuna versione pubblicata trovata; il repository potrebbe non essere ancora pubblico
 Stato: non ancora controllato
 Stato: versione trovata ma formato non confrontabile
 Stato: aggiornato

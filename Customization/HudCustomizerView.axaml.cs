@@ -203,6 +203,15 @@ public partial class HudCustomizerView : UserControl
         ProfileCombo.SelectionChanged += OnProfileChanged;
         AutoCycleSwitch.IsCheckedChanged += (_, _) => UpdateCycleControls();
         CycleProfileList.SelectionChanged += (_, _) => UpdateCycleButtons();
+        // The list's own scroller has already handled this bubbling request.
+        // A background queue rebuild must not scroll the surrounding editor;
+        // keep normal focus/keyboard scrolling when the user edits the queue.
+        CycleProfileList.AddHandler(Control.RequestBringIntoViewEvent, (_, e) =>
+        {
+            if (!CycleProfileList.IsKeyboardFocusWithin && !CycleAddBtn.IsKeyboardFocusWithin
+                && !CycleRemoveBtn.IsKeyboardFocusWithin && !CycleMoveUpBtn.IsKeyboardFocusWithin
+                && !CycleMoveDownBtn.IsKeyboardFocusWithin) e.Handled = true;
+        }, RoutingStrategies.Bubble);
         CycleAddBtn.Click += OnCycleAdd;
         CycleRemoveBtn.Click += OnCycleRemove;
         CycleMoveUpBtn.Click += OnCycleMoveUp;
@@ -410,6 +419,7 @@ public partial class HudCustomizerView : UserControl
         RebuildVariableCategories();
         RefreshVariableList();
         _loading = false;
+        UpdateTriggerValidation();
         UpdateContextOptionsUi();
         UpdateCycleControls();
     }

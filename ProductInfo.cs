@@ -1,7 +1,7 @@
 namespace EndfieldChargePlus;
 internal static class ProductInfo
 {
-    internal const string BuildDate = "2026.10.23";
+    internal const string BuildDate = "2026.10.24";
     internal const string MacName = "Endfield Charge Plus For MacOS";
     internal static string Name
     {

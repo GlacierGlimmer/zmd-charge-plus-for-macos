@@ -70,7 +70,7 @@ Warna aksen
 Jumlah antarmuka aktif
 Profil aktif
 Profil aktif
-Berlaku hanya ketika Selalu Tampilkan dinonaktifkan. Aturan yang dipenuhi memanggil item pergiliran berikutnya, atau profil saat ini jika antrean kosong. Sampel pertama dan sampel pertama setelah data pulih hanya membentuk garis dasar.
+Berlaku hanya ketika Selalu Tampilkan dinonaktifkan. Aturan yang dipenuhi memanggil item pergiliran berikutnya, atau profil saat ini jika antrean kosong. Sampel pertama dan sampel pertama setelah data pulih hanya membentuk garis dasar. Permintaan area aktif diprioritaskan; area aktif dan aturan melanjutkan antrean secara terpisah. Pengambilan sampel tetap berlangsung saat HUD tampil, sesuai interval global dan sumber data. Peristiwa yang terdeteksi saat sibuk digabung dan disimpan.
 ActivityManager.MemoryInfo.lowMemory: apakah sistem melaporkan memori rendah.
 Laju perubahan penghitung bingkai komposisi aktual SurfaceFlinger dengan ROOT. Tidak tersedia jika penghitung tidak dapat dikaitkan dengan satu layar tertentu pada sistem beberapa layar; nilainya bukan refresh rate.
 Status pengumpulan aktual dan alasan tidak tersedia.
@@ -202,7 +202,7 @@ Kiri bawah
 Kanan bawah
 Pantulan
 Buenos Aires, Brasilia
-Build 2026.10.23
+Build 2026.10.24
 Build {0}
 Bangun antrian carousel
 Tanggal build
@@ -1148,7 +1148,7 @@ Berisi informasi perangkat, kemampuan, izin, dan konfigurasi yang dapat dibagika
 Setelan independen dan berbagi
 Sensor dan ringkasan individual
 Info
-Sampel awal dan yang dipulihkan menetapkan garis dasar tanpa muncul.Setiap aturan memiliki cooldownnya sendiri; ambang batas yang berkelanjutan dapat dipicu lagi setelah berakhir. Aturan pencocokan memanggil item berikutnya dalam antrian contoh itu, atau profil aktif untuk antrian kosong. Aturan hanya bekerja dalam mode transient.
+Sampel awal dan yang dipulihkan menetapkan garis dasar tanpa muncul.Setiap aturan memiliki cooldownnya sendiri; ambang batas yang berkelanjutan dapat dipicu lagi setelah berakhir. Aturan pencocokan memanggil item berikutnya dalam antrian contoh itu, atau profil aktif untuk antrian kosong. Aturan hanya bekerja dalam mode transient. Permintaan area aktif diprioritaskan; area aktif dan aturan melanjutkan antrean secara terpisah. Pengambilan sampel tetap berlangsung saat HUD tampil, sesuai interval global dan sumber data. Peristiwa yang terdeteksi saat sibuk digabung dan disimpan.
 Sisipkan variabel
 Periksa pembacaan nyata dan menyelesaikan masalah driver.
 Pemeriksaan, pencarian, salinan dan ekspor
@@ -1386,7 +1386,7 @@ Belum ada entri log.
 Tidak ada bab yang cocok
 Tidak ada variabel yang sesuai.
 Tidak ada jaringan tersedia saat ini.
-Tidak ada rilis atau tag yang diterbitkan ditemukan.
+Tidak ditemukan rilis yang dipublikasikan.
 Belum ada aturan.
 Belum ada sampel yang dikumpulkan.
 Belum ada profil yang dimuat.
@@ -1804,7 +1804,7 @@ Status: terjadi galat saat memeriksa pembaruan
 Status: memeriksa GitHub…
 Status: versi lokal lebih baru dari versi daring terbaru
 Status: permintaan jaringan gagal ({0})
-Status: rilis/tag tidak ditemukan; repositori mungkin belum publik
+Status: tidak ditemukan rilis yang dipublikasikan; repositori mungkin belum bersifat publik
 Status: Belum diperiksa
 Status: versi daring ditemukan, tetapi formatnya tidak dapat dibandingkan
 Status: versi terbaru

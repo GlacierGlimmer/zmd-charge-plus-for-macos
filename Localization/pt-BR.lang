@@ -70,7 +70,7 @@ Cor de destaque
 Número de interfaces de rede ativas
 Perfil ativo
 Perfil ativo
-Só funciona quando Sempre visível está desativado. Uma regra atendida mostra o próximo item da fila de alternância, ou o perfil atual se a fila estiver vazia. A primeira amostra e o retorno de dados ausentes apenas estabelecem a referência.
+Só funciona quando Sempre visível está desativado. Uma regra atendida mostra o próximo item da fila de alternância, ou o perfil atual se a fila estiver vazia. A primeira amostra e o retorno de dados ausentes apenas estabelecem a referência. Os pedidos da zona ativa têm prioridade; a zona e as regras avançam na fila de forma independente. A recolha continua durante a apresentação do HUD nos intervalos globais e de cada fonte. Os eventos detetados durante uma operação são agrupados e guardados.
 ActivityManager.MemoryInfo.lowMemory: o sistema informa falta de memória.
 Taxa de variação do contador real de quadros compostos do SurfaceFlinger com ROOT; não é a taxa de atualização. Indisponível quando não é possível distinguir várias telas.
 Estado real da coleta e motivo da indisponibilidade.
@@ -202,7 +202,7 @@ Inferior esquerdo
 Inferior direito
 Rebote
 Buenos Aires, Brasília
-Compilação 2026.10.23
+Compilação 2026.10.24
 Compilação {0}
 Construir uma fila de carrossel
 Data de compilação
@@ -1148,7 +1148,7 @@ Inclui um resumo do dispositivo, capacidades, permissões e configuração que p
 Configurações independentes e compartilhadas
 Sensores individuais e resumos
 Informações
-As amostras iniciais e recuperadas estabelecem uma linha de base sem aparecer. Cada regra tem sua própria descontração; um limiar sustentado pode ser ativado novamente após expirar. Regras de correspondência chamam o próximo item na fila dessa instância, ou o perfil ativo para uma fila vazia. Regras funcionam apenas em modo transitório.
+As amostras iniciais e recuperadas estabelecem uma linha de base sem aparecer. Cada regra tem sua própria descontração; um limiar sustentado pode ser ativado novamente após expirar. Regras de correspondência chamam o próximo item na fila dessa instância, ou o perfil ativo para uma fila vazia. Regras funcionam apenas em modo transitório. Os pedidos da zona ativa têm prioridade; a zona e as regras avançam na fila de forma independente. A recolha continua durante a apresentação do HUD nos intervalos globais e de cada fonte. Os eventos detetados durante uma operação são agrupados e guardados.
 Inserir variável
 Inscreva leituras reais e resolva problemas com o driver.
 Inspecte, procure, copie e exporta
@@ -1386,7 +1386,7 @@ Ainda não há entradas de log.
 Nenhum capítulo encontrado
 Nenhuma variável correspondente.
 Nenhuma rede disponível no momento.
-Nenhuma versão publicada ou tag foi encontrada.
+Nenhuma versão publicada encontrada.
 Ainda não há regras.
 Nenhuma amostra foi coletada ainda.
 Nenhum perfil carregado ainda.
@@ -1804,7 +1804,7 @@ Status: Falha na verificação
 Estado: conectando ao GitHub para verificar atualizações…
 Status: versão local mais nova que a online
 Status: falha de rede ({0})
-Status: sem versão/tag; repositório pode não ser público
+Estado: nenhuma versão publicada encontrada; o repositório pode ainda não ser público
 Status: Não verificado
 Status: versão encontrada, formato não comparável
 Status: atualizado

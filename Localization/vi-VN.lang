@@ -70,7 +70,7 @@ Màu nhấn
 Số giao diện mạng đang hoạt động
 Cấu hình hiện tại
 Cấu hình hiện tại
-Có hiệu lực khi tắt Luôn hiển thị. Quy tắc khớp sẽ gọi mục tiếp theo trong hàng đợi luân phiên, hoặc cấu hình hiện tại nếu hàng đợi trống. Mẫu đầu tiên và mẫu đầu sau khi dữ liệu phục hồi chỉ thiết lập mốc so sánh.
+Có hiệu lực khi tắt Luôn hiển thị. Quy tắc khớp sẽ gọi mục tiếp theo trong hàng đợi luân phiên, hoặc cấu hình hiện tại nếu hàng đợi trống. Mẫu đầu tiên và mẫu đầu sau khi dữ liệu phục hồi chỉ thiết lập mốc so sánh. Yêu cầu từ vùng kích hoạt được ưu tiên; vùng kích hoạt và quy tắc tiến trong hàng đợi độc lập. Dữ liệu vẫn được lấy khi HUD hiển thị theo chu kỳ chung và chu kỳ của nguồn. Các sự kiện phát hiện khi đang bận được gộp và giữ lại.
 ActivityManager.MemoryInfo.lowMemory: hệ thống có báo thiếu bộ nhớ hay không.
 Tốc độ thay đổi bộ đếm khung hình tổng hợp thực của SurfaceFlinger với ROOT; không khả dụng khi không xác định được bộ đếm thuộc màn hình nào trong hệ thống nhiều màn hình. Đây không phải tần số quét.
 Trạng thái thu thập thực tế và lý do không khả dụng.
@@ -202,7 +202,7 @@ Dưới trái
 Dưới phải
 Độ nảy
 Buenos Aires, Brasilia
-Bản dựng 2026.10.23
+Bản dựng 2026.10.24
 Bản dựng {0}
 Tạo hàng đợi luân phiên
 Ngày bản dựng
@@ -1148,7 +1148,7 @@ Gồm thông tin thiết bị, khả năng, quyền và cấu hình có thể ch
 Các thiết lập độc lập và chia sẻ
 Các cảm biến cá nhân và bản tóm tắt
 Thông tin
-Các mẫu ban đầu và các mẫu được phục hồi thiết lập một đường cơ sở mà không xuất hiện. Mỗi quy tắc có độ làm mát của riêng mình; một ngưỡng duy trì có thể kích hoạt lại sau khi hết hạn. Các quy tắc phù hợp gọi mục tiếp theo trong hàng đợi của trường hợp đó, hoặc hồ sơ hoạt động cho một hàng đợi trống. Các quy tắc chỉ hoạt động trong chế độ tạm thời.
+Các mẫu ban đầu và các mẫu được phục hồi thiết lập một đường cơ sở mà không xuất hiện. Mỗi quy tắc có độ làm mát của riêng mình; một ngưỡng duy trì có thể kích hoạt lại sau khi hết hạn. Các quy tắc phù hợp gọi mục tiếp theo trong hàng đợi của trường hợp đó, hoặc hồ sơ hoạt động cho một hàng đợi trống. Các quy tắc chỉ hoạt động trong chế độ tạm thời. Yêu cầu từ vùng kích hoạt được ưu tiên; vùng kích hoạt và quy tắc tiến trong hàng đợi độc lập. Dữ liệu vẫn được lấy khi HUD hiển thị theo chu kỳ chung và chu kỳ của nguồn. Các sự kiện phát hiện khi đang bận được gộp và giữ lại.
 Chèn biến
 Kiểm tra số lượng đọc thực tế và giải quyết các vấn đề về trình điều khiển.
 Kiểm tra, tìm kiếm, sao chép và xuất khẩu
@@ -1386,7 +1386,7 @@ Chưa có mục nhật ký.
 Không tìm thấy chương
 Không có biến phù hợp.
 Hiện không có mạng khả dụng.
-Không tìm thấy bản phát hành hoặc thẻ đã công bố.
+Không tìm thấy bản phát hành đã công bố.
 Chưa có quy tắc.
 Chưa thu thập mẫu nào.
 Chưa nạp cấu hình nào.
@@ -1804,7 +1804,7 @@ Trạng thái: có lỗi khi kiểm tra cập nhật
 Trạng thái: đang kiểm tra GitHub…
 Trạng thái: phiên bản cục bộ mới hơn phiên bản trực tuyến mới nhất
 Trạng thái: yêu cầu mạng thất bại ({0})
-Trạng thái: không có bản phát hành/thẻ; kho có thể chưa công khai
+Trạng thái: không tìm thấy bản phát hành đã công bố; kho lưu trữ có thể chưa được công khai
 Trạng thái: Chưa kiểm tra
 Trạng thái: tìm thấy phiên bản từ xa nhưng không thể so sánh định dạng
 Trạng thái: đã cập nhật

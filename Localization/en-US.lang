@@ -70,7 +70,7 @@ Accent colour
 Active Interface Count
 Active Profile
 Active scheme
-Active when Always Visible is off. Matching rules summon the next carousel item, or the current profile if the queue is empty. Initial and recovered samples only establish a baseline.
+Active when Always Visible is off. Matching rules summon the next carousel item, or the current profile if the queue is empty. Initial and recovered samples only establish a baseline. Hot-zone requests take priority; hot-zone and rule queues advance independently. Sampling continues during HUD presentations at the configured global and data-source intervals; detected events are coalesced while busy.
 ActivityManager.MemoryInfo.lowMemory.
 Actual SurfaceFlinger composition-frame counter rate with ROOT; unavailable when multiple displays cannot be attributed.
 Actual collection status and unavailable reason.
@@ -202,7 +202,7 @@ Bottom left
 Bottom right
 Bounce
 Buenos Aires, Brasilia
-Build  2026.10.23
+Build  2026.10.24
 Build  {0}
 Build a carousel queue
 Build date
@@ -1148,7 +1148,7 @@ Includes device, capability, permission and configuration facts that can be shar
 Independent and shared settings
 Individual sensors and summaries
 Info
-Initial and recovered samples establish a baseline without popping up. Each rule has its own cooldown; a sustained threshold can trigger again after it expires. Matching rules summon the next item in that instance's queue, or the active profile for an empty queue. Rules work only in transient mode.
+Initial and recovered samples establish a baseline without popping up. Each rule has its own cooldown; a sustained threshold can trigger again after it expires. Matching rules summon the next item in that instance's queue, or the active profile for an empty queue. Rules work only in transient mode. Hot-zone requests take priority; hot-zone and rule queues advance independently. Sampling continues during HUD presentations at the configured global and data-source intervals; detected events are coalesced while busy.
 Insert variable
 Inspect real readings and resolve driver issues.
 Inspect, search, copy and export
@@ -1386,7 +1386,7 @@ No log entries yet.
 No matching chapters
 No matching variable.
 No network is currently available.
-No published release or tag was found.
+No published release was found.
 No rules yet.
 No sample has been collected yet.
 No scheme is loaded yet.
@@ -1804,7 +1804,7 @@ Status: an error occurred while checking for updates
 Status: checking GitHub…
 Status: local version is newer than the latest online version
 Status: network request failed ({0})
-Status: no release/tag found; the repository may not be public yet
+Status: no published release found; the repository may not be public yet
 Status: not checked
 Status: remote version found, but its format cannot be compared
 Status: up to date
