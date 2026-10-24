@@ -481,7 +481,7 @@
           <Border Background="#242426" BorderBrush="#343438" BorderThickness="1" CornerRadius="10" Padding="18">
             <StackPanel Spacing="12">
               <TextBlock Text="事件呼出" FontSize="14" FontWeight="SemiBold" Foreground="#C6CA4C" TextWrapping="Wrap"/>
-              <TextBlock Text="仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。鼠标热区优先响应；热区和规则各自推进队列。HUD 展示期间仍按全局与数据源设置的间隔采样，忙碌时检测到的触发会合并保留。" TextWrapping="Wrap" FontSize="12" Foreground="#A0A0A6"/>
+              <TextBlock x:Name="TriggerRulesHint" Text="仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。鼠标热区优先响应；热区和规则各自推进队列。HUD 展示期间仍按全局与数据源设置的间隔采样，忙碌时检测到的触发会合并保留。" TextWrapping="Wrap" FontSize="12" Foreground="#A0A0A6"/>
               <ListBox x:Name="TriggerList" Height="160"/>
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <Button x:Name="AddTriggerBtn" Content="添加规则"/>

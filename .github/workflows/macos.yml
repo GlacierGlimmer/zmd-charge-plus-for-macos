@@ -35,6 +35,15 @@ jobs:
           security default-keychain -d user -s "$RUNNER_TEMP/ecp-test.keychain-db"
           security unlock-keychain -p "$password" "$RUNNER_TEMP/ecp-test.keychain-db"
           security set-keychain-settings -lut 21600 "$RUNNER_TEMP/ecp-test.keychain-db"
+      - name: Test profile editing scroll position
+        timeout-minutes: 3
+        run: dotnet run --project Tests/ProfileScrollTests.csproj -c Release
+      - name: Test platform update checks and reminders
+        timeout-minutes: 3
+        run: dotnet run --project Tests/UpdateTests.csproj -c Release -- zmd-charge-plus-for-macos
+      - name: Test hot-zone and trigger rule interactions
+        timeout-minutes: 3
+        run: dotnet run --project Tests/TriggerTests.csproj -c Release
       - name: Test collectors, every local variable, profiles and native UI
         timeout-minutes: 5
         run: dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
@@ -48,15 +57,6 @@ jobs:
         env:
           ECP_LAYOUT_OUTPUT: ${{ github.workspace }}/artifacts/audit/language-layout
         run: dotnet run --project Tests/LanguageLayoutTests.csproj -c Release
-      - name: Test profile editing scroll position
-        timeout-minutes: 3
-        run: dotnet run --project Tests/ProfileScrollTests.csproj -c Release
-      - name: Test platform update checks and reminders
-        timeout-minutes: 3
-        run: dotnet run --project Tests/UpdateTests.csproj -c Release -- zmd-charge-plus-for-macos
-      - name: Test hot-zone and trigger rule interactions
-        timeout-minutes: 3
-        run: dotnet run --project Tests/TriggerTests.csproj -c Release
       - name: Build DMG
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then

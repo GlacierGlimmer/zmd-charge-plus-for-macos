@@ -49,7 +49,7 @@ public static partial class LocalizationManager
         ["快捷键显示动画"] = "Shortcut show animation",
         ["触发规则"] = "Trigger rules",
         ["事件呼出"] = "Event summons",
-        ["仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。"] = "Active when Always Visible is off. Matching rules summon the next carousel item, or the current profile if the queue is empty. Initial and recovered samples only establish a baseline.",
+        ["仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。鼠标热区优先响应；热区和规则各自推进队列。HUD 展示期间仍按全局与数据源设置的间隔采样，忙碌时检测到的触发会合并保留。"] = "Active when Always Visible is off. Matching rules summon the next carousel item, or the current profile if the queue is empty. Initial and recovered samples only establish a baseline.",
         ["添加规则"] = "Add rule",
         ["删除所选规则"] = "Remove selected rule",
         ["启用这条规则"] = "Enable this rule",

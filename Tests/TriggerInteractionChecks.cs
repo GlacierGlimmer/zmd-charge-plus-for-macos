@@ -129,6 +129,7 @@ internal static class TriggerInteractionChecks
             {
                 LocalizationManager.SetLanguage(locale.Language);editor.ApplyLocalization();
                 variable.Text="cpu.usage.typo";
+                Check(editor.FindControl<TextBlock>("TriggerRulesHint")!.Text==LocalizationManager.Text("仅在关闭“一直显示”时生效。满足规则后按轮播队列呼出下一项；空队列使用当前方案。首次采样和数据恢复只建立基线。鼠标热区优先响应；热区和规则各自推进队列。HUD 展示期间仍按全局与数据源设置的间隔采样，忙碌时检测到的触发会合并保留。","Active when Always Visible is off. Matching rules summon the next carousel item, or the current profile if the queue is empty. Initial and recovered samples only establish a baseline."),"The complete rules hint follows "+locale.Code);
                 await Task.Delay(30);
                 Check(status.Text!.StartsWith(LocalizationManager.Text("未找到匹配变量。","No matching variable.")),"Validation feedback follows "+locale.Code+": "+status.Text);
                 Check(editor.FindControl<Button>("CheckTriggerVariableBtn")!.Content?.ToString()==LocalizationManager.Text("刷新","Refresh"),"Read-check action follows "+locale.Code+": "+editor.FindControl<Button>("CheckTriggerVariableBtn")!.Content);
