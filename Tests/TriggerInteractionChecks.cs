@@ -18,7 +18,17 @@ internal static class TriggerInteractionChecks
     static void Check(bool ok,string message){if(!ok)throw new Exception(message);checks++;}
     static T Field<T>(object value,string name)=>(T)value.GetType().GetField(name,Private)!.GetValue(value)!;
     static void Set(object value,string name,object field)=>value.GetType().GetField(name,Private)!.SetValue(value,field);
-    static Task Observe(CustomHudRuntime runtime){Set(runtime,"_nextTriggerPoll",0L);return (Task)typeof(CustomHudRuntime).GetMethod("ObserveTriggerRulesAsync",Private)!.Invoke(runtime,null)!;}
+    static async Task Observe(CustomHudRuntime runtime)
+    {
+        // Stopping the timer does not cancel an already running asynchronous read.
+        // A forced test sample must wait for that read before establishing a new
+        // baseline, matching the independent observer's next scheduled sample.
+        long end=Environment.TickCount64+6000;
+        while(Field<int>(runtime,"_triggerObservationBusy")!=0 && Environment.TickCount64<end)await Task.Delay(10);
+        if(Field<int>(runtime,"_triggerObservationBusy")!=0)throw new TimeoutException("The previous trigger read did not complete.");
+        Set(runtime,"_nextTriggerPoll",0L);
+        await (Task)typeof(CustomHudRuntime).GetMethod("ObserveTriggerRulesAsync",Private)!.Invoke(runtime,null)!;
+    }
     static int Pending(CustomHudRuntime runtime)=>Field<Dictionary<string,HudTriggerRule>>(runtime,"_pendingTriggerRules").Count;
     static Task Tick(CustomHudRuntime runtime)
     {
