@@ -64,6 +64,12 @@ public partial class HudCustomizerView
         _workflowSearch=new TextBox{Name="ProfileWorkspaceSearch",Watermark=LocalizationManager.Text("搜索方案","Search profiles")};
         _workflowProfiles=new ListBox{Name="ProfileWorkspaceList",Background=Brushes.Transparent,BorderThickness=new(0),MinHeight=280};
         _workflowProfiles.Classes.Add("workflow-list");
+        // The list has already scrolled its selected row. Keep programmatic
+        // refreshes from moving the surrounding scaled settings viewport.
+        _workflowProfiles.AddHandler(Control.RequestBringIntoViewEvent,(_,e)=>
+        {
+            if(!_workflowProfiles.IsKeyboardFocusWithin)e.Handled=true;
+        },Avalonia.Interactivity.RoutingStrategies.Bubble);
         _workflowProfiles.SelectionChanged+=(_,_)=>{if(!_workflowSync && _workflowProfiles.SelectedItem is ListBoxItem {Tag:string id})ProfileCombo.SelectedIndex=_profiles.FindIndex(p=>p.Id==id);};
         _workflowSearch.TextChanged+=(_,_)=>RefreshWorkflowProfiles();
         var actions=new WrapPanel{Orientation=Orientation.Horizontal,Children={AddProfileBtn,DeleteProfileBtn}};AddProfileBtn.Margin=new(0,0,6,6);

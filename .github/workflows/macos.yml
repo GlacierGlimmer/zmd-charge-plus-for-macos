@@ -19,11 +19,17 @@ jobs:
             runner: macos-15-intel
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
+    env:
+      ECP_PROFILE_SCROLL_OUTPUT: ${{ github.workspace }}/artifacts/audit/profile-scroll
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+      - name: Prepare audit directory
+        run: |
+          mkdir -p artifacts/audit
+          git rev-parse HEAD > artifacts/audit/source-commit.txt
       - name: Check official DeepSeek windows and Chinese holidays
         run: dotnet run --project Tests/DeepSeekPeriodTests.csproj -c Release
       - name: Build native collectors
@@ -37,16 +43,24 @@ jobs:
           security set-keychain-settings -lut 21600 "$RUNNER_TEMP/ecp-test.keychain-db"
       - name: Test profile editing scroll position
         timeout-minutes: 3
-        run: dotnet run --project Tests/ProfileScrollTests.csproj -c Release
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/ProfileScrollTests.csproj -c Release 2>&1 | tee artifacts/audit/profile-scroll.log
       - name: Test platform update checks and reminders
         timeout-minutes: 3
-        run: dotnet run --project Tests/UpdateTests.csproj -c Release -- zmd-charge-plus-for-macos
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/UpdateTests.csproj -c Release -- zmd-charge-plus-for-macos 2>&1 | tee artifacts/audit/update.log
       - name: Test hot-zone and trigger rule interactions
         timeout-minutes: 3
-        run: dotnet run --project Tests/TriggerTests.csproj -c Release
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/TriggerTests.csproj -c Release 2>&1 | tee artifacts/audit/triggers.log
       - name: Test collectors, every local variable, profiles and native UI
         timeout-minutes: 5
-        run: dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release 2>&1 | tee artifacts/audit/platform.log
       - name: Test Save and Apply in a fresh macOS home
         timeout-minutes: 3
         run: |
@@ -56,7 +70,9 @@ jobs:
         timeout-minutes: 8
         env:
           ECP_LAYOUT_OUTPUT: ${{ github.workspace }}/artifacts/audit/language-layout
-        run: dotnet run --project Tests/LanguageLayoutTests.csproj -c Release
+        run: |
+          set -o pipefail
+          dotnet run --project Tests/LanguageLayoutTests.csproj -c Release 2>&1 | tee artifacts/audit/language-layout.log
       - name: Build DMG
         run: |
           if [[ "$GITHUB_REF" == refs/tags/v* ]]; then

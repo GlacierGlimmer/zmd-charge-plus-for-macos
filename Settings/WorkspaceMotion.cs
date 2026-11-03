@@ -21,4 +21,3 @@ internal static class WorkspaceMotion
         try {await animation.RunAsync(control,token.Token);}catch(OperationCanceledException){}
     }
 }
-

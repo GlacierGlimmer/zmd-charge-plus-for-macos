@@ -35,14 +35,15 @@ internal static class ProfileScrollChecks
             await Task.Delay(500);
             var editor=window.FindControl<HudCustomizerView>("Customizer")!;
             var add=editor.FindControl<Button>("AddProfileBtn")!;
-            var scroll=add.GetVisualAncestors().OfType<ScrollViewer>().First();
+            var workspace=editor.FindControl<Grid>("ProfileWorkspaceColumns")!;
+            var scroll=workspace.Children.OfType<ScrollViewer>().Single();
             scroll.AddHandler(Control.RequestBringIntoViewEvent,(_,e)=>requests.Add((e.Source?.GetType().Name ?? "?")+" "+(e.Source is ContentControl c ? c.Content?.ToString() : (e.Source as Control)?.Name)),RoutingStrategies.Bubble,true);
             int step=0;
             async Task Click(string name,double offset=0,Action? edit=null)
             {
                 scroll.Offset=new Vector(0,offset);await Task.Delay(100);edit?.Invoke();
                 var button=editor.FindControl<Button>(name)!;button.Focus();await Task.Delay(80);requests.Clear();
-                var before=scroll.Offset;var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().ToArray();var positions=viewers.Select(s=>s.Offset).ToArray();
+                var before=scroll.Offset;var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().Append(scroll).Distinct().ToArray();var positions=viewers.Select(s=>s.Offset).ToArray();
                 var point=button.TranslatePoint(default,window)!.Value;
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));await Task.Delay(350);
                 var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),requests=requests.ToArray()});
