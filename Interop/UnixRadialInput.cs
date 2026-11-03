@@ -20,6 +20,7 @@ internal sealed class UnixRadialInput : IDisposable
     private static readonly XErrorCallback ErrorRoot=OnXError;
     private static XErrorCallback? _previousXError;
     private static bool _xErrorInstalled;
+    [ThreadStatic] private static bool _forwardingXError;
     private static bool _escape;
     static UnixRadialInput(){Poll.Tick+=(_,_)=>PumpX11();}
     internal UnixRadialInput(Func<PixelPoint,bool> hit,Action<int,PixelPoint,int> input)
@@ -42,7 +43,14 @@ internal sealed class UnixRadialInput : IDisposable
         } catch(Exception ex) {AppLog.Error("Native radial input is unavailable.",ex);}
     }
     internal static bool EscapePressed=>OperatingSystem.IsMacOS() ? CGEventSourceKeyState(0,53) : _escape;
-    private static int OnXError(IntPtr display,IntPtr error)=>display==_display ? 0 : _previousXError?.Invoke(display,error) ?? 0;
+    private static int OnXError(IntPtr display,IntPtr error)
+    {
+        if(display==_display || _forwardingXError)return 0;
+        // X11 error handlers are process-wide. Another client may chain back to
+        // us; never recursively forward the same native error until stack overflow.
+        try{_forwardingXError=true;return _previousXError?.Invoke(display,error) ?? 0;}
+        finally{_forwardingXError=false;}
+    }
     private static void PumpX11()
     {
         if(_display==IntPtr.Zero)return;

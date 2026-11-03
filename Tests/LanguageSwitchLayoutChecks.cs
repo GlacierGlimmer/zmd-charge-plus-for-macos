@@ -55,7 +55,8 @@ internal static class LanguageSwitchLayoutChecks
                     {
                         var text=((Grid)tab.Content!).Children.OfType<TextBlock>().Single();
                         var formatted=new FormattedText(text.Text!,CultureInfo.CurrentCulture,text.FlowDirection,new Typeface(text.FontFamily,text.FontStyle,text.FontWeight,text.FontStretch),text.FontSize,Brushes.White){MaxTextWidth=Math.Max(1,text.Bounds.Width)};
-                        check(text.Bounds.Width>0 && text.Bounds.Height>=formatted.Height-1,"The sidebar label fits or wraps completely after switching to "+code+": "+text.Text);
+                        // Use the actual renderer layout; FormattedText can choose a different wrap at fractional widths.
+                        check(text.Bounds.Width>0 && text.Bounds.Height>=text.TextLayout.Height-1,"The sidebar label fits or wraps completely after switching to "+code+": "+text.Text);
                     }
                     foreach(string page in new[]{"display","hud","ring","cycle","rules","variables","hardware","sources","quick","experimental","manual","about"})
                     {

@@ -156,8 +156,8 @@ internal static class TriggerInteractionChecks
             var startupHud=new HudWindow();using var startup=new CustomHudRuntime(startupHud);
             try
             {
-                var first=changes with{HotZoneEnabled=false};startupHud.ApplySettings(first);startup.ApplySettings(first);startup.Start();
-                await Until(()=>startupHud.IsVisible);await Task.Delay(450);
+                var first=changes with{HotZoneEnabled=false,DisplayDurationSeconds=10};startupHud.ApplySettings(first);startup.ApplySettings(first);startup.Start();
+                await Until(()=>startupHud.IsVisible);await Until(()=>Pending(startup)==1);
                 Check(startupHud.IsHudBusy && Pending(startup)==1,"Observation also continues during the initial startup presentation.");
                 startup.Stop();await Field<Task>(startup,"_lastOperation");
             }
