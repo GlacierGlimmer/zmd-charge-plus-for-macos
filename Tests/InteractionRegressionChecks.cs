@@ -66,7 +66,7 @@ internal static class InteractionRegressionChecks
             check(child.Hud.FindControl<TextBlock>("PrimaryText")!.Text=="LIVE1" && hud.FindControl<TextBlock>("PrimaryText")!.Text=="LIVE0","Clicking the secondary HUD switches its own queue without switching the primary.");
         }
         var window=new SettingsWindow(settings,hud,runtime);window.Show();await Task.Delay(600);
-        check(window.FindControl<TextBlock>("BuildDateText")!.Text==LocalizationManager.Text("构建日期  2026.10.18","Build  2026.10.18"),"The actual About control displays the current 2026.10.18 build date in the selected language.");
+        check(window.FindControl<TextBlock>("BuildDateText")!.Text==LocalizationManager.Text("构建日期  ","Build  ")+ProductInfo.BuildDate,"The actual About control displays the current build date in the selected language.");
         string version=typeof(HudWindow).Assembly.GetName().Version!.ToString(3);
         check(window.Title.Contains("v"+version) && window.Title==ProcessPrivileges.SettingsTitle(version),"Settings title uses the localized HUD settings caption.");
         check(hud.IsEditingHighlighted && !child.Hud.IsEditingHighlighted,"Opening Settings with multiple HUDs highlights the primary automatically.");
