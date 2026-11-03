@@ -231,8 +231,11 @@ internal sealed class AuditApp : Application
             using var bitmap=new RenderTargetBitmap(new PixelSize((int)window.Width,(int)window.Height),new Vector(96,96));
             bitmap.Render(window); bitmap.Save($"artifacts/audit/settings-{language}.png");
             var tabs=window.FindControl<TabControl>("MainSettingsTabs")!;
-            Tests.Check(tabs.Items.Count==6,"All six main sections are present in the shared settings shell");
-            Tests.Check(tabs.Items.OfType<TabItem>().Select(t=>t.Header?.ToString()).SequenceEqual(new[]{"Display & Position","HUD Content","Data Management","Experimental Features","User Manual","About"}.Select(LocalizationManager.TranslateLiteral)),"Main sections use the selected language and requested order");
+            Tests.Check(tabs.Items.Count==7,"The settings shell retains its seven content hosts");
+            var navigation=window.FindControl<ListBox>("WorkspaceNavigation")!;
+            var routes=new[]{"display","hud","ring","cycle","rules","variables","hardware","sources","quick","experimental","manual","about"};
+            Tests.Check(navigation.Items.OfType<ListBoxItem>().Select(t=>t.Tag?.ToString()).SequenceEqual(routes),"All twelve sidebar routes are present in the requested order");
+            foreach(var route in routes){window.NavigateToSettingsSection(route);Tests.Check((navigation.SelectedItem as ListBoxItem)?.Tag?.ToString()==route,"Sidebar route selects the matching content: "+route);}
             window.NavigateToSettingsSection("experimental");
             await Task.Delay(250);
             var experimental=window.FindControl<StackPanel>("ExperimentalPanel")!;

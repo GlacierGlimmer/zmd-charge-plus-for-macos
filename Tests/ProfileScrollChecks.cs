@@ -46,11 +46,11 @@ internal static class ProfileScrollChecks
                 var before=scroll.Offset;var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().Append(scroll).Distinct().ToArray();var positions=viewers.Select(s=>s.Offset).ToArray();
                 var point=button.TranslatePoint(default,window)!.Value;
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));await Task.Delay(350);
-                var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),requests=requests.ToArray()});
+                var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),viewers=viewers.Select((s,i)=>new{before=positions[i].ToString(),after=s.Offset.ToString()}).ToArray(),requests=requests.ToArray()});
                 File.WriteAllText(Path.Combine(output,"scroll.json"),JsonSerializer.Serialize(samples,new JsonSerializerOptions{WriteIndented=true}));
                 using(var bmp=new RenderTargetBitmap(new PixelSize((int)window.Bounds.Width,(int)window.Bounds.Height))){bmp.Render(window);bmp.Save(Path.Combine(output,$"{step++:D2}-{name}.png"));}
                 check(Math.Abs(before.Y-after.Y)<1,$"{name} keeps the profile editor in place: {before} -> {after}; requests: {string.Join("; ",requests)}");
-                check(viewers.Select((s,i)=>(s.Offset-positions[i]).Length<1).All(v=>v),name+" also preserves outer UI-scale scrolling.");
+                check(viewers.Select((s,i)=>(s.Offset-positions[i]).Length<1).All(v=>v),name+" also preserves outer UI-scale scrolling: "+string.Join("; ",viewers.Select((s,i)=>positions[i]+" -> "+s.Offset)));
                 var afterPoint=button.TranslatePoint(default,window)!.Value;
                 check(Math.Abs(afterPoint.X-point.X)<1 && Math.Abs(afterPoint.Y-point.Y)<1,name+" stays at the same visible position.");
             }
