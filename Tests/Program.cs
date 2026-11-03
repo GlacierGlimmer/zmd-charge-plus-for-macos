@@ -275,6 +275,7 @@ internal sealed class AuditApp : Application
     {
         string launchDirectory=Path.GetDirectoryName(StartupManager.AutostartPath)!;
         Tests.Check(!Directory.Exists(launchDirectory) && !File.Exists(SettingsManager.SettingsPath),"Fresh macOS account has no LaunchAgents directory or saved settings");
+        runtime.Start(); // The production app starts its sampler before opening Settings.
         var startup=window.FindControl<ToggleSwitch>("StartupSwitch")!;
         var persistent=window.FindControl<ToggleSwitch>("AlwaysVisibleSwitch")!;
         var offset=window.FindControl<NumericUpDown>("OffsetXBox")!;
@@ -291,6 +292,8 @@ internal sealed class AuditApp : Application
             Tests.Check(save.IsEnabled && save.Content?.ToString()==LocalizationManager.Text("已保存","Saved"),"Save & Apply button completes without an error dialog");
         }
         await ClickSave();
+        var applied=Stopwatch.StartNew();
+        while(!hud.IsVisible && applied.Elapsed<TimeSpan.FromSeconds(12))await Task.Delay(50);
         var saved=SettingsManager.Load();
         Tests.Check(!saved.StartWithWindows && saved.AlwaysVisible && saved.HudOffsetX==17 && hud.IsVisible,"Fresh-home Save & Apply persists and applies the selected settings");
         Tests.Check(!Directory.Exists(launchDirectory),"Saving with login startup off does not create LaunchAgents");

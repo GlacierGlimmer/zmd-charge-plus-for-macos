@@ -43,7 +43,12 @@ internal static class ProfileScrollChecks
             {
                 scroll.Offset=new Vector(0,offset);await Task.Delay(100);edit?.Invoke();
                 var button=editor.FindControl<Button>(name)!;button.Focus(NavigationMethod.Pointer);await Task.Delay(80);requests.Clear();
-                var before=scroll.Offset;var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().Append(scroll).Distinct().ToArray();var positions=viewers.Select(s=>s.Offset).ToArray();
+                var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().Append(scroll).Distinct().ToArray();
+                // Establish a reachable pointer-click fixture; Focus may temporarily
+                // scroll horizontally by the width of an overlay scrollbar on macOS.
+                foreach(var viewer in viewers)viewer.Offset=new Vector(0,viewer.Offset.Y);
+                await Task.Delay(120);
+                var before=scroll.Offset;var positions=viewers.Select(s=>s.Offset).ToArray();
                 var point=button.TranslatePoint(default,window)!.Value;
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));await Task.Delay(350);
                 var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),viewers=viewers.Select((s,i)=>new{before=positions[i].ToString(),after=s.Offset.ToString()}).ToArray(),requests=requests.ToArray()});
