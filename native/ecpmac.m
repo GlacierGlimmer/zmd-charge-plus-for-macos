@@ -326,8 +326,10 @@ API char *ecp_keychain_get(const char *account) {
 
 // Small owned input surface. The much larger animated host always ignores mouse events.
 typedef void (*ECPHudClick)(void);
+typedef void (*ECPHudScroll)(double delta);
 @interface ECPHudInputPanel : NSPanel
 @property(nonatomic,assign) ECPHudClick click;
+@property(nonatomic,assign) ECPHudScroll scroll;
 @property(nonatomic,assign) BOOL armed;
 @end
 @implementation ECPHudInputPanel
@@ -340,6 +342,7 @@ typedef void (*ECPHudClick)(void);
     return (p.x-cx)*(p.x-cx)+(p.y-size.height/2)*(p.y-size.height/2)<=radius*radius;
 }
 - (void)sendEvent:(NSEvent *)event {
+    if(event.type==NSEventTypeScrollWheel && [self inside:event] && self.scroll) {self.scroll(event.hasPreciseScrollingDeltas ? event.scrollingDeltaY/10.0 : event.scrollingDeltaY);return;}
     if(event.type==NSEventTypeLeftMouseDown) { self.armed=[self inside:event];return; }
     if(event.type==NSEventTypeLeftMouseUp) { BOOL clicked=self.armed && [self inside:event];self.armed=NO;if(clicked && self.click) self.click();return; }
     [super sendEvent:event];
@@ -376,11 +379,15 @@ API int ecp_hud_input(void *handle,int enabled,double x,double y,double width,do
         if(!panel.visible || moved || layerChanged) [panel orderWindow:NSWindowBelow relativeTo:owner.windowNumber];return 1;
     }
 }
+API void ecp_hud_scroll_bind(void *handle,ECPHudScroll scroll) {
+    if(!NSThread.isMainThread || !handle)return;
+    ECPHudInputPanel *panel=ecpHudInputs[[NSValue valueWithPointer:handle]];panel.scroll=scroll;
+}
 API void ecp_hud_input_close(void *handle) {
     @autoreleasepool {
         if(!NSThread.isMainThread || !handle) return;
         NSValue *key=[NSValue valueWithPointer:handle];ECPHudInputPanel *panel=ecpHudInputs[key];
-        if(panel) { panel.click=NULL;panel.armed=NO;[panel.parentWindow removeChildWindow:panel];[panel orderOut:nil];[panel close];[ecpHudInputs removeObjectForKey:key]; }
+        if(panel) { panel.click=NULL;panel.scroll=NULL;panel.armed=NO;[panel.parentWindow removeChildWindow:panel];[panel orderOut:nil];[panel close];[ecpHudInputs removeObjectForKey:key]; }
     }
 }
 

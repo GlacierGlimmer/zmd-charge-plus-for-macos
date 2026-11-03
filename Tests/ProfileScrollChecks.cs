@@ -35,23 +35,29 @@ internal static class ProfileScrollChecks
             await Task.Delay(500);
             var editor=window.FindControl<HudCustomizerView>("Customizer")!;
             var add=editor.FindControl<Button>("AddProfileBtn")!;
-            var scroll=add.GetVisualAncestors().OfType<ScrollViewer>().First();
+            var workspace=editor.GetVisualDescendants().OfType<Grid>().Single(g=>g.Name=="ProfileWorkspaceColumns");
+            var scroll=workspace.Children.OfType<ScrollViewer>().Single();
             scroll.AddHandler(Control.RequestBringIntoViewEvent,(_,e)=>requests.Add((e.Source?.GetType().Name ?? "?")+" "+(e.Source is ContentControl c ? c.Content?.ToString() : (e.Source as Control)?.Name)),RoutingStrategies.Bubble,true);
             int step=0;
             async Task Click(string name,double offset=0,Action? edit=null)
             {
                 scroll.Offset=new Vector(0,offset);await Task.Delay(100);edit?.Invoke();
-                var button=editor.FindControl<Button>(name)!;button.Focus();await Task.Delay(80);requests.Clear();
-                var before=scroll.Offset;var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().ToArray();var positions=viewers.Select(s=>s.Offset).ToArray();
+                var button=editor.FindControl<Button>(name)!;button.Focus(NavigationMethod.Pointer);await Task.Delay(80);requests.Clear();
+                var viewers=button.GetVisualAncestors().OfType<ScrollViewer>().Append(scroll).Distinct().ToArray();
+                // Establish a reachable pointer-click fixture; Focus may temporarily
+                // scroll horizontally by the width of an overlay scrollbar on macOS.
+                foreach(var viewer in viewers)viewer.Offset=new Vector(0,viewer.Offset.Y);
+                await Task.Delay(120);
+                var before=scroll.Offset;var positions=viewers.Select(s=>s.Offset).ToArray();
                 var point=button.TranslatePoint(default,window)!.Value;
                 button.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));await Task.Delay(350);
-                var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),requests=requests.ToArray()});
+                var after=scroll.Offset;samples.Add(new{name,offset,before=before.ToString(),after=after.ToString(),viewers=viewers.Select((s,i)=>new{before=positions[i].ToString(),after=s.Offset.ToString()}).ToArray(),requests=requests.ToArray()});
                 File.WriteAllText(Path.Combine(output,"scroll.json"),JsonSerializer.Serialize(samples,new JsonSerializerOptions{WriteIndented=true}));
                 using(var bmp=new RenderTargetBitmap(new PixelSize((int)window.Bounds.Width,(int)window.Bounds.Height))){bmp.Render(window);bmp.Save(Path.Combine(output,$"{step++:D2}-{name}.png"));}
                 check(Math.Abs(before.Y-after.Y)<1,$"{name} keeps the profile editor in place: {before} -> {after}; requests: {string.Join("; ",requests)}");
-                check(viewers.Select((s,i)=>(s.Offset-positions[i]).Length<1).All(v=>v),name+" also preserves outer UI-scale scrolling.");
+                check(viewers.Select((s,i)=>(s.Offset-positions[i]).Length<1).All(v=>v),name+" also preserves outer UI-scale scrolling: "+string.Join("; ",viewers.Select((s,i)=>positions[i]+" -> "+s.Offset)));
                 var afterPoint=button.TranslatePoint(default,window)!.Value;
-                check(Math.Abs(afterPoint.X-point.X)<1 && Math.Abs(afterPoint.Y-point.Y)<1,name+" stays at the same visible position.");
+                check(Math.Abs(afterPoint.X-point.X)<1 && Math.Abs(afterPoint.Y-point.Y)<1,name+" stays at the same visible position: "+point+" -> "+afterPoint);
             }
             foreach(var scales in new[]{(1d,1d),(1.25,1.5)})
             {
@@ -72,12 +78,16 @@ internal static class ProfileScrollChecks
             await Click("SaveProfileBtn",edit:()=>editor.FindControl<TextBox>("TitleBox")!.Text="Scroll audit built-in copy");
             check(editor.FindControl<ComboBox>("ProfileCombo")!.Items.Count==builtInCount+1,"Saving edits to a built-in profile still creates a copy.");
             await Click("DeleteProfileBtn");
+            window.NavigateToSettingsSection("cycle");await Task.Delay(150);
             var cycle=editor.FindControl<ToggleSwitch>("AutoCycleSwitch")!;
+            scroll=cycle.GetVisualAncestors().OfType<ScrollViewer>().First();
             cycle.BringIntoView();cycle.Focus();await Task.Delay(150);var beforeToggle=scroll.Offset;
             cycle.IsChecked=cycle.IsChecked!=true;await Task.Delay(250);
             check((scroll.Offset-beforeToggle).Length<1,"Toggling auto cycle also keeps the surrounding page in place.");
             GlobalAppearance.Apply(window,1,1);await Task.Delay(180);
             var queue=editor.FindControl<ListBox>("CycleProfileList")!;
+            // Force overflow independently of platform fonts and display size.
+            queue.MinHeight=0;queue.Height=160;queue.MaxHeight=160;await Task.Delay(180);
             // Navigate into the visible queue controls before keyboard selection;
             // virtualized rows outside the effective viewport are not realized.
             var queueAction=editor.FindControl<Button>("CycleMoveDownBtn")!;
@@ -93,6 +103,7 @@ internal static class ProfileScrollChecks
             check(position!.Value.Y>=-1 && position.Value.Y+item.Bounds.Height<=inner.Viewport.Height+1,"Active queue navigation still reveals the selected row inside its own scroller.");
             editor.Load(settings.CustomHud with{CycleProfileIds=new(),AutoCycle=false},hud);await Task.Delay(150);
             check(queue.Items.Count==0,"An empty cycle queue is retained for the second regression scenario.");
+            window.NavigateToSettingsSection("hud");await Task.Delay(120);
             await Click("AddProfileBtn");await Click("SaveProfileBtn",edit:()=>editor.FindControl<TextBox>("ProfileNameBox")!.Text="Empty queue audit");await Click("DeleteProfileBtn");
         }
         finally{window.Close();hud.Close();LocalizationManager.Initialize("zh-CN");}

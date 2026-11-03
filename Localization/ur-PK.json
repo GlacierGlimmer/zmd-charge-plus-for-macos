@@ -2334,5 +2334,18 @@
   "{time.display.status_text}": "{time.display.status_text}",
   "¥{deepseek.balance|0.00}": "¥{deepseek.balance|0.00}",
   "← Previous": "پچھلا باب →",
-  "↓ {network.display_download}": "↓ {network.display_download}"
+  "↓ {network.display_download}": "↓ {network.display_download}",
+  "Current system": "موجودہ نظام",
+  "Software usage": "سافٹ ویئر کا استعمال",
+  "System CPU load across all logical processors.": "تمام منطقی پروسیسرز پر نظام کا CPU استعمال۔",
+  "Used physical RAM divided by total physical RAM.": "استعمال شدہ فزیکل RAM کو کل فزیکل RAM سے تقسیم کرنے کا تناسب۔",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "تمام GPU کی استعمال شدہ مخصوص VRAM کو کل مخصوص VRAM سے تقسیم کرنے کا تناسب۔ مشترکہ میموری شامل نہیں۔",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus کے CPU وقت کو گزرے ہوئے وقت اور منطقی پروسیسرز کی تعداد سے تقسیم کیا جاتا ہے۔",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus کی رہائشی RAM کو کل فزیکل RAM سے تقسیم کرنے کا تناسب۔ رہائشی مشترکہ صفحات شامل ہیں۔",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus کو مختص مخصوص VRAM کو کل مخصوص VRAM سے تقسیم کرنے کا تناسب۔ مشترکہ GPU میموری شامل نہیں۔",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "پورا Endfield Charge Plus عمل: ترتیبات اور تمام HUD۔ CPU استعمال تمام منطقی پروسیسرز کے لحاظ سے شمار ہوتا ہے۔",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "پورے Endfield Charge Plus (ترتیبات اور تمام HUD) کی رہائشی RAM، مشترکہ رہائشی صفحات سمیت۔ قدر: MiB/GiB؛ قوس: کل فزیکل RAM کا تناسب۔",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "پورے Endfield Charge Plus (ترتیبات اور تمام HUD) کی مخصوص VRAM، مشترکہ GPU میموری کے بغیر۔ قدر: MiB/GiB؛ قوس: کل مخصوص VRAM کا تناسب۔",
+  "Author's BiliBili channel": "مصنف کا BiliBili چینل",
+  "Author's YouTube channel": "مصنف کا YouTube چینل"
 }

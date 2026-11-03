@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+Gestión de perfiles
+Selector radial
+Acciones rápidas
+Mantén pulsado el botón central del ratón sobre el HUD, arrastra hacia un perfil y suelta para cambiar.
+Suelta en el centro o fuera del anillo para cancelar.
+Tiempo de pulsación prolongada
+Umbral de arrastre
+Tamaño del anillo
+Activar la selección radial
+Perfiles en el anillo
+Usar todos los perfiles
+Vista previa del anillo
+Perfil seleccionado
+No hay perfiles disponibles
+Página anterior
+Página siguiente
+Página {0} / {1}
+Apariencia
+Claro
+Clásico
+Suave
+Radio de las esquinas
+Opacidad del anillo
+Restablecer tema
+Vista previa del tema
+Gestos del HUD
+Pulsación prolongada del botón central
+Clic izquierdo
+Los cambios se aplican al pulsar «Guardar y aplicar».
+Pulsa Esc para cancelar.
+Cambio de perfil
+Solo vista previa
+Añadir al anillo
+Quitar del anillo
+Seguimiento de incidencias
+Minimizar ventana
+Maximizar ventana
+Restaurar ventana
+Cerrar ventana
+Sistema actual
+Uso del software
+Carga de CPU del sistema en todos los procesadores lógicos.
+RAM física utilizada dividida entre la RAM física total.
+VRAM dedicada utilizada dividida entre la VRAM dedicada total de todas las GPU. Se excluye la memoria compartida.
+Tiempo de CPU de Endfield Charge Plus dividido entre el tiempo transcurrido y el número de procesadores lógicos.
+RAM residente de Endfield Charge Plus dividida entre la RAM física total. Incluye páginas compartidas residentes.
+VRAM dedicada asignada a Endfield Charge Plus dividida entre la VRAM dedicada total. Se excluye la memoria compartida de GPU.
+Proceso completo de Endfield Charge Plus: ajustes y todos los HUD. CPU normalizada respecto a todos los procesadores lógicos.
+RAM residente de todo Endfield Charge Plus (ajustes y todos los HUD), incluidas las páginas compartidas residentes. Valor: MiB/GiB; arco: proporción de la RAM física.
+VRAM dedicada de todo Endfield Charge Plus (ajustes y todos los HUD), sin memoria compartida de GPU. Valor: MiB/GiB; arco: proporción de la VRAM dedicada total.
+Canal de BiliBili del autor
+Canal de YouTube del autor
+Colores
+Buscar perfiles
+Cambiar de perfil al hacer clic o usar la rueda
+Intervalo de rotación / s
+Desplázate hacia arriba para el perfil anterior y hacia abajo para el siguiente.
+Perfiles disponibles
+Perfil anterior
+Perfil siguiente
+Pausar/reanudar la rotación automática
+Vista previa del perfil actual
+Abrir ajustes
+Los atajos de teclado funcionan mientras esta aplicación tiene el foco.
+Mantener el HUD visible al situar el puntero sobre él o la zona de activación

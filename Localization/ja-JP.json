@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "画面収録の権限が必要です。許可した後にアプリを再起動してください",
   "Requires macOS 12.3 or newer": "macOS 12.3 以降が必要です",
   "Frame capture failed: {0}": "フレーム取得に失敗しました：{0}",
-  "Frame capture exited ({0})": "フレーム取得が終了しました（{0}）"
+  "Frame capture exited ({0})": "フレーム取得が終了しました（{0}）",
+  "Current system": "システムの現在値",
+  "Software usage": "ソフトの使用量",
+  "System CPU load across all logical processors.": "全論理プロセッサに対するシステムの CPU 使用率です。",
+  "Used physical RAM divided by total physical RAM.": "使用中の物理メモリを物理メモリ総量で割った割合です。",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "各 GPU の専用 VRAM 使用量を専用 VRAM 総量で割った割合です。共有メモリは含みません。",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus の CPU 時間を経過時間と論理プロセッサ数で割った値です。",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus の常駐メモリを物理メモリ総量で割った割合です。常駐共有ページを含みます。",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus に割り当てられた専用 VRAM を専用 VRAM 総量で割った割合です。共有 GPU メモリは含みません。",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "Endfield Charge Plus のプロセス全体（設定画面とすべての HUD）が対象です。CPU 使用率は全論理プロセッサを基準にします。",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "Endfield Charge Plus 全体（設定画面と全 HUD）の常駐メモリです。常駐共有ページを含みます。数値は MiB/GiB、円弧は物理メモリ総量に対する割合です。",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "Endfield Charge Plus 全体（設定画面と全 HUD）の専用 VRAM です。共有 GPU メモリは含みません。数値は MiB/GiB、円弧は専用 VRAM 総量に対する割合です。",
+  "Author's BiliBili channel": "作者の BiliBili チャンネル",
+  "Author's YouTube channel": "作者の YouTube チャンネル"
 }

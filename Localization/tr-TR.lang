@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Değiştirildi)
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+Profil yönetimi
+Dairesel seçici
+Hızlı işlemler
+HUD üzerinde orta fare düğmesini basılı tutun, bir profile doğru sürükleyin ve geçiş yapmak için bırakın.
+İptal etmek için merkezde veya halkanın dışında bırakın.
+Basılı tutma süresi
+Sürükleme eşiği
+Halka boyutu
+Dairesel geçişi etkinleştir
+Halkadaki profiller
+Tüm profilleri kullan
+Halkayı önizle
+Seçili profil
+Kullanılabilir profil yok
+Önceki sayfa
+Sonraki sayfa
+Sayfa {0} / {1}
+Görünüm
+Açık
+Klasik
+Yumuşak
+Köşe yarıçapı
+Halka opaklığı
+Temayı sıfırla
+Tema önizlemesi
+HUD hareketleri
+Orta düğmeyi basılı tutma
+Sol tıklama
+Değişiklikler «Kaydet ve uygula» düğmesine bastıktan sonra uygulanır.
+İptal etmek için Esc tuşuna basın.
+Profil değiştirme
+Yalnızca önizleme
+Halkaya ekle
+Halkadan kaldır
+Sorun takibi
+Pencereyi küçült
+Pencereyi büyüt
+Pencere boyutunu geri yükle
+Pencereyi kapat
+Geçerli sistem
+Yazılım kullanımı
+Tüm mantıksal işlemciler genelinde sistem CPU yükü.
+Kullanılan fiziksel RAM miktarının toplam fiziksel RAM miktarına oranı.
+Kullanılan ayrılmış VRAM miktarının tüm GPU’lardaki toplam ayrılmış VRAM miktarına oranı. Paylaşılan bellek hariçtir.
+Endfield Charge Plus CPU süresinin geçen süreye ve mantıksal işlemci sayısına bölünmesi.
+Endfield Charge Plus yerleşik RAM miktarının toplam fiziksel RAM miktarına oranı. Yerleşik paylaşılan sayfalar dahildir.
+Endfield Charge Plus için ayrılan VRAM miktarının toplam ayrılmış VRAM miktarına oranı. Paylaşılan GPU belleği hariçtir.
+Endfield Charge Plus işleminin tamamı: ayarlar ve tüm HUD’lar. CPU kullanımı tüm mantıksal işlemcilere göre hesaplanır.
+Endfield Charge Plus işleminin (ayarlar ve tüm HUD’lar) yerleşik RAM’i; yerleşik paylaşılan sayfalar dahildir. Değer: MiB/GiB; yay: fiziksel RAM içindeki pay.
+Endfield Charge Plus işleminin (ayarlar ve tüm HUD’lar) ayrılmış VRAM’i; paylaşılan GPU belleği hariçtir. Değer: MiB/GiB; yay: toplam ayrılmış VRAM içindeki pay.
+Geliştiricinin BiliBili kanalı
+Geliştiricinin YouTube kanalı
+Renkler
+Profil ara
+Tıklayarak veya kaydırarak profil değiştir
+Geçiş aralığı / sn
+Önceki profil için yukarı, sonraki profil için aşağı kaydırın.
+Kullanılabilir profiller
+Önceki profil
+Sonraki profil
+Otomatik geçişi duraklat/sürdür
+Geçerli profili önizle
+Ayarları aç
+Klavye kısayolları yalnızca bu uygulama odaktayken çalışır.
+İşaretçi HUD veya etkin bölge üzerindeyken HUD'u görünür tut

@@ -1,8 +1,8 @@
-﻿namespace EndfieldChargePlus.Settings;
+namespace EndfieldChargePlus.Settings;
 
 internal sealed record ManualText(string Zh,string En,string? Localized=null)
 {
-    internal string Value=>Localized ?? LocalizationManager.Text(Zh,En);
+    internal string Value=>WorkspaceManualContent.UpdateNavigationLabels(Localized ?? LocalizationManager.Text(Zh,En));
     public override string ToString()=>Value;
 }
 internal sealed record ManualBlock(string Id,ManualText Title,ManualText Body,string Kind="text",string Code="",string? Target=null);
@@ -30,7 +30,7 @@ internal static class UserManualContent
 """;
     private static ManualBlock B(string id,string title,string enTitle,string body,string enBody,string kind="text",string code="",string? target=null)=>new(id,new(title,enTitle),new(body,enBody),kind,code,target);
     private static ManualChapter C(string id,string title,string enTitle,string summary,string enSummary,params ManualBlock[] blocks)=>new(id,new(title,enTitle),new(summary,enSummary),blocks);
-    internal static IReadOnlyList<ManualChapter> Chapters=>PlatformManualContent.Adapt(NativeManualContent.Localize(BaseChapters));
+    internal static IReadOnlyList<ManualChapter> Chapters=>WorkspaceManualContent.Adapt(PlatformManualContent.Adapt(NativeManualContent.Localize(BaseChapters)));
     private static IReadOnlyList<ManualChapter> BaseChapters {get;}=new[] {
         C("start","快速开始","Getting started","先完成一次显示，再逐步定制。","Get a HUD on screen, then customize it.",
             B("first-hud","三步显示 HUD","Show your first HUD","在“显示与位置”开启 HUD 总开关；需要持续显示时开启“一直显示”。\n在“HUD显示内容 → HUD 配置”选择一个内置方案，点击“预览当前方案”查看效果。\n点击右上角“保存并应用”，让当前编辑的设置进入实际运行。","Enable the HUD Master Switch under Display & Position; turn on Always Visible for a persistent HUD.\nChoose a built-in profile under HUD Content → HUD Configuration and preview it.\nClick Save & Apply at the top right to apply the settings to the running HUD.","steps",target:"hud"),

@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "Cần quyền ghi màn hình; hãy khởi động lại ứng dụng sau khi cấp quyền",
   "Requires macOS 12.3 or newer": "Cần macOS 12.3 trở lên",
   "Frame capture failed: {0}": "Thu thập khung hình thất bại: {0}",
-  "Frame capture exited ({0})": "Quá trình thu thập khung hình đã kết thúc ({0})"
+  "Frame capture exited ({0})": "Quá trình thu thập khung hình đã kết thúc ({0})",
+  "Current system": "Hệ thống hiện tại",
+  "Software usage": "Tài nguyên phần mềm",
+  "System CPU load across all logical processors.": "Mức sử dụng CPU của hệ thống trên tất cả bộ xử lý lô-gic.",
+  "Used physical RAM divided by total physical RAM.": "RAM vật lý đã dùng chia cho tổng RAM vật lý.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "VRAM chuyên dụng đã dùng chia cho tổng VRAM chuyên dụng của các GPU. Không bao gồm bộ nhớ dùng chung.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Thời gian CPU của Endfield Charge Plus chia cho thời gian đã trôi qua và số bộ xử lý lô-gic.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "RAM thường trú của Endfield Charge Plus chia cho tổng RAM vật lý. Bao gồm các trang dùng chung đang thường trú.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "VRAM chuyên dụng được cấp cho Endfield Charge Plus chia cho tổng VRAM chuyên dụng. Không bao gồm bộ nhớ GPU dùng chung.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "Toàn bộ tiến trình Endfield Charge Plus: phần cài đặt và tất cả HUD. CPU được chuẩn hóa theo tất cả bộ xử lý lô-gic.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM thường trú của toàn bộ Endfield Charge Plus (cài đặt và tất cả HUD), gồm các trang dùng chung thường trú. Giá trị: MiB/GiB; cung tròn: tỷ lệ RAM vật lý.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM chuyên dụng của toàn bộ Endfield Charge Plus (cài đặt và tất cả HUD), không gồm bộ nhớ GPU dùng chung. Giá trị: MiB/GiB; cung tròn: tỷ lệ tổng VRAM chuyên dụng.",
+  "Author's BiliBili channel": "Kênh BiliBili của tác giả",
+  "Author's YouTube channel": "Kênh YouTube của tác giả"
 }

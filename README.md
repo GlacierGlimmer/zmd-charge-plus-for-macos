@@ -38,7 +38,7 @@ Android 仓库已建立；可下载版本以其 Releases 页面为准。
 - 磁盘：APFS Data 卷 statfs，正确读取可写数据卷，不拿只读系统快照作为用户磁盘。
 - 网络：en* 物理接口 64 位收发计数器差分，排除 loopback / VPN 虚拟接口，避免重复计算；接口新增、断开及计数器重置不产生突增。
 - GPU：Metal 型号、数量、统一内存标记、低功耗/可移除状态和建议工作集预算。**工作集预算不是显存容量**。
-- 显示器、剪贴板、中英界面、全局鼠标顶部唤出、HUD 点击穿透、菜单栏、登录启动和单实例均有 macOS 实现。
+- 显示器、剪贴板、20 种语言界面、全局鼠标顶部唤出、HUD 点击穿透、菜单栏、登录启动和单实例均有 macOS 实现。
 - API Key 保存到 macOS 登录钥匙串。配置和日志位于 `~/Library/Application Support/EndfieldChargePlusForMacOS`。导出设置只带钥匙串引用，换 Mac 后需重新输入 Key。
 - 登录启动使用当前用户 `~/Library/LaunchAgents/com.glacierglimmer.endfieldchargeplus.macos.plist`。必须先安装到本机，不能从 DMG 临时路径注册。
 

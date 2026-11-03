@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (geändert)
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+Profilverwaltung
+Ringauswahl
+Schnellaktionen
+Halten Sie auf dem HUD die mittlere Maustaste gedrückt, ziehen Sie zu einem Profil und lassen Sie los, um zu wechseln.
+Lassen Sie in der Mitte oder außerhalb des Rings los, um abzubrechen.
+Haltezeit
+Ziehschwelle
+Ringgröße
+Ringauswahl aktivieren
+Profile im Ring
+Alle Profile verwenden
+Ringvorschau
+Ausgewähltes Profil
+Keine Profile verfügbar
+Vorherige Seite
+Nächste Seite
+Seite {0} / {1}
+Darstellung
+Hell
+Klassisch
+Sanft
+Eckenradius
+Deckkraft des Rings
+Design zurücksetzen
+Designvorschau
+HUD-Gesten
+Mittlere Maustaste gedrückt halten
+Linksklick
+Die Änderungen werden wirksam, sobald Sie „Übernehmen“ wählen.
+Zum Abbrechen Esc drücken.
+Profilwechsel
+Nur Vorschau
+Zum Ring hinzufügen
+Aus dem Ring entfernen
+Problemerfassung
+Fenster minimieren
+Fenster maximieren
+Fenster wiederherstellen
+Fenster schließen
+Aktuelles System
+Softwareauslastung
+CPU-Auslastung des Systems über alle logischen Prozessoren.
+Genutzter physischer RAM geteilt durch den gesamten physischen RAM.
+Genutzter dedizierter VRAM geteilt durch den gesamten dedizierten VRAM aller GPUs. Gemeinsamer Speicher ist ausgeschlossen.
+CPU-Zeit von Endfield Charge Plus geteilt durch die verstrichene Zeit und die Anzahl logischer Prozessoren.
+Residenter RAM von Endfield Charge Plus geteilt durch den gesamten physischen RAM. Enthält residente gemeinsam genutzte Seiten.
+Endfield Charge Plus zugewiesener dedizierter VRAM geteilt durch den gesamten dedizierten VRAM. Gemeinsamer GPU-Speicher ist ausgeschlossen.
+Gesamter Endfield Charge Plus-Prozess: Einstellungen und alle HUDs. CPU-Auslastung bezogen auf alle logischen Prozessoren.
+Residenter RAM des gesamten Endfield Charge Plus-Prozesses (Einstellungen und alle HUDs), einschließlich gemeinsam genutzter residenter Seiten. Wert: MiB/GiB; Bogen: Anteil am physischen RAM.
+Dedizierter VRAM des gesamten Endfield Charge Plus-Prozesses (Einstellungen und alle HUDs), ohne gemeinsamen GPU-Speicher. Wert: MiB/GiB; Bogen: Anteil am gesamten dedizierten VRAM.
+BiliBili-Kanal des Entwicklers
+YouTube-Kanal des Entwicklers
+Farben
+Profile suchen
+Profile per Klick oder Mausrad wechseln
+Wechselintervall / Sek.
+Nach oben scrollen: vorheriges Profil; nach unten: nächstes Profil.
+Verfügbare Profile
+Vorheriges Profil
+Nächstes Profil
+Automatischen Wechsel pausieren/fortsetzen
+Aktuelles Profil anzeigen
+Einstellungen öffnen
+Tastenkürzel funktionieren nur, solange diese App den Fokus hat.
+HUD beim Zeigen auf das HUD oder die Aktivierungszone sichtbar halten

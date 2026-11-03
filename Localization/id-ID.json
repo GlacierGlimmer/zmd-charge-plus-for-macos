@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "Izin perekaman layar diperlukan; mulai ulang aplikasi setelah memberikannya",
   "Requires macOS 12.3 or newer": "Memerlukan macOS 12.3 atau yang lebih baru",
   "Frame capture failed: {0}": "Pengambilan bingkai gagal: {0}",
-  "Frame capture exited ({0})": "Pengambilan bingkai berakhir ({0})"
+  "Frame capture exited ({0})": "Pengambilan bingkai berakhir ({0})",
+  "Current system": "Sistem saat ini",
+  "Software usage": "Penggunaan perangkat lunak",
+  "System CPU load across all logical processors.": "Beban CPU sistem pada semua prosesor logis.",
+  "Used physical RAM divided by total physical RAM.": "RAM fisik yang terpakai dibagi total RAM fisik.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "VRAM khusus yang terpakai dibagi total VRAM khusus semua GPU. Memori bersama tidak disertakan.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Waktu CPU Endfield Charge Plus dibagi waktu berlalu dan jumlah prosesor logis.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "RAM residen Endfield Charge Plus dibagi total RAM fisik. Termasuk halaman bersama yang residen.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "VRAM khusus yang dialokasikan ke Endfield Charge Plus dibagi total VRAM khusus. Memori GPU bersama tidak disertakan.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "Seluruh proses Endfield Charge Plus: pengaturan dan semua HUD. CPU dinormalisasi terhadap semua prosesor logis.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM residen seluruh Endfield Charge Plus (pengaturan dan semua HUD), termasuk halaman bersama yang residen. Nilai: MiB/GiB; busur: bagian dari RAM fisik.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM khusus seluruh Endfield Charge Plus (pengaturan dan semua HUD), tidak termasuk memori GPU bersama. Nilai: MiB/GiB; busur: bagian dari total VRAM khusus.",
+  "Author's BiliBili channel": "Kanal BiliBili pengembang",
+  "Author's YouTube channel": "Kanal YouTube pengembang"
 }

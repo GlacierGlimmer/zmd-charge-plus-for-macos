@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "مجوز ضبط صفحه لازم است؛ پس از دادن مجوز برنامه را دوباره اجرا کنید",
   "Requires macOS 12.3 or newer": "به macOS 12.3 یا جدیدتر نیاز است",
   "Frame capture failed: {0}": "ثبت فریم ناموفق بود: {0}",
-  "Frame capture exited ({0})": "ثبت فریم پایان یافت ({0})"
+  "Frame capture exited ({0})": "ثبت فریم پایان یافت ({0})",
+  "Current system": "وضعیت فعلی سیستم",
+  "Software usage": "مصرف نرم‌افزار",
+  "System CPU load across all logical processors.": "بار پردازندهٔ سیستم در تمام پردازنده‌های منطقی.",
+  "Used physical RAM divided by total physical RAM.": "حافظهٔ RAM فیزیکی مصرف‌شده تقسیم بر کل RAM فیزیکی.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "حافظهٔ اختصاصی VRAM مصرف‌شده تقسیم بر کل VRAM اختصاصی همهٔ GPUها. حافظهٔ اشتراکی محاسبه نمی‌شود.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "زمان پردازندهٔ Endfield Charge Plus تقسیم بر زمان سپری‌شده و تعداد پردازنده‌های منطقی.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "حافظهٔ مقیم Endfield Charge Plus تقسیم بر کل RAM فیزیکی. صفحه‌های اشتراکی مقیم نیز محاسبه می‌شوند.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "حافظهٔ اختصاصی VRAM تخصیص‌یافته به Endfield Charge Plus تقسیم بر کل VRAM اختصاصی. حافظهٔ اشتراکی GPU محاسبه نمی‌شود.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "کل فرایند Endfield Charge Plus: تنظیمات و تمام HUDها. مصرف CPU نسبت به همهٔ پردازنده‌های منطقی محاسبه می‌شود.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM مقیم کل Endfield Charge Plus (تنظیمات و تمام HUDها)، شامل صفحه‌های اشتراکی مقیم. مقدار: MiB/GiB؛ کمان: سهم از RAM فیزیکی.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM اختصاصی کل Endfield Charge Plus (تنظیمات و تمام HUDها)، بدون حافظهٔ اشتراکی GPU. مقدار: MiB/GiB؛ کمان: سهم از کل VRAM اختصاصی.",
+  "Author's BiliBili channel": "کانال BiliBili سازنده",
+  "Author's YouTube channel": "کانال YouTube سازنده"
 }

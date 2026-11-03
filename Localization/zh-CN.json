@@ -2464,5 +2464,18 @@
   "macOS clipboard; update time is when ECP last observed a content change": "macOS 剪贴板；更新时间为 ECP 最近观察到内容变化的时刻",
   "statfs f_bavail for the APFS Data volume, excluding system-reserved space.": "APFS Data 卷 statfs f_bavail，不含系统保留空间。",
   "statfs for the APFS Data volume; capacity includes space shared within the same APFS container": "APFS Data 卷 statfs；容量包含同一 APFS 容器共享空间",
-  "{0}. Data source: {1}.": "{0}。数据来源：{1}。"
+  "{0}. Data source: {1}.": "{0}。数据来源：{1}。",
+  "Current system": "当前系统",
+  "Software usage": "软件占用",
+  "System CPU load across all logical processors.": "所有逻辑处理器的系统 CPU 总使用率。",
+  "Used physical RAM divided by total physical RAM.": "已用物理内存占物理内存总量的比例。",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "各物理 GPU 已用专用显存占专用显存总量的比例，不包含共享内存。",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus 消耗的 CPU 时间除以经过的时间和逻辑处理器数量。",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus 驻留内存占物理内存总量的比例，包含驻留的共享内存页。",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus 已分配的专用显存占专用显存总量的比例，不包含共享 GPU 内存。",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "整个 Endfield Charge Plus 进程，包含设置界面和全部 HUD。CPU 占用按全部逻辑处理器归一化。",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的驻留内存，包含驻留的共享页。数值显示 MiB/GiB；圆弧表示占物理内存总量的比例。",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的专用显存，不含共享 GPU 内存。数值显示 MiB/GiB；圆弧表示占专用显存总量的比例。",
+  "Author's BiliBili channel": "作者BiliBili频道",
+  "Author's YouTube channel": "作者YouTube频道"
 }

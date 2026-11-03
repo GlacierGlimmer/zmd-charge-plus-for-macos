@@ -761,7 +761,11 @@ def audit(report_path: pathlib.Path | None = None) -> int:
     if any(not key.strip() for key in keys):
         errors.append("core.lang contains an empty key")
     english_keys = list(language_json("en-US"))
-    if canonical_keys[: len(english_keys)] != english_keys:
+    # Platform fields may be appended before a later shared UI extension.
+    # Preserve every legacy key and its relative order without assuming a prefix.
+    english_set = set(english_keys)
+    legacy_order = [key for key in canonical_keys if key in english_set]
+    if legacy_order != english_keys:
         errors.append("core.lang legacy field order differs from the canonical en-US pack")
     appended = keys[len(english_keys):]
     if len(set(appended)) != len(appended):

@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Đã sửa đổi)
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+Quản lý hồ sơ
+Bộ chọn vòng tròn
+Thao tác nhanh
+Nhấn giữ nút chuột giữa trên HUD, kéo về phía một hồ sơ rồi thả nút để chuyển.
+Thả nút ở tâm hoặc bên ngoài vòng tròn để hủy.
+Thời gian nhấn giữ
+Ngưỡng kéo
+Kích thước vòng tròn
+Bật chuyển bằng vòng tròn
+Hồ sơ trong vòng tròn
+Dùng tất cả hồ sơ
+Xem trước vòng tròn
+Hồ sơ đã chọn
+Không có hồ sơ khả dụng
+Trang trước
+Trang tiếp
+Trang {0} / {1}
+Giao diện
+Sáng
+Cổ điển
+Dịu nhẹ
+Bán kính góc
+Độ đục của vòng tròn
+Đặt lại chủ đề
+Xem trước chủ đề
+Cử chỉ HUD
+Nhấn giữ nút chuột giữa
+Nhấp chuột trái
+Các thay đổi có hiệu lực sau khi nhấn «Lưu và áp dụng».
+Nhấn Esc để hủy.
+Chuyển hồ sơ
+Chỉ xem trước
+Thêm vào vòng tròn
+Xóa khỏi vòng tròn
+Theo dõi sự cố
+Thu nhỏ cửa sổ
+Phóng to cửa sổ
+Khôi phục kích thước cửa sổ
+Đóng cửa sổ
+Hệ thống hiện tại
+Tài nguyên phần mềm
+Mức sử dụng CPU của hệ thống trên tất cả bộ xử lý lô-gic.
+RAM vật lý đã dùng chia cho tổng RAM vật lý.
+VRAM chuyên dụng đã dùng chia cho tổng VRAM chuyên dụng của các GPU. Không bao gồm bộ nhớ dùng chung.
+Thời gian CPU của Endfield Charge Plus chia cho thời gian đã trôi qua và số bộ xử lý lô-gic.
+RAM thường trú của Endfield Charge Plus chia cho tổng RAM vật lý. Bao gồm các trang dùng chung đang thường trú.
+VRAM chuyên dụng được cấp cho Endfield Charge Plus chia cho tổng VRAM chuyên dụng. Không bao gồm bộ nhớ GPU dùng chung.
+Toàn bộ tiến trình Endfield Charge Plus: phần cài đặt và tất cả HUD. CPU được chuẩn hóa theo tất cả bộ xử lý lô-gic.
+RAM thường trú của toàn bộ Endfield Charge Plus (cài đặt và tất cả HUD), gồm các trang dùng chung thường trú. Giá trị: MiB/GiB; cung tròn: tỷ lệ RAM vật lý.
+VRAM chuyên dụng của toàn bộ Endfield Charge Plus (cài đặt và tất cả HUD), không gồm bộ nhớ GPU dùng chung. Giá trị: MiB/GiB; cung tròn: tỷ lệ tổng VRAM chuyên dụng.
+Kênh BiliBili của tác giả
+Kênh YouTube của tác giả
+Màu sắc
+Tìm hồ sơ
+Đổi hồ sơ bằng cách nhấp hoặc cuộn
+Khoảng thời gian chuyển / giây
+Cuộn lên để về hồ sơ trước, cuộn xuống để sang hồ sơ tiếp theo.
+Hồ sơ khả dụng
+Hồ sơ trước
+Hồ sơ tiếp theo
+Tạm dừng/tiếp tục chuyển tự động
+Xem trước hồ sơ hiện tại
+Mở cài đặt
+Phím tắt chỉ hoạt động khi ứng dụng này có tiêu điểm.
+Giữ HUD hiển thị khi trỏ chuột lên HUD hoặc vùng kích hoạt

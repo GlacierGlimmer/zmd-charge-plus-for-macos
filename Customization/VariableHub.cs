@@ -212,7 +212,7 @@ public sealed class VariableHub : IDisposable
         {
             using var p = Process.GetCurrentProcess();
             var asm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
-            var version = asm.GetName().Version?.ToString(3) ?? "0.1.4";
+            var version = asm.GetName().Version?.ToString(3) ?? "0.2.0";
             var start = p.StartTime;
             var uptime = Math.Max(0d, (DateTime.Now - start).TotalSeconds);
             v["app.name"] = ProductInfo.Name;
@@ -693,6 +693,8 @@ public sealed class VariableHub : IDisposable
             if (requested is not null && !requested.Any(k => k.StartsWith(sourcePrefix, StringComparison.OrdinalIgnoreCase)))
                 continue;
 
+            if(_httpCache.Count>=32)foreach(var key in _httpCache.Where(p=>p.Value.ExpiresAt<=DateTime.UtcNow).Select(p=>p.Key).ToArray())_httpCache.Remove(key);
+            if(_httpCache.Count>=64)_httpCache.Clear();
             string cacheKey = source.Name + "|" + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(source))));
             if (!_httpCache.TryGetValue(cacheKey, out var cache) || DateTime.UtcNow >= cache.ExpiresAt)
             {

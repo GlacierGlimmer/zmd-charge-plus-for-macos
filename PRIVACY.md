@@ -1,11 +1,60 @@
-# Privacy — Endfield Charge Plus For MacOS
+# Endfield Charge Plus
 
-ECP reads requested system metrics locally. It does not upload system, clipboard or HUD data to the developer. Clipboard data is read only for a profile that requests clipboard variables.
+隐私与本地数据说明 / Privacy and local data — macOS
 
-Automatic/manual update checks contact api.github.com for releases in GlacierGlimmer/zmd-charge-plus-for-macos. Public-IP variables contact api.ipify.org / api6.ipify.org when requested. DeepSeek balance queries send the user-provided API key to api.deepseek.com. HTTP/JSON sources and ICMP/TCP/UDP probes contact the destinations configured by the user. These services receive ordinary connection metadata such as the source IP address.
+## 1. 数据处理原则 / Data handling
 
-DeepSeek API keys are stored in the user's macOS login Keychain; the settings file contains a reference. Exported settings do not include the Keychain secret. Custom HTTP headers and URLs are stored in the settings JSON and included in exported files; avoid sharing exports containing credentials. Keys are never passed on a shell command line.
+Endfield Charge Plus 未集成广告、产品分析遥测、应用账号系统或开发者运营的用户数据云端后台。HUD、预览、变量库和硬件页面所需的数据在本机读取和处理；内置更新检查不会上传 HUD 变量值、剪贴板内容、设备传感器读数或用户配置。
 
-Configuration, backups and logs are stored below ~/Library/Application Support/EndfieldChargePlusForMacOS. Removing the .app does not remove these files or its Keychain entries. Turning off launch at login removes the ECP LaunchAgent from ~/Library/LaunchAgents. The user can remove the application's Keychain entries using Keychain Access.
+Endfield Charge Plus does not implement advertising, product analytics telemetry, an application account system or a developer-operated user-data cloud backend. HUD, preview, variable-library and hardware-page data is processed locally. Built-in update checks do not upload HUD values, clipboard content, sensor readings or user settings.
 
-No root privileges, Accessibility permission, screen recording permission, kernel extension, SIP changes, or external hardware-monitoring service are required for the shipped metrics.
+## 2. 配置与存储 / Settings and storage
+
+本平台默认用户数据位置：`~/Library/Application Support/EndfieldChargePlusForMacOS`。配置、备份、日志和应用缓存使用用户数据位置，不自动写入解压后的程序目录。程序文件和用户数据相互独立；移动或替换程序文件不会自动清除个人设置。手动导出只写入用户选择的位置。
+
+登录启动使用当前用户的 `~/Library/LaunchAgents`；在软件中关闭登录启动会移除对应 LaunchAgent。
+
+Default data location: `~/Library/Application Support/EndfieldChargePlusForMacOS`. Settings, backups, logs and application caches use the user data location, independently of the extracted program folder. Moving/replacing application files does not automatically delete personal settings. Explicit exports are written to the location selected by the user. Login startup uses a per-user LaunchAgent under ~/Library/LaunchAgents. Turning it off in ECP removes that LaunchAgent.
+
+## 3. 密钥与导出 / Secrets and exports
+
+macOS 将 DeepSeek API Key 保存在当前用户的登录钥匙串，配置文件仅保存引用。配置导出不携带钥匙串密钥；换机后应重新输入。删除应用不会自动移除其用户数据或钥匙串项目，可在“钥匙串访问”中管理相应项目。
+
+macOS stores the DeepSeek API key in the current user login Keychain; settings contain a reference. Exports do not include the Keychain secret. Enter it again after moving to another Mac. Removing the app does not automatically remove its user data or Keychain entries.
+
+自定义 HTTP/JSON 的 URL、参数和请求头可能包含密码、令牌或其他个人信息，并随配置保存或导出。支持环境变量引用的桌面配置可使用 `${env:VARIABLE_NAME}`，以保存引用代替直接填写秘密值。共享配置、备份或日志前，请先检查敏感内容；密钥加密不代表整个配置文件都已加密。
+
+Custom HTTP/JSON URLs, parameters and headers may contain credentials or personal information and can be saved/exported with settings. Desktop configuration that supports environment references can use `${env:VARIABLE_NAME}` instead of storing a literal secret. Review settings, backups and logs before sharing them. Protecting an API key does not encrypt the entire configuration file.
+
+## 4. 网络访问 / Network access
+
+- 更新检查：启动时或手动访问 GitHub API，查询 `zmd-charge-plus-for-macos` 对应的 `GlacierGlimmer/zmd-charge-plus-for-macos` 已发布版本。
+- 公网 IP：请求相应变量时访问 `api.ipify.org` 或 `api6.ipify.org`，结果会缓存。
+- DeepSeek：启用相关数据源并配置 Key 后，向 API 发起余额等功能请求。默认接口为 `api.deepseek.com`。
+- 节假日日历：相关时段功能可从 `cdn.jsdelivr.net` 或 `raw.githubusercontent.com` 获取公开的 `NateScarlet/holiday-cn` 年度数据，不发送 DeepSeek Key。
+- HTTP/JSON 和网络探测：访问用户启用的数据源地址或探测目标。请求头、URL 中的参数和鉴权值按配置发给该目标。
+
+Outbound connections are made for update checks, DeepSeek requests, public holiday-calendar refreshes, enabled custom HTTP/JSON sources and configured probe targets. Desktop public-IP variables additionally use api.ipify.org/api6.ipify.org. Update checks use only this platform's GitHub repository: GlacierGlimmer/zmd-charge-plus-for-macos. Calendar refreshes request public holiday-cn data from jsDelivr or GitHub Raw without a DeepSeek key. DeepSeek credentials go to the API endpoint used by that platform; Android also allows a user-configured base URL.
+
+外部服务会在正常连接中获得来源 IP 等连接信息，并获得该请求明确包含的数据；其处理方式受各自政策约束。打开项目、更新或帮助链接会交给系统浏览器，不代表浏览器和外部网站也由 ECP 控制。
+
+External services receive normal connection metadata such as the source IP and data explicitly included in a request, subject to their own policies. Project/update/help links open external services in the system browser; their behavior is outside ECP's control.
+
+## 5. 本机数据与权限 / Local data and permissions
+
+为实现所选功能，软件可能读取设备/硬件状态、电池、网络接口、运行进程或窗口、媒体状态以及系统允许的其他指标。剪贴板内容在请求相应变量时读取。数据能否读取取决于系统权限、设备、驱动和接口支持，无法读取时会显示不可用。
+
+macOS 的实际帧率功能使用 ScreenCaptureKit，需要系统屏幕录制授权。当前采集器统计完整帧状态和时间戳，不把画面保存为图片或视频，也不向网络发送画面。未授权时该功能不可用。其他指标以系统接口和硬件支持为准；不要求关闭 SIP 或 Gatekeeper。
+
+Features may read device/hardware status, battery/network state, processes/windows, media status and other system-permitted metrics. Clipboard content is read for requested clipboard variables. Availability depends on permissions, hardware, drivers and supported interfaces; unavailable data is reported as unavailable.
+
+Real frame-rate collection on macOS uses ScreenCaptureKit and requires Screen Recording permission. The current collector counts complete-frame status and timestamps; it does not save image/video recordings or send frames over the network. Without permission that feature is unavailable. Other metrics depend on available system interfaces and hardware; disabling SIP or Gatekeeper is not required.
+
+## 6. 日志、清理与反馈 / Logs, removal and feedback
+
+日志用于本地诊断，可能包含错误详情、路径、功能状态或自定义服务返回的信息。ECP 不会自动将诊断文件提交给开发者；请在主动分享前检查内容。清理前请退出软件，并按需要保留配置和密钥；删除密钥可能使原有受保护值无法使用。
+
+Logs are local diagnostics and may include error details, paths, feature status or custom-service responses. ECP does not automatically submit diagnostic files to the developer. Review them before sharing. Exit the app before clearing data and retain settings/keys as needed; deleting a protection key can make saved protected values unusable.
+
+开发与维护 / Developer and maintainer: **GlacierGlimmer冰川雪貓**  
+源码与反馈 / Source and issues: https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos

@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "ต้องมีสิทธิ์บันทึกหน้าจอ โปรดเริ่มแอปใหม่หลังอนุญาต",
   "Requires macOS 12.3 or newer": "ต้องใช้ macOS 12.3 ขึ้นไป",
   "Frame capture failed: {0}": "เก็บข้อมูลเฟรมไม่สำเร็จ: {0}",
-  "Frame capture exited ({0})": "การเก็บข้อมูลเฟรมสิ้นสุดแล้ว ({0})"
+  "Frame capture exited ({0})": "การเก็บข้อมูลเฟรมสิ้นสุดแล้ว ({0})",
+  "Current system": "ระบบปัจจุบัน",
+  "Software usage": "การใช้ทรัพยากรของซอฟต์แวร์",
+  "System CPU load across all logical processors.": "ภาระ CPU ของระบบในตัวประมวลผลเชิงตรรกะทั้งหมด",
+  "Used physical RAM divided by total physical RAM.": "RAM จริงที่ใช้หารด้วย RAM จริงทั้งหมด",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "VRAM เฉพาะที่ใช้หารด้วย VRAM เฉพาะทั้งหมดของ GPU ทุกตัว ไม่รวมหน่วยความจำที่ใช้ร่วมกัน",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "เวลา CPU ของ Endfield Charge Plus หารด้วยเวลาที่ผ่านไปและจำนวนตัวประมวลผลเชิงตรรกะ",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "RAM ที่อยู่ในหน่วยความจำของ Endfield Charge Plus หารด้วย RAM จริงทั้งหมด รวมหน้าหน่วยความจำที่ใช้ร่วมกันซึ่งอยู่ในหน่วยความจำ",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "VRAM เฉพาะที่จัดสรรให้ Endfield Charge Plus หารด้วย VRAM เฉพาะทั้งหมด ไม่รวมหน่วยความจำ GPU ที่ใช้ร่วมกัน",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "ทั้งกระบวนการ Endfield Charge Plus: การตั้งค่าและ HUD ทั้งหมด ค่า CPU คำนวณเทียบกับตัวประมวลผลเชิงตรรกะทั้งหมด",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM ที่อยู่ในหน่วยความจำของ Endfield Charge Plus ทั้งหมด (การตั้งค่าและ HUD ทั้งหมด) รวมหน้าหน่วยความจำร่วมที่อยู่ในหน่วยความจำ ค่า: MiB/GiB; ส่วนโค้ง: สัดส่วนของ RAM จริงทั้งหมด",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM เฉพาะของ Endfield Charge Plus ทั้งหมด (การตั้งค่าและ HUD ทั้งหมด) ไม่รวมหน่วยความจำ GPU ร่วม ค่า: MiB/GiB; ส่วนโค้ง: สัดส่วนของ VRAM เฉพาะทั้งหมด",
+  "Author's BiliBili channel": "ช่อง BiliBili ของผู้พัฒนา",
+  "Author's YouTube channel": "ช่อง YouTube ของผู้พัฒนา"
 }

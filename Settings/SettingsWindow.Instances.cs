@@ -142,7 +142,10 @@ public partial class SettingsWindow
     private void ApplySettingsToControls(AppSettings settings)
     {
         HudHotkeyBox.Text=settings.HudToggleHotkey;
+        LoadQuickHotkeys(settings);
         HudHotkeyAnimationCombo.SelectedIndex=settings.HudHotkeyShowAnimation=="Simple" ? 0 : 1;
+        _workspaceDraft=WorkspacePreferences.Normalize(settings.Workspace);
+        if (_workspaceReady) { WorkspaceTheme.Apply(this,_workspaceDraft); RefreshQuickActionsLocalization(); }
         _rootSettings=settings; _persistedRootSettings=settings; _selectedInstanceId=""; ApplyEditorControls(settings); RefreshInstanceEditor(); _=RefreshEditingHighlightAsync();
         GlobalAppearance.Apply(this,settings.GlobalFontScale,settings.GlobalUiScale);
         RefreshHudHotkeyRegistrationStatus();
@@ -159,10 +162,11 @@ public partial class SettingsWindow
                 HudInstances=_rootSettings.HudInstances.Select(i => i.Id==_selectedInstanceId ? i with {
                     Settings=editor, Name=string.IsNullOrWhiteSpace(_instanceName?.Text) ? i.Name : _instanceName.Text.Trim() } : i).ToList() };
         _rootSettings=_rootSettings with { HudToggleHotkey=HudHotkeyBox.Text?.Trim() ?? "",
+            QuickHotkeys=CollectQuickHotkeys(),
             HudHotkeyShowAnimation=HudHotkeyAnimationCombo.SelectedIndex==0 ? "Simple" : "Full",
-            SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle,UiLanguage=editor.UiLanguage,
+            Workspace=editor.Workspace,SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle,UiLanguage=editor.UiLanguage,
             HudInstances=_rootSettings.HudInstances.Select(i=>i with { Settings=i.Settings with {
-                SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle,
+                Workspace=editor.Workspace,SamplingIntervalSeconds=editor.SamplingIntervalSeconds,ClickToCycle=editor.ClickToCycle,
                 GlobalFontScale=_rootSettings.GlobalFontScale,GlobalUiScale=_rootSettings.GlobalUiScale } }).ToList() };
         return _rootSettings;
     }
