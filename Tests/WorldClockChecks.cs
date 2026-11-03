@@ -52,7 +52,7 @@ internal static class WorldClockChecks
         finally { LocalizationManager.SetLanguage(previous); }
     }
 
-    internal static void Editor(Action<bool,string> check)
+    internal static async Task Editor(Action<bool,string> check)
     {
         var previous=LocalizationManager.Current;
         LocalizationManager.SetLanguage(AppLanguage.SimplifiedChinese);
@@ -61,13 +61,13 @@ internal static class WorldClockChecks
         view.Load(settings,null);
         var profiles=view.FindControl<ComboBox>("ProfileCombo")!;
         var zones=view.FindControl<ComboBox>("WorldClockZoneCombo")!;
-        profiles.SelectedIndex=settings.Profiles.FindIndex(p=>p.BuiltInKey=="time.world-clock");
+        profiles.SelectedIndex=settings.Profiles.FindIndex(p=>p.BuiltInKey=="time.world-clock");await Task.Delay(180);
         check(view.FindControl<StackPanel>("WorldClockOptions")!.IsVisible && view.FindControl<Border>("TimeOptionsPanel")!.IsVisible,"Selecting World Clock exposes zone and target settings.");
         zones.SelectedItem=zones.ItemsSource!.Cast<WorldClockZone>().Single(z=>z.Minutes==-420);
         view.FindControl<ToggleSwitch>("TimeTargetSwitch")!.IsChecked=true;
         view.FindControl<TextBox>("TimeTargetBox")!.Text="18:25:00";
         LocalizationManager.SetLanguage(AppLanguage.English);
-        view.ApplyLocalization();
+        view.ApplyLocalization();await Task.Delay(180);
         check((zones.SelectedItem as WorldClockZone)?.Minutes==-420 && view.FindControl<TextBox>("TimeTargetBox")!.Text=="18:25:00","Changing UI language retains the unsaved zone and daily target.");
         var saved=view.ExportSettings();
         var kept=saved.Profiles.Single(p=>p.BuiltInKey=="time.world-clock");
@@ -75,7 +75,7 @@ internal static class WorldClockChecks
         view.FindControl<TextBox>("ProfileNameBox")!.Text="My World Clock";
         saved=view.ExportSettings();
         check(saved.Profiles.Count==settings.Profiles.Count+1 && saved.Profiles.Last().Name=="My World Clock" && saved.Profiles.Last().TimeUtcOffsetMinutes==-420,"Renaming still creates an editable world-clock copy with its zone.");
-        profiles.SelectedIndex=settings.Profiles.FindIndex(p=>p.BuiltInKey=="time.day-progress");
+        profiles.SelectedIndex=settings.Profiles.FindIndex(p=>p.BuiltInKey=="time.day-progress");await Task.Delay(180);
         check(!view.FindControl<StackPanel>("WorldClockOptions")!.IsVisible,"Day Progress stays local and does not expose an irrelevant UTC selector.");
         view.FindControl<ToggleSwitch>("TimeTargetSwitch")!.IsChecked=true;
         view.FindControl<TextBox>("TimeTargetBox")!.Text="16:00:00";
