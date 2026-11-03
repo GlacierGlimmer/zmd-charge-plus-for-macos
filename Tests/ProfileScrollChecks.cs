@@ -35,7 +35,7 @@ internal static class ProfileScrollChecks
             await Task.Delay(500);
             var editor=window.FindControl<HudCustomizerView>("Customizer")!;
             var add=editor.FindControl<Button>("AddProfileBtn")!;
-            var workspace=editor.FindControl<Grid>("ProfileWorkspaceColumns")!;
+            var workspace=editor.GetVisualDescendants().OfType<Grid>().Single(g=>g.Name=="ProfileWorkspaceColumns");
             var scroll=workspace.Children.OfType<ScrollViewer>().Single();
             scroll.AddHandler(Control.RequestBringIntoViewEvent,(_,e)=>requests.Add((e.Source?.GetType().Name ?? "?")+" "+(e.Source is ContentControl c ? c.Content?.ToString() : (e.Source as Control)?.Name)),RoutingStrategies.Bubble,true);
             int step=0;

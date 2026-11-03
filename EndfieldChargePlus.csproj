@@ -49,8 +49,8 @@
     <EmbeddedResource Include="Localization/manual.*.json" WithCulture="false" LogicalName="EndfieldChargePlus.Localization.%(Filename)%(Extension)" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Licenses/*-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
-    <None Update="Licenses/Filee-MIT.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="Licenses/*-LICENSE.txt" Link="licenses/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="Licenses/Filee-MIT.txt" Link="licenses/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Update="Assets/Fonts/OFL-NotoSerifTibetan.txt" Link="licenses/NotoSerifTibetan-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Update="Assets/Fonts/OFL-NotoSansGothic.txt" Link="licenses/NotoSansGothic-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <None Update="Assets/Fonts/OFL-NotoSansDeseret.txt" Link="licenses/NotoSansDeseret-OFL.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
