@@ -81,6 +81,8 @@ internal static class ProfileScrollChecks
             check((scroll.Offset-beforeToggle).Length<1,"Toggling auto cycle also keeps the surrounding page in place.");
             GlobalAppearance.Apply(window,1,1);await Task.Delay(180);
             var queue=editor.FindControl<ListBox>("CycleProfileList")!;
+            // Force overflow independently of platform fonts and display size.
+            queue.MinHeight=0;queue.Height=160;queue.MaxHeight=160;await Task.Delay(180);
             // Navigate into the visible queue controls before keyboard selection;
             // virtualized rows outside the effective viewport are not realized.
             var queueAction=editor.FindControl<Button>("CycleMoveDownBtn")!;
