@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "화면 기록 권한이 필요합니다. 허용한 뒤 앱을 다시 시작하세요",
   "Requires macOS 12.3 or newer": "macOS 12.3 이상이 필요합니다",
   "Frame capture failed: {0}": "프레임 수집 실패: {0}",
-  "Frame capture exited ({0})": "프레임 수집 종료 ({0})"
+  "Frame capture exited ({0})": "프레임 수집 종료 ({0})",
+  "Current system": "현재 시스템",
+  "Software usage": "소프트웨어 사용량",
+  "System CPU load across all logical processors.": "모든 논리 프로세서 기준의 시스템 CPU 사용률입니다.",
+  "Used physical RAM divided by total physical RAM.": "사용 중인 물리 메모리를 전체 물리 메모리로 나눈 비율입니다.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "각 GPU의 전용 VRAM 사용량을 전체 전용 VRAM으로 나눈 비율입니다. 공유 메모리는 제외됩니다.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus의 CPU 시간을 경과 시간과 논리 프로세서 수로 나눈 값입니다.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus의 상주 메모리를 전체 물리 메모리로 나눈 비율입니다. 상주 공유 페이지가 포함됩니다.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus에 할당된 전용 VRAM을 전체 전용 VRAM으로 나눈 비율입니다. 공유 GPU 메모리는 제외됩니다.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "설정 화면과 모든 HUD를 포함한 Endfield Charge Plus 프로세스 전체입니다. CPU 사용률은 모든 논리 프로세서를 기준으로 계산합니다.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "설정 화면과 모든 HUD를 포함한 Endfield Charge Plus 전체의 상주 메모리입니다. 상주 공유 페이지를 포함합니다. 값은 MiB/GiB, 원호는 전체 물리 RAM 대비 비율입니다.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "설정 화면과 모든 HUD를 포함한 Endfield Charge Plus 전체의 전용 VRAM입니다. 공유 GPU 메모리는 제외합니다. 값은 MiB/GiB, 원호는 전체 전용 VRAM 대비 비율입니다.",
+  "Author's BiliBili channel": "제작자의 BiliBili 채널",
+  "Author's YouTube channel": "제작자의 YouTube 채널"
 }

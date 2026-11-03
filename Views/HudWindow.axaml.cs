@@ -26,8 +26,19 @@ public partial class HudWindow : Window
     private bool _persistent;
     private readonly DispatcherTimer _inputTimer=new() { Interval=TimeSpan.FromMilliseconds(16) };
     private readonly MacNative.HudClick _nativeClick;
+    private readonly MacNative.HudScroll _nativeScroll;
     private IntPtr _macInputOwner;
     public event Action? HudClicked;
+    public event Action<int>? HudScrolled;
+    private double _profileWheel;
+    private void HandleProfileWheel(double amount)
+    {
+        if(!CanCycleOnClick || IsRadialOpen)return;
+        _profileWheel+=amount;
+        int steps=Math.Clamp((int)_profileWheel,-24,24);
+        if(steps==0)return;
+        _profileWheel-=steps;HudScrolled?.Invoke(-steps);
+    }
     private bool CanCycleOnClick => !_closed && IsVisible && _settings.AlwaysVisible && _settings.ClickToCycle ;
 
     private HudRenderData? _lastRenderData;
@@ -81,6 +92,7 @@ public partial class HudWindow : Window
 
     public HudWindow()
     {
+        _nativeScroll=delta=>{try{HandleProfileWheel(delta);}catch(Exception ex){EndfieldChargePlus.Diagnostics.AppLog.Error("HUD scroll input failed.",ex);}};
         _nativeClick=()=> { try { if(CanCycleOnClick) HudClicked?.Invoke(); } catch(Exception ex) { EndfieldChargePlus.Diagnostics.AppLog.Error("HUD native input failed.",ex); } };
         InitializeComponent();
         LocalizationManager.ApplyStaticText(this);
@@ -92,6 +104,7 @@ public partial class HudWindow : Window
         {
             if(_macInputOwner!=IntPtr.Zero) { MacNative.ecp_hud_input_close(_macInputOwner);_macInputOwner=IntPtr.Zero; }
             _closed=true;
+            DisposeRadialInput();
             CancelPresentation();
             _progressTimer.Stop();
         };
@@ -101,6 +114,7 @@ public partial class HudWindow : Window
             _pointerPressedInside=CanCycleOnClick && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed
                 && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)));
         };
+        PointerWheelChanged+=(_,e)=>{if(CanCycleOnClick && !IsRadialOpen && IsPointInsideVisibleHud(this.PointToScreen(e.GetPosition(this)))){HandleProfileWheel(e.Delta.Y);e.Handled=true;}};
         PointerReleased += (_,e) =>
         {
             if (OperatingSystem.IsWindows()) return;
@@ -113,11 +127,14 @@ public partial class HudWindow : Window
         Closed += (_,_) => _inputTimer.Stop();
         Root.IsHitTestVisible=true;
         ResetToInitial();
+        InitializeRadialInput();
     }
 
     public void ApplySettings(AppSettings settings)
     {
-        _settings = settings;
+        CancelRadial();
+        _settings = settings with {Workspace=WorkspacePreferences.Normalize(settings.Workspace)};
+        EnsureRadialRegistration();
         if (_closed) return;
         // Named controls exist immediately after XAML loads; the visual tree does not.
         FontFamily numeric=new("avares://Avalonia.Fonts.Inter/Assets#Inter, Microsoft YaHei UI, PingFang SC, sans-serif");
@@ -195,7 +212,7 @@ public partial class HudWindow : Window
                     HudAnimations.SimplePillAppear(_animOptions).RunAsync(Pill, ct),
                     HudAnimations.SimpleFadeIn(_animOptions).RunAsync(BoltIcon, ct),
                     HudAnimations.SimpleFadeIn(_animOptions).RunAsync(NumHost, ct),
-                    HudAnimations.SimpleScaleOut(_animOptions).RunAsync(ScaleHost, ct));
+                    _settings.TransientHoverHold?Task.CompletedTask:HudAnimations.SimpleScaleOut(_animOptions).RunAsync(ScaleHost, ct));
             }
             else
             {
@@ -204,7 +221,7 @@ public partial class HudWindow : Window
                     HudAnimations.PillAppear(_animOptions).RunAsync(Pill, ct),
                     HudAnimations.PillHeight(_animOptions).RunAsync(Pill, ct),
                     HudAnimations.PillHeight(_animOptions).RunAsync(RippleHost, ct),
-                    HudAnimations.ScaleOut(_animOptions).RunAsync(ScaleHost, ct),
+                    _settings.TransientHoverHold?Task.CompletedTask:HudAnimations.ScaleOut(_animOptions).RunAsync(ScaleHost, ct),
                     HudAnimations.BoltIcon(_animOptions).RunAsync(BoltIcon, ct),
                     HudAnimations.RippleHost(_animOptions).RunAsync(RippleHost, ct),
                     HudAnimations.CircleForm(_animOptions).RunAsync(CircleForm, ct),
@@ -217,6 +234,12 @@ public partial class HudWindow : Window
                     HudAnimations.RippleRise(_animOptions).RunAsync(RippleInnerHost, ct),
                     HudAnimations.RippleRise(_animOptions).RunAsync(RippleMidHost, ct),
                     HudAnimations.RippleRise(_animOptions).RunAsync(RippleOuterHost, ct));
+            }
+            if(_settings.TransientHoverHold)
+            {
+                SetPersistentFinalState();
+                await WaitForTransientHoverAsync(ct);
+                await HideAnimatedAsync();
             }
         }
         catch (OperationCanceledException)
@@ -748,6 +771,7 @@ public partial class HudWindow : Window
         var a=Pill.PointToScreen(new Point(0,0));var b=Pill.PointToScreen(new Point(Pill.Bounds.Width,Pill.Bounds.Height));
         MacNative.ecp_hud_input(native.Handle,CanCycleOnClick && _persistent && Pill.Opacity>.02 ? 1 : 0,
             Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y),Topmost ? 1 : 0,_nativeClick);
+        MacNative.ecp_hud_scroll_bind(native.Handle,_nativeScroll);
     }
     private void EnsureInputHitTest()
     {
@@ -759,9 +783,9 @@ public partial class HudWindow : Window
         }
     }
 
-    private bool IsPointInsideVisibleHud(PixelPoint screenPoint)
+    internal bool IsPointInsideVisibleHud(PixelPoint screenPoint)
     {
-        if (_closed || !IsVisible || !Pill.IsVisible) return false;
+        if (_closed || !IsVisible || !Pill.IsVisible || Pill.GetVisualRoot() is null) return false;
         var local=Pill.PointToClient(screenPoint);
         var bounds=new Rect(Pill.Bounds.Size);
         if (!bounds.Contains(local)) return false;

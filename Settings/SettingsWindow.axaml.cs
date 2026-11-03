@@ -91,6 +91,9 @@ public partial class SettingsWindow : Window
     public SettingsWindow(AppSettings settings, HudWindow hud, CustomHudRuntime runtime)
     {
         InitializeComponent();
+        InitializeWindowChrome();
+        InitializeRepositoryLinks();
+        InitializeAboutDetails();
         _settings = settings;
         _hud = hud;
         _runtime = runtime;
@@ -102,15 +105,18 @@ public partial class SettingsWindow : Window
 
         LocalizationManager.ApplyStaticText(this);
         RebuildLocalizedChoiceItems();
+        RefreshWindowChrome();
+        RefreshRepositoryLinks();
 
         LanguageButton.Click+=async (_,_)=>await new LanguageSelectionWindow(
             ()=>_rootSettings,OnLanguageSelected,ApplyGlobalAppearanceAsync).ShowDialog(this);
 
-        HudFontCombo.Items.Add(LocalizationManager.Text("系统默认", "System default"));
-        foreach (var family in FontManager.Current.SystemFonts.OrderBy(f => f.Name)) HudFontCombo.Items.Add(family.Name);
+        InitializeFontChoices();
         ApplySettingsToControls(settings);
         UpdateLanguageSwitchVisual();
         InitializeInstanceEditor();
+        InitializeWorkspace();
+        InitializeRuntimeSelection();
 
         HudEnabledSwitch.IsCheckedChanged += (_, _) => UpdateModeUi();
         AlwaysVisibleSwitch.IsCheckedChanged += (_, _) => UpdateModeUi();
@@ -125,8 +131,7 @@ public partial class SettingsWindow : Window
         OpenLogsFolderBtn.Click += OnOpenLogsFolder;
         ResetAllSettingsBtn.Click += OnResetAllSettings;
         HudOpacitySlider.ValueChanged += (_, _) => UpdateOpacityLabel();
-        OpenProjectGithubBtn.Click += (_, _) => OpenUrl("https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos");
-        OpenUpstreamBtn.Click += (_, _) => OpenUrl("https://github.com/QinAnze/zmd-charge");
+        OpenIssueTrackerBtn.Click += (_, _) => OpenUrl("https://ecp-bugs.x-neko.com");
         OpenWebsiteBtn.Click += (_, _) => OpenUrl("https://zmd-bar.x-neko.com");
         CheckUpdateBtn.Click += OnCheckUpdate;
 
@@ -225,10 +230,13 @@ public partial class SettingsWindow : Window
     {
         LocalizationManager.ApplyStaticText(this);
         RebuildLocalizedChoiceItems();
+        RefreshWindowChrome();
+        RefreshRepositoryLinks();
         if (_monitorComboReady)
             PopulateMonitorCombo(force: true);
 
         Customizer.ApplyLocalization();
+        if (_workspaceReady) { RefreshWorkspaceLocalization(); RefreshQuickActionsLocalization(); }
         ApplyInstanceEditorLocalization();
 
         string currentVersion = GetCurrentVersionText();
@@ -389,6 +397,7 @@ public partial class SettingsWindow : Window
             HudOpacitySlider.Value = Math.Clamp(settings.HudOpacity * 100.0, 10.0, 100.0);
             UpdateOpacityLabel();
 
+            if(!string.IsNullOrWhiteSpace(settings.HudFontFamily) && !HudFontCombo.Items.Contains(settings.HudFontFamily))HudFontCombo.Items.Add(settings.HudFontFamily);
             HudFontCombo.SelectedIndex = 0;
             for (int i=1; i<HudFontCombo.Items.Count; i++)
                 if (string.Equals(HudFontCombo.Items[i]?.ToString(), settings.HudFontFamily, StringComparison.OrdinalIgnoreCase)) HudFontCombo.SelectedIndex=i;
@@ -425,6 +434,7 @@ public partial class SettingsWindow : Window
             HudEnabled = HudEnabledSwitch.IsChecked == true,
             StartWithWindows = StartupSwitch.IsChecked == true,
             UiLanguage = _rootSettings.UiLanguage,
+            Workspace = WorkspacePreferences.Normalize(_workspaceDraft),
             GlobalFontScale = _rootSettings.GlobalFontScale,
             GlobalUiScale = _rootSettings.GlobalUiScale,
             GlobalScale = (double)(ScaleBox.Value ?? (decimal)AppSettings.DefaultGlobalScale),
@@ -438,7 +448,8 @@ public partial class SettingsWindow : Window
             HudFontFamily = HudFontCombo.SelectedIndex > 0 ? HudFontCombo.SelectedItem?.ToString() ?? "" : "",
             ClickToCycle = ClickToCycleSwitch.IsChecked == true,
             AlwaysVisible = AlwaysVisibleSwitch.IsChecked == true,
-            HotZoneEnabled=HotZoneEnabledCheck.IsChecked==true,HotZonePosition=(HudPosition)Math.Max(0,HotZonePositionCombo.SelectedIndex),
+            HotZoneEnabled=HotZoneEnabledCheck.IsChecked==true,
+            TransientHoverHold=_transientHoverHold.IsChecked==true,HotZonePosition=(HudPosition)Math.Max(0,HotZonePositionCombo.SelectedIndex),
             HotZoneWidth=(int)(HotZoneWidthBox.Value ?? 240),HotZoneHeight=(int)(HotZoneHeightBox.Value ?? 20),
             HotZoneOffsetX=(int)(HotZoneOffsetXBox.Value ?? 0),HotZoneOffsetY=(int)(HotZoneOffsetYBox.Value ?? 0),
             HotZoneDwellMilliseconds=(int)HotZoneDwellSlider.Value,HotZoneAdvanceQueue=HotZoneAdvanceCheck.IsChecked==true,
@@ -494,7 +505,7 @@ public partial class SettingsWindow : Window
         SaveBtn.Content = LocalizationManager.Text("应用中…", "Applying…");
         try
         {
-            await _runtime.ApplySettingsWithTransitionAsync(_settings);
+            await _runtime.ApplySavedSettingsAsync(_settings);
             _rootSettings=_settings;
             _settings=string.IsNullOrEmpty(_selectedInstanceId) ? _rootSettings : _rootSettings.HudInstances.FirstOrDefault(i=>i.Id==_selectedInstanceId)?.Settings ?? _rootSettings;
             RefreshInstanceEditor();
@@ -673,18 +684,18 @@ public partial class SettingsWindow : Window
     }
 
     private static string GetCurrentVersionText()
-        => typeof(SettingsWindow).Assembly.GetName().Version?.ToString(3) ?? "0.1.4";
+        => typeof(SettingsWindow).Assembly.GetName().Version?.ToString(3) ?? "0.2.0";
 
     private async void OnCheckUpdate(object? sender, RoutedEventArgs e)
     {
         CheckUpdateBtn.IsEnabled = false;
-        CheckUpdateBtn.Content = LocalizationManager.Text("检查中…", "Checking…");
+        SetAboutActionLabel(CheckUpdateBtn,"refresh-cw",LocalizationManager.Text("检查中…", "Checking…"));
         UpdateStatusText.Text = LocalizationManager.Text("状态：正在连接 GitHub 检查更新…", "Status: checking GitHub…");
 
         UpdateCheckResult result = await CheckForUpdatesAsync();
         ApplyUpdateCheckResult(result);
 
-        CheckUpdateBtn.Content = LocalizationManager.Text("检查更新", "Check Updates");
+        SetAboutActionLabel(CheckUpdateBtn,"refresh-cw",LocalizationManager.Text("检查更新", "Check Updates"));
         CheckUpdateBtn.IsEnabled = true;
     }
 

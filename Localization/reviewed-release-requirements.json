@@ -2338,7 +2338,20 @@
     "{time.display.status_text}",
     "¥{deepseek.balance|0.00}",
     "← Previous",
-    "↓ {network.display_download}"
+    "↓ {network.display_download}",
+    "Colors",
+    "Search profiles",
+    "Click or scroll to switch profiles",
+    "Cycle Interval / sec",
+    "Scroll up for previous; scroll down for next.",
+    "Available profiles",
+    "Previous profile",
+    "Next profile",
+    "Pause / resume auto cycle",
+    "Preview current profile",
+    "Open Settings",
+    "Keyboard shortcuts work while this app is focused.",
+    "Keep HUD visible while hovering over it or the hot zone"
   ],
   "sourceTokens": {
     "  {deepseek.period.remaining_text}": {

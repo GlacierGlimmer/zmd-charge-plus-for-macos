@@ -1,7 +1,7 @@
 name: macOS DMG
 on:
   push:
-    branches: [main]
+    branches: [main, 'build/v0.2.0-20261103']
     tags: ['v*']
   pull_request:
   workflow_dispatch:

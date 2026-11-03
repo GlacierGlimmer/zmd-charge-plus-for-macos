@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modified)
@@ -2469,3 +2469,68 @@ windows.title
 linux.title
 macos.title
 android.title
+Profile management
+Radial switcher
+Quick actions
+Hold the middle mouse button on the HUD, drag to a profile, then release to switch.
+Release in the centre or outside the ring to cancel.
+Hold delay
+Drag threshold
+Ring size
+Enable radial switching
+Profiles in the ring
+Use all profiles
+Preview ring
+Selected profile
+No profiles available
+Previous page
+Next page
+Page {0} / {1}
+Appearance
+Light
+Classic
+Soft
+Corner radius
+Ring opacity
+Reset theme
+Theme preview
+HUD gestures
+Middle button hold
+Left click
+Your changes apply after Save & Apply.
+Press Esc to cancel.
+Profile switching
+Preview only
+Add to ring
+Remove from ring
+Issue tracker
+Minimize window
+Maximize window
+Restore window
+Close window
+Current system
+Software usage
+System CPU load across all logical processors.
+Used physical RAM divided by total physical RAM.
+Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.
+Endfield Charge Plus CPU time divided by elapsed time and logical processor count.
+Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.
+Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.
+Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.
+Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.
+Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.
+Author's BiliBili channel
+Author's YouTube channel
+Colors
+Search profiles
+Click or scroll to switch profiles
+Cycle Interval / sec
+Scroll up for previous; scroll down for next.
+Available profiles
+Previous profile
+Next profile
+Pause / resume auto cycle
+Preview current profile
+Open Settings
+Keyboard shortcuts work while this app is focused.
+Keep HUD visible while hovering over it or the hot zone

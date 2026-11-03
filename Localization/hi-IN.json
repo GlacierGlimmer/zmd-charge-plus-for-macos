@@ -2334,5 +2334,18 @@
   "{time.display.status_text}": "{time.display.status_text}",
   "¥{deepseek.balance|0.00}": "¥{deepseek.balance|0.00}",
   "← Previous": "← पिछला अध्याय",
-  "↓ {network.display_download}": "↓ {network.display_download}"
+  "↓ {network.display_download}": "↓ {network.display_download}",
+  "Current system": "वर्तमान सिस्टम",
+  "Software usage": "सॉफ़्टवेयर का उपयोग",
+  "System CPU load across all logical processors.": "सभी तार्किक प्रोसेसरों पर सिस्टम का CPU उपयोग।",
+  "Used physical RAM divided by total physical RAM.": "उपयोग की गई भौतिक RAM को कुल भौतिक RAM से भाग देने पर प्राप्त अनुपात।",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "सभी GPU की उपयोग की गई समर्पित VRAM को कुल समर्पित VRAM से भाग देने पर प्राप्त अनुपात। साझा मेमोरी शामिल नहीं है।",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus के CPU समय को बीते समय और तार्किक प्रोसेसरों की संख्या से भाग दिया जाता है।",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus की निवासी RAM को कुल भौतिक RAM से भाग देने पर प्राप्त अनुपात। निवासी साझा पृष्ठ शामिल हैं।",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus को आवंटित समर्पित VRAM को कुल समर्पित VRAM से भाग देने पर प्राप्त अनुपात। साझा GPU मेमोरी शामिल नहीं है।",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "पूरा Endfield Charge Plus प्रोसेस: सेटिंग्स और सभी HUD। CPU उपयोग सभी तार्किक प्रोसेसरों के आधार पर है।",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "पूरे Endfield Charge Plus (सेटिंग्स और सभी HUD) की निवासी RAM, साझा निवासी पृष्ठों सहित। मान: MiB/GiB; चाप: कुल भौतिक RAM में हिस्सा।",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "पूरे Endfield Charge Plus (सेटिंग्स और सभी HUD) की समर्पित VRAM, साझा GPU मेमोरी के बिना। मान: MiB/GiB; चाप: कुल समर्पित VRAM में हिस्सा।",
+  "Author's BiliBili channel": "लेखक का BiliBili चैनल",
+  "Author's YouTube channel": "लेखक का YouTube चैनल"
 }

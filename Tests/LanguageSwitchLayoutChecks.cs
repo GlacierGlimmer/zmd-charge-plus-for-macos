@@ -51,18 +51,13 @@ internal static class LanguageSwitchLayoutChecks
                     Console.WriteLine("Checking switched language: "+code);
                     main.NavigateToSettingsSection("experimental");await Task.Delay(80);
                     if(code is "en-US" or "zh-CN" or "ar-SA")Capture(main,$"{snapshots.Count:D2}-{code}.png");
-                    foreach(var tab in main.FindControl<TabControl>("MainSettingsTabs")!.Items.OfType<TabItem>())
+                    foreach(var tab in main.FindControl<ListBox>("WorkspaceNavigation")!.Items.OfType<ListBoxItem>())
                     {
-                        var presenter=tab.GetVisualDescendants().OfType<Avalonia.Controls.Presenters.ContentPresenter>().First(p=>p.Content?.ToString()==tab.Header?.ToString());
-                        var text=(TextBlock)presenter.Child!;
-                        check(text.Text==tab.Header?.ToString(),"The rendered header follows its actual content after switching to "+code+": "+tab.Header+" / "+text.Text);
-                        var width=new FormattedText(text.Text!,CultureInfo.CurrentCulture,text.FlowDirection,new Typeface(text.FontFamily,text.FontStyle,text.FontWeight,text.FontStretch),text.FontSize,Brushes.White).Width;
-                        snapshots.Add(new{language=code,header=tab.Header,tab=tab.Bounds.ToString(),text=text.Bounds.ToString(),text.DesiredSize,requiredWidth=width,text.Width,text.MaxWidth,text.MinWidth,font=text.FontSize,ancestors=text.GetVisualAncestors().TakeWhile(a=>a!=main).Select(a=>new{type=a.GetType().Name,bounds=a.Bounds.ToString()}).ToArray()});
-                        // Write diagnostics before failing so the exact truncated ancestor is visible.
-                        File.WriteAllText(Path.Combine(Folder,"header-layout.json"),JsonSerializer.Serialize(snapshots,new JsonSerializerOptions{WriteIndented=true,NumberHandling=System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals}));
-                        check(text.Bounds.Width>=width-1,$"Full header fits after switching to {code}: {tab.Header}; text={text.Bounds.Width}, required={width}, tab={tab.Bounds.Width}");
+                        var text=((Grid)tab.Content!).Children.OfType<TextBlock>().Single();
+                        var formatted=new FormattedText(text.Text!,CultureInfo.CurrentCulture,text.FlowDirection,new Typeface(text.FontFamily,text.FontStyle,text.FontWeight,text.FontStretch),text.FontSize,Brushes.White){MaxTextWidth=Math.Max(1,text.Bounds.Width)};
+                        check(text.Bounds.Width>0 && text.Bounds.Height>=formatted.Height-1,"The sidebar label fits or wraps completely after switching to "+code+": "+text.Text);
                     }
-                    foreach(string page in new[]{"display","hud","rules","variables","hardware","sources","experimental","manual","about"})
+                    foreach(string page in new[]{"display","hud","ring","cycle","rules","variables","hardware","sources","quick","experimental","manual","about"})
                     {
                         main.NavigateToSettingsSection(page);await Task.Delay(70);
                         Scan(main,code,page,clipping);
@@ -85,7 +80,7 @@ internal static class LanguageSwitchLayoutChecks
                     {
                         choices.SelectedItem=choices.Items.Cast<object>().Single(c=>c.GetType().GetProperty("Code")!.GetValue(c)?.ToString()==code);
                         GlobalAppearance.Apply(main,scales.Item1,scales.Item2);GlobalAppearance.Apply(picker,scales.Item1,scales.Item2);await Task.Delay(220);
-                        foreach(string page in new[]{"display","hud","rules","variables","hardware","sources","experimental","manual","about"})
+                        foreach(string page in new[]{"display","hud","ring","cycle","rules","variables","hardware","sources","quick","experimental","manual","about"})
                         {
                             main.NavigateToSettingsSection(page);await Task.Delay(70);
                             Scan(main,code,$"{page}@{scales.Item1}/{scales.Item2}",clipping);

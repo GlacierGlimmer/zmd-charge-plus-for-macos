@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "É necessária permissão de gravação da tela; reinicie o aplicativo após concedê-la",
   "Requires macOS 12.3 or newer": "Requer macOS 12.3 ou posterior",
   "Frame capture failed: {0}": "Falha na captura de quadros: {0}",
-  "Frame capture exited ({0})": "A captura de quadros foi encerrada ({0})"
+  "Frame capture exited ({0})": "A captura de quadros foi encerrada ({0})",
+  "Current system": "Sistema atual",
+  "Software usage": "Uso do software",
+  "System CPU load across all logical processors.": "Carga de CPU do sistema em todos os processadores lógicos.",
+  "Used physical RAM divided by total physical RAM.": "RAM física usada dividida pela RAM física total.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "VRAM dedicada usada dividida pela VRAM dedicada total de todas as GPUs. A memória compartilhada é excluída.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Tempo de CPU do Endfield Charge Plus dividido pelo tempo decorrido e pelo número de processadores lógicos.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "RAM residente do Endfield Charge Plus dividida pela RAM física total. Inclui páginas compartilhadas residentes.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "VRAM dedicada alocada ao Endfield Charge Plus dividida pela VRAM dedicada total. A memória compartilhada da GPU é excluída.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "Processo completo do Endfield Charge Plus: configurações e todos os HUDs. CPU normalizada para todos os processadores lógicos.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM residente de todo o Endfield Charge Plus (configurações e todos os HUDs), incluindo páginas compartilhadas residentes. Valor: MiB/GiB; arco: proporção da RAM física.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM dedicada de todo o Endfield Charge Plus (configurações e todos os HUDs), sem memória compartilhada da GPU. Valor: MiB/GiB; arco: proporção da VRAM dedicada total.",
+  "Author's BiliBili channel": "Canal do autor no BiliBili",
+  "Author's YouTube channel": "Canal do autor no YouTube"
 }

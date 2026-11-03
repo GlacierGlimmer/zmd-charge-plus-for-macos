@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Diubah)
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+Pengelolaan profil
+Pemilih melingkar
+Tindakan cepat
+Tahan tombol tengah mouse pada HUD, seret ke suatu profil, lalu lepaskan untuk beralih.
+Lepaskan di tengah atau di luar lingkaran untuk membatalkan.
+Durasi tekan tahan
+Ambang seret
+Ukuran lingkaran
+Aktifkan peralihan melingkar
+Profil dalam lingkaran
+Gunakan semua profil
+Pratinjau lingkaran
+Profil terpilih
+Tidak ada profil yang tersedia
+Halaman sebelumnya
+Halaman berikutnya
+Halaman {0} / {1}
+Tampilan
+Terang
+Klasik
+Lembut
+Radius sudut
+Opasitas lingkaran
+Atur ulang tema
+Pratinjau tema
+Gestur HUD
+Tahan tombol tengah
+Klik kiri
+Perubahan diterapkan setelah menekan «Simpan dan Terapkan».
+Tekan Esc untuk membatalkan.
+Peralihan profil
+Hanya pratinjau
+Tambahkan ke lingkaran
+Hapus dari lingkaran
+Pelacakan masalah
+Minimalkan jendela
+Maksimalkan jendela
+Pulihkan ukuran jendela
+Tutup jendela
+Sistem saat ini
+Penggunaan perangkat lunak
+Beban CPU sistem pada semua prosesor logis.
+RAM fisik yang terpakai dibagi total RAM fisik.
+VRAM khusus yang terpakai dibagi total VRAM khusus semua GPU. Memori bersama tidak disertakan.
+Waktu CPU Endfield Charge Plus dibagi waktu berlalu dan jumlah prosesor logis.
+RAM residen Endfield Charge Plus dibagi total RAM fisik. Termasuk halaman bersama yang residen.
+VRAM khusus yang dialokasikan ke Endfield Charge Plus dibagi total VRAM khusus. Memori GPU bersama tidak disertakan.
+Seluruh proses Endfield Charge Plus: pengaturan dan semua HUD. CPU dinormalisasi terhadap semua prosesor logis.
+RAM residen seluruh Endfield Charge Plus (pengaturan dan semua HUD), termasuk halaman bersama yang residen. Nilai: MiB/GiB; busur: bagian dari RAM fisik.
+VRAM khusus seluruh Endfield Charge Plus (pengaturan dan semua HUD), tidak termasuk memori GPU bersama. Nilai: MiB/GiB; busur: bagian dari total VRAM khusus.
+Kanal BiliBili pengembang
+Kanal YouTube pengembang
+Warna
+Cari profil
+Ganti profil dengan klik atau gulir
+Interval pergantian / detik
+Gulir ke atas untuk profil sebelumnya dan ke bawah untuk berikutnya.
+Profil yang tersedia
+Profil sebelumnya
+Profil berikutnya
+Jeda/lanjutkan pergantian otomatis
+Pratinjau profil saat ini
+Buka pengaturan
+Pintasan keyboard berfungsi saat aplikasi ini memiliki fokus.
+Biarkan HUD terlihat saat penunjuk berada di atas HUD atau area aktif

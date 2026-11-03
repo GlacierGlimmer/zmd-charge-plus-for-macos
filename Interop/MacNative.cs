@@ -30,6 +30,8 @@ internal static class MacNative
     internal static string? ReadKeychain(string account) => Consume(ecp_keychain_get(account));
     [DllImport(Library)] private static extern int ecp_hud_interactive(IntPtr handle, int interactive);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate void HudClick();
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)] internal delegate void HudScroll(double delta);
+    [DllImport(Library)] internal static extern void ecp_hud_scroll_bind(IntPtr handle,HudScroll scroll);
     [DllImport(Library)] internal static extern int ecp_hud_input(IntPtr handle,int enabled,double x,double y,double width,double height,int topmost,HudClick click);
     [DllImport(Library)] internal static extern void ecp_hud_input_close(IntPtr handle);
     internal static void SetHudInteractive(IntPtr handle, bool interactive) => ecp_hud_interactive(handle,interactive ? 1 : 0);

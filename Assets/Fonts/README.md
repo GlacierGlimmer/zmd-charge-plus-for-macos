@@ -1,18 +1,11 @@
-# Offline fallback fonts
+# Endfield Charge Plus — fallback fonts
 
-ECP bundles these SIL Open Font License 1.1 fonts so supported language names and HUD text do not depend solely on installed system fonts.
+These unmodified fonts provide offline fallback for their Unicode scripts. Their presence does not define the application's list of UI languages.
 
-| Asset | Script | Official source |
+| Typeface | Script | Original project |
 | --- | --- | --- |
-| NotoSerifTibetan.ttf | Tibetan | [Noto Serif Tibetan](https://github.com/notofonts/tibetan) |
-| NotoSansGothic-Regular.ttf | Gothic | [Noto Gothic font builds](https://notofonts.github.io/gothic/) |
-| NotoSansDeseret-Regular.ttf | Deseret, including a letter used by upside-down English | [Noto Deseret font builds](https://notofonts.github.io/deseret/) |
+| Noto Serif Tibetan | Tibetan | https://github.com/notofonts/tibetan |
+| Noto Sans Gothic | Gothic | https://notofonts.github.io/gothic/ |
+| Noto Sans Deseret | Deseret | https://notofonts.github.io/deseret/ |
 
-The adjacent `OFL-*.txt` files contain the corresponding license and copyright notices. All three license notices accompany desktop publish outputs, Windows Store packages and Android font assets.
-
-The two supplemental font downloads are the official `googlefonts/ttf/*-Regular.ttf` builds. Their SHA-256 digests are:
-
-- Gothic: `535169be262d111f61e5a20455ec2a62dd5fc033a002e0caf8f41633f1877fb0`
-- Deseret: `e5ab632f0c9ef73605bbfada7c97acfd1f48957a37870e6763e30c82e322080c`
-
-Desktop fallback ranges are limited to the respective Unicode scripts. Android uses bundled faces for the matching language and language-list row; API 29 and later combine the three faces with the system fallback chain. Earlier supported Android versions use the matching bundled face with their system fallback. Final visual checks must include supplementary-plane characters, Tibetan combining marks, mixed text and font/UI scaling.
+Each font retains its original The Noto Project Authors copyright and SIL Open Font License 1.1. Keep the corresponding OFL text with redistributions. Source trees name them OFL-<font>.txt; some published packages name them <font>-OFL.txt. The font binaries and license texts are not modified by this documentation update.

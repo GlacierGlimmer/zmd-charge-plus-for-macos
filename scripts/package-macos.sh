@@ -32,7 +32,7 @@ info={"CFBundleName":"ECP For MacOS","CFBundleDisplayName":"Endfield Charge Plus
       "CFBundleShortVersionString":version,"CFBundleExecutable":"EndfieldChargePlus","CFBundlePackageType":"APPL",
       "CFBundleIconFile":"AppIcon.icns","LSMinimumSystemVersion":"13.0","LSUIElement":True,
       "NSHighResolutionCapable":True,"NSPrincipalClass":"NSApplication","LSArchitecturePriority":[arch],
-      "NSHumanReadableCopyright":"© 2026 GlacierGlimmer_冰川雪貓"}
+      "NSHumanReadableCopyright":"© 2026 GlacierGlimmer冰川雪貓"}
 with open(pathlib.Path(app)/'Contents/Info.plist','wb') as f: plistlib.dump(info,f)
 PY
 iconset="$PWD/artifacts/$rid/AppIcon.iconset"
@@ -43,7 +43,7 @@ for size in 16 32 128 256 512; do
   sips -z "$double" "$double" Assets/tray_bolt.png --out "$iconset/icon_${size}x${size}@2x.png" >/dev/null
 done
 iconutil -c icns "$iconset" -o "$app/Contents/Resources/AppIcon.icns"
-cp LICENSE NOTICE.md "$app/Contents/Resources/"
+cp LICENSE NOTICE.md PRIVACY.md README.md README.en.md "$app/Contents/Resources/"
 plutil -lint "$app/Contents/Info.plist"
 
 # Sign inner code first. A Developer ID can be supplied without changing the build.

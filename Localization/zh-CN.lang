@@ -1,4 +1,4 @@
-#20261020$2470
+#20261102$2535
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
 （已更改）
@@ -2469,3 +2469,68 @@ Endfield Charge Plus
 Endfield Charge Plus For Linux
 Endfield Charge Plus For MacOS
 Endfield Charge Plus for Android
+方案管理
+环形切换栏
+快捷操作
+在 HUD 上长按鼠标中键，拖向方案后松开即可切换。
+在中心或圆环外松开可取消切换。
+长按时间
+拖动距离
+圆盘大小
+启用环形切换
+圆盘中的方案
+使用全部方案
+预览圆盘
+所选方案
+暂无可用方案
+上一页
+下一页
+第 {0} / {1} 页
+外观
+浅色
+经典
+柔和
+圆角
+圆盘不透明度
+重置主题
+主题预览
+HUD 手势
+长按鼠标中键
+鼠标左键单击
+点击“保存并应用”后更改生效。
+按 Esc 可取消。
+方案切换
+仅供预览
+添加到圆盘
+从圆盘移除
+问题追踪
+最小化窗口
+最大化窗口
+还原窗口
+关闭窗口
+当前系统
+软件占用
+所有逻辑处理器的系统 CPU 总使用率。
+已用物理内存占物理内存总量的比例。
+各物理 GPU 已用专用显存占专用显存总量的比例，不包含共享内存。
+Endfield Charge Plus 消耗的 CPU 时间除以经过的时间和逻辑处理器数量。
+Endfield Charge Plus 驻留内存占物理内存总量的比例，包含驻留的共享内存页。
+Endfield Charge Plus 已分配的专用显存占专用显存总量的比例，不包含共享 GPU 内存。
+整个 Endfield Charge Plus 进程，包含设置界面和全部 HUD。CPU 占用按全部逻辑处理器归一化。
+整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的驻留内存，包含驻留的共享页。数值显示 MiB/GiB；圆弧表示占物理内存总量的比例。
+整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的专用显存，不含共享 GPU 内存。数值显示 MiB/GiB；圆弧表示占专用显存总量的比例。
+作者BiliBili频道
+作者YouTube频道
+颜色
+搜索方案
+点击或滚轮切换方案
+轮播间隔 / 秒
+向上滚动切换上一项，向下滚动切换下一项。
+可用方案
+上一方案
+下一方案
+暂停／继续轮播
+预览当前方案
+打开设置
+键盘快捷键仅在本应用有焦点时生效。
+鼠标悬停在 HUD 或热区时保持显示

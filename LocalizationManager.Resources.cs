@@ -158,16 +158,27 @@ public static partial class LocalizationManager
         try{return string.Format(CultureInfo.CurrentCulture,format,english.GetArguments());}
         catch(FormatException){return english.ToString(CultureInfo.CurrentCulture);}
     }
-    internal static string EnglishKey(string value)=>ZhToEn.GetValueOrDefault(value,LiteralKeys.Value.GetValueOrDefault(value,value));
+    private static readonly HashSet<string> IndexedLiteralLanguages=new(StringComparer.OrdinalIgnoreCase);
+    internal static string EnglishKey(string value)
+    {
+        if(ZhToEn.TryGetValue(value,out var english))return english;
+        var index=LiteralKeys.Value;
+        lock(ResourceGate)
+        {
+            if(index.TryGetValue(value,out english))return english;
+            string code=PreferenceFor(Current);
+            if(IndexedLiteralLanguages.Add(code))
+                foreach(var item in ReadResource(code))index.TryAdd(item.Value,item.Key);
+            return index.GetValueOrDefault(value,value);
+        }
+    }
     private static Dictionary<string,string> BuildLiteralKeys()
     {
         var result=new Dictionary<string,string>(StringComparer.Ordinal);
         foreach(var item in ReadResource("en-US"))result.TryAdd(item.Key,item.Key);
         foreach(var item in ReadResource("zh-CN"))result.TryAdd(item.Value,item.Key);
-        // Controls retain their canonical source across switches. This map only
-        // recognizes messages created dynamically in the currently selected language.
-        foreach(var language in SupportedLanguages)
-            foreach(var item in ReadResource(language.Code))result.TryAdd(item.Value,item.Key);
+        // Existing controls retain their canonical source across language switches.
+        // Foreign literals are indexed only when their selected language is used.
         return result;
     }
     private static string TranslateControlLiteral(Control control,string property,string value)

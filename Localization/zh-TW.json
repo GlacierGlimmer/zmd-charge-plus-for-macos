@@ -2464,5 +2464,18 @@
   "macOS clipboard; update time is when ECP last observed a content change": "macOS 剪貼簿；更新時間為 ECP 最近觀察到內容變化的時刻",
   "statfs f_bavail for the APFS Data volume, excluding system-reserved space.": "APFS Data 卷 statfs f_bavail，不含系統保留空間。",
   "statfs for the APFS Data volume; capacity includes space shared within the same APFS container": "APFS Data 卷 statfs；容量包含同一 APFS 容器共享空間",
-  "{0}. Data source: {1}.": "{0}。資料來源：{1}。"
+  "{0}. Data source: {1}.": "{0}。資料來源：{1}。",
+  "Current system": "目前系統",
+  "Software usage": "軟體使用量",
+  "System CPU load across all logical processors.": "所有邏輯處理器的系統 CPU 總使用率。",
+  "Used physical RAM divided by total physical RAM.": "已用實體記憶體占實體記憶體總量的比例。",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "各實體 GPU 已用專用顯示記憶體占專用總量的比例，不包含共用記憶體。",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Endfield Charge Plus 消耗的 CPU 時間除以經過的時間及邏輯處理器數量。",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Endfield Charge Plus 常駐記憶體占實體記憶體總量的比例，包含常駐的共用記憶體頁。",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Endfield Charge Plus 已配置的專用顯示記憶體占專用總量的比例，不包含共用 GPU 記憶體。",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "整個 Endfield Charge Plus 處理程序，包含設定介面和所有 HUD。CPU 使用率按所有邏輯處理器正規化。",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "整個 Endfield Charge Plus 處理程序（設定介面和所有 HUD）的常駐記憶體，包含常駐共用頁。數值顯示 MiB/GiB；圓弧表示占實體記憶體總量的比例。",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "整個 Endfield Charge Plus 處理程序（設定介面和所有 HUD）的專用顯示記憶體，不含共用 GPU 記憶體。數值顯示 MiB/GiB；圓弧表示占專用總量的比例。",
+  "Author's BiliBili channel": "作者BiliBili頻道",
+  "Author's YouTube channel": "作者YouTube頻道"
 }

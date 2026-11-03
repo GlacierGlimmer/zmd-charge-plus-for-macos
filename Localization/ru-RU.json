@@ -2334,5 +2334,18 @@
   "Screen Recording permission required; relaunch after granting": "Требуется разрешение на запись экрана; после его предоставления перезапустите приложение",
   "Requires macOS 12.3 or newer": "Требуется macOS 12.3 или новее",
   "Frame capture failed: {0}": "Ошибка сбора кадров: {0}",
-  "Frame capture exited ({0})": "Сбор кадров завершён ({0})"
+  "Frame capture exited ({0})": "Сбор кадров завершён ({0})",
+  "Current system": "Текущее состояние системы",
+  "Software usage": "Ресурсы программы",
+  "System CPU load across all logical processors.": "Загрузка CPU системы по всем логическим процессорам.",
+  "Used physical RAM divided by total physical RAM.": "Занятая физическая ОЗУ, делённая на общий объём физической ОЗУ.",
+  "Used dedicated VRAM divided by total dedicated VRAM across GPUs. Shared memory is excluded.": "Занятая выделенная видеопамять, делённая на общий объём выделенной видеопамяти всех GPU. Общая память исключена.",
+  "Endfield Charge Plus CPU time divided by elapsed time and logical processor count.": "Процессорное время Endfield Charge Plus, делённое на прошедшее время и число логических процессоров.",
+  "Endfield Charge Plus resident RAM divided by total physical RAM. Includes shared resident pages.": "Резидентная память Endfield Charge Plus, делённая на общий объём физической ОЗУ. Включает резидентные общие страницы.",
+  "Endfield Charge Plus dedicated VRAM divided by total dedicated VRAM. Shared GPU memory is excluded.": "Выделенная видеопамять Endfield Charge Plus, делённая на общий объём выделенной видеопамяти. Общая память GPU исключена.",
+  "Entire Endfield Charge Plus process: Settings and all HUDs. CPU is normalized to all logical processors.": "Весь процесс Endfield Charge Plus: настройки и все HUD. Загрузка CPU нормирована по всем логическим процессорам.",
+  "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "Резидентная память всего Endfield Charge Plus (настройки и все HUD), включая общие резидентные страницы. Значение: MiB/GiB; дуга: доля физической ОЗУ.",
+  "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "Выделенная видеопамять всего Endfield Charge Plus (настройки и все HUD), без общей памяти GPU. Значение: MiB/GiB; дуга: доля всей выделенной видеопамяти.",
+  "Author's BiliBili channel": "Канал автора на BiliBili",
+  "Author's YouTube channel": "Канал автора на YouTube"
 }

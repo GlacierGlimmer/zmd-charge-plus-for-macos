@@ -72,7 +72,9 @@ internal static class ProfileScrollChecks
             await Click("SaveProfileBtn",edit:()=>editor.FindControl<TextBox>("TitleBox")!.Text="Scroll audit built-in copy");
             check(editor.FindControl<ComboBox>("ProfileCombo")!.Items.Count==builtInCount+1,"Saving edits to a built-in profile still creates a copy.");
             await Click("DeleteProfileBtn");
+            window.NavigateToSettingsSection("cycle");await Task.Delay(150);
             var cycle=editor.FindControl<ToggleSwitch>("AutoCycleSwitch")!;
+            scroll=cycle.GetVisualAncestors().OfType<ScrollViewer>().First();
             cycle.BringIntoView();cycle.Focus();await Task.Delay(150);var beforeToggle=scroll.Offset;
             cycle.IsChecked=cycle.IsChecked!=true;await Task.Delay(250);
             check((scroll.Offset-beforeToggle).Length<1,"Toggling auto cycle also keeps the surrounding page in place.");
@@ -93,6 +95,7 @@ internal static class ProfileScrollChecks
             check(position!.Value.Y>=-1 && position.Value.Y+item.Bounds.Height<=inner.Viewport.Height+1,"Active queue navigation still reveals the selected row inside its own scroller.");
             editor.Load(settings.CustomHud with{CycleProfileIds=new(),AutoCycle=false},hud);await Task.Delay(150);
             check(queue.Items.Count==0,"An empty cycle queue is retained for the second regression scenario.");
+            window.NavigateToSettingsSection("hud");await Task.Delay(120);
             await Click("AddProfileBtn");await Click("SaveProfileBtn",edit:()=>editor.FindControl<TextBox>("ProfileNameBox")!.Text="Empty queue audit");await Click("DeleteProfileBtn");
         }
         finally{window.Close();hud.Close();LocalizationManager.Initialize("zh-CN");}
