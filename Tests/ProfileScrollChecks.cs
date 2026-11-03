@@ -57,7 +57,7 @@ internal static class ProfileScrollChecks
                 check(Math.Abs(before.Y-after.Y)<1,$"{name} keeps the profile editor in place: {before} -> {after}; requests: {string.Join("; ",requests)}");
                 check(viewers.Select((s,i)=>(s.Offset-positions[i]).Length<1).All(v=>v),name+" also preserves outer UI-scale scrolling: "+string.Join("; ",viewers.Select((s,i)=>positions[i]+" -> "+s.Offset)));
                 var afterPoint=button.TranslatePoint(default,window)!.Value;
-                check(Math.Abs(afterPoint.X-point.X)<1 && Math.Abs(afterPoint.Y-point.Y)<1,name+" stays at the same visible position.");
+                check(Math.Abs(afterPoint.X-point.X)<1 && Math.Abs(afterPoint.Y-point.Y)<1,name+" stays at the same visible position: "+point+" -> "+afterPoint);
             }
             foreach(var scales in new[]{(1d,1d),(1.25,1.5)})
             {

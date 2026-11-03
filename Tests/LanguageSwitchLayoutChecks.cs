@@ -51,12 +51,16 @@ internal static class LanguageSwitchLayoutChecks
                     Console.WriteLine("Checking switched language: "+code);
                     main.NavigateToSettingsSection("experimental");await Task.Delay(80);
                     if(code is "en-US" or "zh-CN" or "ar-SA")Capture(main,$"{snapshots.Count:D2}-{code}.png");
-                    foreach(var tab in main.FindControl<ListBox>("WorkspaceNavigation")!.Items.OfType<ListBoxItem>())
+                    var navigation=main.FindControl<ListBox>("WorkspaceNavigation")!;
+                    foreach(var tab in navigation.Items.OfType<ListBoxItem>())
                     {
+                        // A translated row may move outside the virtualized viewport.
+                        // Select each real route before measuring its realized label.
+                        navigation.SelectedItem=tab;await Task.Delay(100);
                         var text=((Grid)tab.Content!).Children.OfType<TextBlock>().Single();
                         var formatted=new FormattedText(text.Text!,CultureInfo.CurrentCulture,text.FlowDirection,new Typeface(text.FontFamily,text.FontStyle,text.FontWeight,text.FontStretch),text.FontSize,Brushes.White){MaxTextWidth=Math.Max(1,text.Bounds.Width)};
                         // Use the actual renderer layout; FormattedText can choose a different wrap at fractional widths.
-                        check(text.Bounds.Width>0 && text.Bounds.Height>=text.TextLayout.Height-1,"The sidebar label fits or wraps completely after switching to "+code+": "+text.Text);
+                        check(text.Bounds.Width>0 && text.Bounds.Height>=text.TextLayout.Height-1,"The sidebar label fits or wraps completely after switching to "+code+": "+text.Text+" bounds="+text.Bounds+" layoutHeight="+text.TextLayout.Height);
                     }
                     foreach(string page in new[]{"display","hud","ring","cycle","rules","variables","hardware","sources","quick","experimental","manual","about"})
                     {

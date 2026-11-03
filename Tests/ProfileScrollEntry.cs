@@ -7,7 +7,7 @@ internal static class ProfileScrollEntry
     {
         try
         {
-            AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().With(LocalizationManager.FontOptions).SetupWithoutStarting();
+            AppBuilder.Configure<App>().UsePlatformDetect().WithInterFont().With(LocalizationManager.FontOptions).With(new AvaloniaNativePlatformOptions { RenderingMode = new[] { AvaloniaNativeRenderingMode.Software } }).SetupWithoutStarting();
             int checks=0;
             ProfileScrollChecks.Run((valid,message)=>{if(!valid)throw new Exception(message);checks++;});
             Console.WriteLine($"PASS {checks} native profile scroll checks");return 0;
