@@ -2348,5 +2348,6 @@
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "پورے Endfield Charge Plus (ترتیبات اور تمام HUD) کی مخصوص VRAM، مشترکہ GPU میموری کے بغیر۔ قدر: MiB/GiB؛ قوس: کل مخصوص VRAM کا تناسب۔",
   "Author's BiliBili channel": "مصنف کا BiliBili چینل",
   "Author's YouTube channel": "مصنف کا YouTube چینل",
-  "Copy error details": "خرابی کی تفصیلات کاپی کریں"
+  "Copy error details": "خرابی کی تفصیلات کاپی کریں",
+  "The previous run ended unexpectedly.": "پچھلی بار ایپ غیر متوقع طور پر بند ہو گئی تھی۔"
 }

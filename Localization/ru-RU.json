@@ -2348,5 +2348,6 @@
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "Выделенная видеопамять всего Endfield Charge Plus (настройки и все HUD), без общей памяти GPU. Значение: MiB/GiB; дуга: доля всей выделенной видеопамяти.",
   "Author's BiliBili channel": "Канал автора на BiliBili",
   "Author's YouTube channel": "Канал автора на YouTube",
-  "Copy error details": "Скопировать сведения об ошибке"
+  "Copy error details": "Скопировать сведения об ошибке",
+  "The previous run ended unexpectedly.": "Предыдущий запуск завершился неожиданно."
 }

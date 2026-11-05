@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2543,3 +2543,4 @@ Um clique passa ao próximo perfil com uma animação para baixo. Role para cima
 A troca manual e a alternância automática usam esta fila. A troca manual funciona mesmo com a alternância automática desativada e reinicia o intervalo.
 Há {0} perfis na fila; a troca manual e a alternância automática seguem esta ordem.
 Copiar detalhes do erro
+A execução anterior terminou inesperadamente.

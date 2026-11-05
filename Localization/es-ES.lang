@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2543,3 +2543,4 @@ Un clic pasa al siguiente perfil con una animación hacia abajo. Desplaza la rue
 El cambio manual y el ciclo automático usan esta lista. El cambio manual funciona aunque el ciclo automático esté desactivado y reinicia el intervalo.
 Hay {0} perfiles en la lista; el cambio manual y el ciclo automático comparten este orden.
 Copiar detalles del error
+La ejecución anterior terminó de forma inesperada.

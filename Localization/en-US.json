@@ -2490,5 +2490,6 @@
   "Preview current profile": "Preview current profile",
   "Open Settings": "Open Settings",
   "Keep HUD visible while hovering over it or the hot zone": "Keep HUD visible while hovering over it or the hot zone",
-  "Copy error details": "Copy error details"
+  "Copy error details": "Copy error details",
+  "The previous run ended unexpectedly.": "The previous run ended unexpectedly."
 }

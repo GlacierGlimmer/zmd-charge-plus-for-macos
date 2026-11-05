@@ -28,6 +28,7 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _desktop = desktop;
+            ApplicationErrors.Attach(desktop);
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var settings = SettingsManager.Load();
             LocalizationManager.Initialize(settings.UiLanguage);

@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (geändert)
@@ -2543,3 +2543,4 @@ Ein Klick wechselt mit einer Abwärtsbewegung zum nächsten Profil. Nach oben sc
 Manueller Wechsel und automatischer Wechsel verwenden diese Liste. Der manuelle Wechsel funktioniert auch ohne Automatik und startet das Intervall neu.
 {0} Profile stehen in der Liste; manueller und automatischer Wechsel verwenden diese Reihenfolge.
 Fehlerdetails kopieren
+Die vorherige Ausführung wurde unerwartet beendet.

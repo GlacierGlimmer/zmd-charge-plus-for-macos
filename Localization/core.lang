@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modified)
@@ -2543,3 +2543,4 @@ Click switches to the next profile with a downward roll. Scroll up for the previ
 Manual switching and auto cycle use this queue. Manual switching works while auto cycle is off and restarts the interval.
 {0} profiles are queued; manual switching and auto cycle share this order.
 Copy error details
+The previous run ended unexpectedly.

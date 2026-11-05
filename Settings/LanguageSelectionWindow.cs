@@ -94,15 +94,16 @@ internal sealed class LanguageSelectionWindow : Window
         var settings=_settings();
         var font=new NumericUpDown {Name="GlobalFontScaleBox",Minimum=80,Maximum=125,Increment=5,Value=(decimal)(100*GlobalAppearance.NormalizeFontScale(settings.GlobalFontScale)),FormatString="0'%'"};
         var ui=new NumericUpDown {Name="GlobalUiScaleBox",Minimum=80,Maximum=150,Increment=5,Value=(decimal)(100*GlobalAppearance.NormalizeUiScale(settings.GlobalUiScale)),FormatString="0'%'"};
-        var panel=new StackPanel {Spacing=14,Margin=new Thickness(24),MinWidth=400};
-        panel.Children.Add(new TextBlock {Text=T("全局字体大小和UI缩放","Global font size and UI scale"),FontSize=20,TextWrapping=TextWrapping.Wrap});
+        var panel=new StackPanel {Spacing=14,MinWidth=400};
+        panel.Children.Add(PromptStyle.Heading(T("全局字体大小和UI缩放","Global font size and UI scale")));
         panel.Children.Add(new TextBlock {Text=T("字体缩放","Font scale")});panel.Children.Add(font);
         panel.Children.Add(new TextBlock {Text=T("UI 缩放","UI scale")});panel.Children.Add(ui);
         panel.Children.Add(new TextBlock {Text=T("应用于整个设置界面和所有 HUD。单个 HUD 的大小设置会与全局 UI 缩放相乘。","Applies to all settings and every HUD. Individual HUD size is multiplied by global UI scale."),TextWrapping=TextWrapping.Wrap});
         var apply=new Button {Name="ApplyGlobalAppearanceButton",Content=T("保存并应用","Save & Apply"),HorizontalAlignment=HorizontalAlignment.Stretch,HorizontalContentAlignment=HorizontalAlignment.Center,MinHeight=40};
         var reset=new Button {Content=T("恢复 100%","Reset to 100%"),HorizontalAlignment=HorizontalAlignment.Stretch};
         panel.Children.Add(reset);panel.Children.Add(apply);
-        var dialog=new Window {Title=T("全局字体大小和UI缩放","Global font size and UI scale"),Content=panel,Width=610,Height=470,MinWidth=460,MinHeight=370,Background=Background,WindowStartupLocation=WindowStartupLocation.CenterOwner};
+        var dialog=new Window {Title=T("全局字体大小和UI缩放","Global font size and UI scale"),Width=610,MinWidth=460,MinHeight=370,WindowStartupLocation=WindowStartupLocation.CenterOwner};
+        PromptStyle.Apply(dialog,panel);
         reset.Click+=(_,_)=>{font.Value=100;ui.Value=100;};
         apply.Click+=async (_,_)=>{
             apply.IsEnabled=false;

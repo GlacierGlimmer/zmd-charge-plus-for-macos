@@ -197,7 +197,7 @@ internal sealed class AuditApp : Application
         await Task.Delay(600);
         ChromeGestureChecks.Run(window,Tests.Check);
         await MacSettingsChecks.Resize(window,Tests.Check);
-        await SaveFailureChecks.Run(window,Tests.Check);
+        await SaveFailureChecks.Run(window,Tests.Check);await UnifiedPromptChecks.Run(window,Tests.Check,"artifacts/audit/prompts");
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
         {
             await VerifyFreshHomeSave(window,hud,runtime,settings);

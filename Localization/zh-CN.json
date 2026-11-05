@@ -2478,5 +2478,6 @@
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的专用显存，不含共享 GPU 内存。数值显示 MiB/GiB；圆弧表示占专用显存总量的比例。",
   "Author's BiliBili channel": "作者BiliBili频道",
   "Author's YouTube channel": "作者YouTube频道",
-  "Copy error details": "复制异常详情"
+  "Copy error details": "复制异常详情",
+  "The previous run ended unexpectedly.": "上次运行异常退出。"
 }

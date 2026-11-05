@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (modificato)
@@ -2543,3 +2543,4 @@ Un clic passa al profilo successivo con uno scorrimento verso il basso. Scorri v
 Il cambio manuale e il ciclo automatico usano questa coda. Il cambio manuale funziona anche con il ciclo automatico disattivato e riavvia l’intervallo.
 Ci sono {0} profili in coda; il cambio manuale e il ciclo automatico seguono questo ordine.
 Copia dettagli dell’errore
+L’esecuzione precedente è terminata in modo imprevisto.

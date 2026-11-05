@@ -2348,5 +2348,6 @@
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM dedicada de todo Endfield Charge Plus (ajustes y todos los HUD), sin memoria compartida de GPU. Valor: MiB/GiB; arco: proporción de la VRAM dedicada total.",
   "Author's BiliBili channel": "Canal de BiliBili del autor",
   "Author's YouTube channel": "Canal de YouTube del autor",
-  "Copy error details": "Copiar detalles del error"
+  "Copy error details": "Copiar detalles del error",
+  "The previous run ended unexpectedly.": "La ejecución anterior terminó de forma inesperada."
 }

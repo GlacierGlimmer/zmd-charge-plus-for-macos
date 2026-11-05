@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Değiştirildi)
@@ -2543,3 +2543,4 @@ Tıklama, aşağı kaydırma animasyonuyla sonraki profile geçer. Önceki profi
 Elle geçiş ve otomatik döngü bu kuyruğu kullanır. Elle geçiş, otomatik döngü kapalıyken de çalışır ve bekleme süresini yeniden başlatır.
 Kuyrukta {0} profil var; elle geçiş ve otomatik döngü bu sırayı kullanır.
 Hata ayrıntılarını kopyala
+Önceki çalışma beklenmedik şekilde sona erdi.

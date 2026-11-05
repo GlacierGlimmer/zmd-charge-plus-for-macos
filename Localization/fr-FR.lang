@@ -1,4 +1,4 @@
-#20261105$2544
+#20261105$2545
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (modifié)
@@ -2543,3 +2543,4 @@ Un clic passe au profil suivant avec un défilement vers le bas. La molette vers
 Le changement manuel et le défilement automatique utilisent cette liste. Le changement manuel fonctionne même si le défilement automatique est désactivé et réinitialise le délai.
 {0} profils sont dans la liste ; les changements manuels et automatiques suivent cet ordre.
 Copier les détails de l’erreur
+L’exécution précédente s’est terminée de manière inattendue.

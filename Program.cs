@@ -13,6 +13,8 @@ internal static class Program
     public static void Main(string[] args)
     {
         if (!OperatingSystem.IsMacOS()) throw new PlatformNotSupportedException("This edition requires macOS.");
+        if(ApplicationErrors.TryShowRecovery(args))return;
+        ApplicationErrors.Initialize();
         IsAutoStart = args.Any(a => a.Equals("--autostart", StringComparison.OrdinalIgnoreCase));
         using var mutex = new Mutex(true, MacInstanceName, out bool primary);
         if (!primary)
@@ -37,7 +39,7 @@ internal static class Program
             Customization.MacVariableCatalog.Refresh();
             BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
         }
-        catch (Exception ex) { AppLog.Fatal("Application startup/runtime failed.", ex); throw; }
+        catch (Exception ex) { AppLog.Fatal("Application startup/runtime failed.", ex); Environment.ExitCode=1; }
         finally { mutex.ReleaseMutex(); AppLog.Info("Application ended."); }
     }
     public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().UsePlatformDetect()
