@@ -199,7 +199,10 @@ internal sealed class AuditApp : Application
         await MacSettingsChecks.Resize(window,Tests.Check);
         await SaveFailureChecks.Run(window,Tests.Check);
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
+        {
             await VerifyFreshHomeSave(window,hud,runtime,settings);
+            await MacSettingsChecks.StartupSaveFailure(window,Tests.Check);
+        }
         if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }
         await window.Clipboard!.SetTextAsync("ECP macOS variable audit");
         using var hub=new VariableHub();

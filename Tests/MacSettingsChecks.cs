@@ -58,4 +58,18 @@ internal static class MacSettingsChecks
             window.Width=originalSize.Width;window.Height=originalSize.Height;window.Position=originalPosition;await Task.Delay(60);
         }
     }
+
+    internal static async Task StartupSaveFailure(SettingsWindow window,Action<bool,string> check)
+    {
+        if(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))return;
+        byte[] before=File.ReadAllBytes(SettingsManager.SettingsPath);
+        window.FindControl<ToggleSwitch>("StartupSwitch")!.IsChecked=true;
+        var save=window.FindControl<Button>("SaveBtn")!;
+        save.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));await Task.Delay(180);
+        var dialog=window.OwnedWindows.Single(w=>w.Name=="SaveErrorDialog");
+        var status=window.FindControl<TextBlock>("StartupStatusText")!;
+        check(status.IsVisible && status.Text!.Contains("Applications"),"Failed startup save shows an inline reason on the current page");
+        check(save.IsEnabled && File.ReadAllBytes(SettingsManager.SettingsPath).SequenceEqual(before),"Failed startup save can be retried and does not overwrite the saved configuration");
+        dialog.Close();window.FindControl<ToggleSwitch>("StartupSwitch")!.IsChecked=false;
+    }
 }

@@ -218,7 +218,7 @@ public partial class SettingsWindow : Window
         _rootSettings = _rootSettings with { UiLanguage = _settings.UiLanguage };
         _persistedRootSettings=_persistedRootSettings with { UiLanguage=_rootSettings.UiLanguage };
         try {PersistLanguagePreference(_persistedRootSettings);}
-        catch(Exception ex) {Diagnostics.AppLog.Error("Unable to save the language preference.",ex);MaintenanceStatusText.Text=ex.Message;ToolTip.SetTip(LanguageButton,ex.Message);}
+        catch(Exception ex) {Diagnostics.AppLog.Error("Unable to save the language preference.",ex);MaintenanceStatusText.Text=ex.Message;_ = SaveErrorDialog.Show(this,ex);ToolTip.SetTip(LanguageButton,ex.Message);}
 
         // Persistent and transient HUD renderers read LocalizationManager at render time,
         // so their next live refresh switches language without replacing unsaved settings.
