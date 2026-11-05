@@ -437,10 +437,10 @@
       </ContentControl>
       <Grid x:Name="RepositoriesOverlay" Grid.RowSpan="2" Background="#99000000" IsVisible="False" FlowDirection="LeftToRight">
         <LayoutTransformControl x:Name="RepositoryScaleHost" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
-          <Border x:Name="RepositoryDialog" Classes="ecp-native" Width="380" Background="{DynamicResource EcpCard}" BorderBrush="{DynamicResource EcpBorder}" BorderThickness="1" CornerRadius="8" Padding="22">
+          <Border x:Name="RepositoryDialog" Classes="ecp-native" Width="380" Background="{DynamicResource EcpCard}" BorderBrush="#555555" BorderThickness="1" CornerRadius="8" Padding="22">
             <StackPanel Spacing="18">
               <Grid ColumnDefinitions="*,Auto">
-                <TextBlock Text="GitHub" FontSize="22" FontWeight="SemiBold" VerticalAlignment="Center" />
+                <TextBlock Text="GitHub" FontSize="22" FontWeight="SemiBold" Foreground="#FFFA00" VerticalAlignment="Center" />
                 <Button x:Name="RepositoryCloseButton" Grid.Column="1" Width="32" Height="32" Padding="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                   <Path Width="12" Height="12" Stretch="Uniform" Stroke="{DynamicResource EcpText}" StrokeThickness="1.4" Data="M1,1 L11,11 M11,1 L1,11" />
                 </Button>
