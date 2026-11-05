@@ -51,7 +51,7 @@ internal static class UnifiedPromptChecks
             // Exercise the actual warning window and its persistent per-variable choice.
             var preferencesField=typeof(ProfileDataWarnings).GetField("_preferences",Hidden)!;
             var oldPreferences=preferencesField.GetValue(null);
-            string warningPath=Path.Combine(output,"ignored-test-data.json");
+            string warningPath=Path.Combine(output,Guid.NewGuid().ToString("N")+"-ignored-test-data.json");
             var profile=new HudProfile {Id="uniform-test",Name="Uniform warning",PrimaryTemplate="{test.variable.one}",TaglineTemplate="",TitleTemplate="",SecondaryTemplate="",RightTemplate="",RightSuffix="",ProgressVariable="= 50"};
             try
             {
