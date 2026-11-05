@@ -75,6 +75,12 @@ public partial class HudCustomizerView
         var actions=new Grid{Name="ProfileLibraryActions",ColumnDefinitions=new("*,6,*"),Margin=new(0,8,0,0)};
         foreach(var button in new[]{AddProfileBtn,DeleteProfileBtn}){button.Margin=new(0);button.HorizontalAlignment=HorizontalAlignment.Stretch;button.VerticalAlignment=VerticalAlignment.Stretch;button.MinWidth=0;button.MinHeight=36;}
         actions.Children.Add(AddProfileBtn);Grid.SetColumn(DeleteProfileBtn,2);actions.Children.Add(DeleteProfileBtn);
+        AddProfileBtn.Content=WorkflowText("新建","New",14);DeleteProfileBtn.Content=WorkflowText("删除","Delete",14);
+        foreach(var button in new[]{AddProfileBtn,DeleteProfileBtn})
+        {
+            button.Padding=new(6);button.VerticalAlignment=VerticalAlignment.Stretch;button.HorizontalContentAlignment=HorizontalAlignment.Stretch;
+            ((TextBlock)button.Content!).TextAlignment=TextAlignment.Center;
+        }
         var library=new Grid{RowDefinitions=new("Auto,Auto,*,Auto")};library.Children.Add(WorkflowText("方案管理","Profile management",16));_workflowSearch.Margin=new(0,12,0,10);Grid.SetRow(_workflowSearch,1);library.Children.Add(_workflowSearch);Grid.SetRow(_workflowProfiles,2);library.Children.Add(_workflowProfiles);Grid.SetRow(actions,3);library.Children.Add(actions);
         var layout=new Grid{Name="ProfileWorkspaceColumns",ColumnDefinitions=new("220,*"),Margin=new(4,12,4,4)};var left=WorkflowCard(library);left.Margin=new(0,0,10,0);layout.Children.Add(left);
         var editorScroll=new ScrollViewer{Content=editor,VerticalScrollBarVisibility=Avalonia.Controls.Primitives.ScrollBarVisibility.Auto};Grid.SetColumn(editorScroll,1);layout.Children.Add(editorScroll);page.Content=layout;
@@ -88,7 +94,13 @@ public partial class HudCustomizerView
     {
         int index=_profiles.FindIndex(p=>p.Id==id);
         if(index<0)return false;
-        if(ProfileCombo.SelectedIndex!=index)ProfileCombo.SelectedIndex=index;
+        if(ProfileCombo.SelectedIndex!=index)
+        {
+            ProfileCombo.SelectedIndex=index;
+            // Runtime selection happens outside the ComboBox's event batch.
+            // Complete it now, so the visible editor cannot lag behind its list.
+            if(_profileSelectionPending)CommitProfileSelection();
+        }
         return true;
     }
     private Control WorkflowProfileRow(HudProfile profile,int ordinal=0)

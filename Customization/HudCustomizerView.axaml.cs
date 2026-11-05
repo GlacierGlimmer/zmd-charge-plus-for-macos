@@ -491,6 +491,7 @@ public partial class HudCustomizerView : UserControl
     private string? _requestedProfileId;
     private void CommitProfileSelection()
     {
+        if(!_profileSelectionPending)return;
         _profileSelectionPending=false;
         string? requested=_requestedProfileId;
         if(_loading || requested is null || !_profiles.Any(p=>p.Id==requested))return;
