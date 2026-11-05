@@ -1073,7 +1073,7 @@ public partial class HudCustomizerView : UserControl
         bool wasBuiltIn = _profiles[_selectedIndex].IsBuiltIn;
         bool changed;
         try { changed = SaveCurrentProfile(); }
-        catch (FormatException ex) { ProfileStatusText.Text = ex.Message; return; }
+        catch (Exception ex) { ProfileStatusText.Text = ex.Message; if(TopLevel.GetTopLevel(this) is Window owner)_ = EndfieldChargePlus.Settings.SaveErrorDialog.Show(owner,ex); return; }
         if (wasBuiltIn && changed)
             ProfileStatusText.Text = LocalizationManager.Text("已基于内置方案创建修改副本，原预设保持不变", "Modified copy created; the built-in preset is unchanged.");
         else

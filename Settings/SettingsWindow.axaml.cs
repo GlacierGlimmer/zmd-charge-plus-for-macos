@@ -482,7 +482,18 @@ public partial class SettingsWindow : Window
 
         // MSIX uses the OS-owned startup task; Portable keeps the registry Run entry.
         bool requestedStartup = _settings.StartWithWindows;
-        StartupApplyResult startup = await StartupManager.ApplyAsync(requestedStartup);
+        StartupApplyResult startup;
+        try
+        {
+            startup = await StartupManager.ApplyAsync(requestedStartup);
+            if(!startup.Succeeded)throw new IOException(LocalizationManager.Text("保存失败","Save failed"));
+            SetStartupStatus(null,null);
+        }
+        catch(Exception ex)
+        {
+            SetStartupStatus(ex.Message,ex.Message);
+            throw;
+        }
         if (startup.IsPackaged)
         {
             _settings = _settings with { StartWithWindows = startup.IsEnabled };
@@ -532,6 +543,7 @@ public partial class SettingsWindow : Window
             foreach(var tabs in this.GetLogicalDescendants().OfType<TabControl>()) tabs.IsEnabled=true;
             SaveBtn.Content = LocalizationManager.Text("保存失败", "Save failed");
             MaintenanceStatusText.Text = ex.Message;
+            _ = SaveErrorDialog.Show(this,ex,StartupStatusText.IsVisible);
             EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to apply settings.", ex);
         }
     }
@@ -557,6 +569,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             AppLog.Error("Failed to export settings from the settings UI.", ex);
+            _ = SaveErrorDialog.Show(this,ex);
             SetMaintenanceStatus($"导出失败：{ex.Message}", "Export failed. See logs.");
         }
     }
@@ -602,6 +615,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             AppLog.Error("Failed to import settings from the settings UI.", ex);
+            _ = SaveErrorDialog.Show(this,ex);
             SetMaintenanceStatus($"导入失败：{ex.Message}", "Import failed. See logs.");
         }
     }
@@ -624,6 +638,7 @@ public partial class SettingsWindow : Window
         catch (Exception ex)
         {
             AppLog.Error("Failed to create a manual settings backup.", ex);
+            _ = SaveErrorDialog.Show(this,ex);
             SetMaintenanceStatus($"备份失败：{ex.Message}", "Backup failed. See logs.");
         }
     }

@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Değiştirildi)
@@ -2542,3 +2542,4 @@ Aşağı kaydır
 Tıklama, aşağı kaydırma animasyonuyla sonraki profile geçer. Önceki profil için yukarı, sonraki için aşağı kaydırın; animasyon da aynı yönde ilerler.
 Elle geçiş ve otomatik döngü bu kuyruğu kullanır. Elle geçiş, otomatik döngü kapalıyken de çalışır ve bekleme süresini yeniden başlatır.
 Kuyrukta {0} profil var; elle geçiş ve otomatik döngü bu sırayı kullanır.
+Hata ayrıntılarını kopyala

@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2542,3 +2542,4 @@ Desplazar hacia abajo
 Un clic pasa al siguiente perfil con una animación hacia abajo. Desplaza la rueda hacia arriba para ir al anterior y hacia abajo para ir al siguiente, con la animación en el mismo sentido.
 El cambio manual y el ciclo automático usan esta lista. El cambio manual funciona aunque el ciclo automático esté desactivado y reinicia el intervalo.
 Hay {0} perfiles en la lista; el cambio manual y el ciclo automático comparten este orden.
+Copiar detalles del error

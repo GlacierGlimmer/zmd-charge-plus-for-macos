@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM مقیم کل Endfield Charge Plus (تنظیمات و تمام HUDها)، شامل صفحه‌های اشتراکی مقیم. مقدار: MiB/GiB؛ کمان: سهم از RAM فیزیکی.",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM اختصاصی کل Endfield Charge Plus (تنظیمات و تمام HUDها)، بدون حافظهٔ اشتراکی GPU. مقدار: MiB/GiB؛ کمان: سهم از کل VRAM اختصاصی.",
   "Author's BiliBili channel": "کانال BiliBili سازنده",
-  "Author's YouTube channel": "کانال YouTube سازنده"
+  "Author's YouTube channel": "کانال YouTube سازنده",
+  "Copy error details": "کپی جزئیات خطا"
 }

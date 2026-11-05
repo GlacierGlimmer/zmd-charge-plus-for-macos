@@ -2477,5 +2477,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的驻留内存，包含驻留的共享页。数值显示 MiB/GiB；圆弧表示占物理内存总量的比例。",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "整个 Endfield Charge Plus 进程（设置界面和全部 HUD）的专用显存，不含共享 GPU 内存。数值显示 MiB/GiB；圆弧表示占专用显存总量的比例。",
   "Author's BiliBili channel": "作者BiliBili频道",
-  "Author's YouTube channel": "作者YouTube频道"
+  "Author's YouTube channel": "作者YouTube频道",
+  "Copy error details": "复制异常详情"
 }

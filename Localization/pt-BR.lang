@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2542,3 +2542,4 @@ Rolar para baixo
 Um clique passa ao próximo perfil com uma animação para baixo. Role para cima para o perfil anterior e para baixo para o próximo, com a animação na mesma direção.
 A troca manual e a alternância automática usam esta fila. A troca manual funciona mesmo com a alternância automática desativada e reinicia o intervalo.
 Há {0} perfis na fila; a troca manual e a alternância automática seguem esta ordem.
+Copiar detalhes do erro

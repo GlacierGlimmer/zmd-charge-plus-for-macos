@@ -29,6 +29,18 @@ public partial class SettingsWindow
             Win32Properties.AddWindowStylesCallback(this, (style, extendedStyle) =>
                 ((style & ~0x00050000u) | 0x000A0000u | (CanResize ? 0x00050000u : 0u), extendedStyle));
         }
+        if (OperatingSystem.IsMacOS())
+        {
+            // Cocoa ignores BeginResizeDrag and removes NSWindowStyleMaskResizable
+            // for SystemDecorations.None. Retain native resizing with hidden chrome.
+            SystemDecorations = SystemDecorations.Full;
+            ExtendClientAreaToDecorationsHint = true;
+            ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.NoChrome;
+            ExtendClientAreaTitleBarHeightHint = 0;
+            PointerCaptureLost += (_, _) => EndMacResize();
+            Deactivated += (_, _) => EndMacResize();
+            Closed += (_, _) => EndMacResize();
+        }
         InitializeStatusBar();
         MinimizeWindowButton.Click += (_, _) => WindowState = WindowState.Minimized;
         MaximizeWindowButton.Click += (_, _) => ToggleWindowMaximize();
@@ -51,7 +63,8 @@ public partial class SettingsWindow
                 if (Math.Abs(TitleBarSidebarBackground.Width - width) > .1) TitleBarSidebarBackground.Width = width;
             }
         };
-        AddHandler(PointerMovedEvent,(_, e)=>Cursor=ResizeEdgeAt(e.GetPosition(this)) is {} edge ? ResizeCursors[edge] : null,RoutingStrategies.Tunnel,handledEventsToo:true);
+        AddHandler(PointerMovedEvent,OnWindowFrameMoved,RoutingStrategies.Tunnel,handledEventsToo:true);
+        AddHandler(PointerReleasedEvent,(_,e)=> { if(_macResize is not null) {EndMacResize();e.Handled=true;} },RoutingStrategies.Tunnel,handledEventsToo:true);
         PropertyChanged += (_, e) =>
         {
             if (e.Property == WindowStateProperty) RefreshWindowChrome();
@@ -91,9 +104,44 @@ public partial class SettingsWindow
     {
         if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed && ResizeEdgeAt(e.GetPosition(this)) is { } edge)
         {
-            BeginResizeDrag(edge, e);
+            if (OperatingSystem.IsMacOS())
+            {
+                _macResize=new MacResizeState(edge,this.PointToScreen(e.GetPosition(this)),Position,ClientSize,RenderScaling,e.Pointer);
+                e.Pointer.Capture(this);
+            }
+            else BeginResizeDrag(edge, e);
             e.Handled = true;
         }
+    }
+
+    private sealed record MacResizeState(WindowEdge Edge,PixelPoint PointerStart,PixelPoint PositionStart,Size SizeStart,double Scale,IPointer Pointer);
+    private MacResizeState? _macResize;
+
+    private void EndMacResize()
+    {
+        var state=_macResize;_macResize=null;
+        if(state?.Pointer.Captured==this)state.Pointer.Capture(null);
+    }
+
+    private void OnWindowFrameMoved(object? sender,PointerEventArgs e)
+    {
+        if(_macResize is {} state)
+        {
+            if(!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed || WindowState!=WindowState.Normal) {EndMacResize();return;}
+            var point=this.PointToScreen(e.GetPosition(this));
+            double dx=(point.X-state.PointerStart.X)/state.Scale,dy=(point.Y-state.PointerStart.Y)/state.Scale;
+            bool left=state.Edge is WindowEdge.West or WindowEdge.NorthWest or WindowEdge.SouthWest;
+            bool right=state.Edge is WindowEdge.East or WindowEdge.NorthEast or WindowEdge.SouthEast;
+            bool top=state.Edge is WindowEdge.North or WindowEdge.NorthWest or WindowEdge.NorthEast;
+            bool bottom=state.Edge is WindowEdge.South or WindowEdge.SouthWest or WindowEdge.SouthEast;
+            double width=Math.Clamp(state.SizeStart.Width+(left?-dx:right?dx:0),MinWidth,MaxWidth);
+            double height=Math.Clamp(state.SizeStart.Height+(top?-dy:bottom?dy:0),MinHeight,MaxHeight);
+            Width=width;Height=height;
+            if(left||top)Position=new PixelPoint(state.PositionStart.X+(left?(int)Math.Round((state.SizeStart.Width-width)*state.Scale):0),
+                state.PositionStart.Y+(top?(int)Math.Round((state.SizeStart.Height-height)*state.Scale):0));
+            Cursor=ResizeCursors[state.Edge];e.Handled=true;
+        }
+        else Cursor=ResizeEdgeAt(e.GetPosition(this)) is {} edge ? ResizeCursors[edge] : null;
     }
 
     private void RefreshWindowChrome()

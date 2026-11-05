@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM résidente de tout le processus Endfield Charge Plus (paramètres et tous les HUD), pages partagées résidentes incluses. Valeur : MiB/GiB ; arc : part de la RAM physique.",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM dédiée de tout le processus Endfield Charge Plus (paramètres et tous les HUD), mémoire GPU partagée exclue. Valeur : MiB/GiB ; arc : part de la VRAM dédiée totale.",
   "Author's BiliBili channel": "Chaîne BiliBili de l’auteur",
-  "Author's YouTube channel": "Chaîne YouTube de l’auteur"
+  "Author's YouTube channel": "Chaîne YouTube de l’auteur",
+  "Copy error details": "Copier les détails de l’erreur"
 }

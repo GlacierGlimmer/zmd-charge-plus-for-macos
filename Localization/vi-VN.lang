@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Đã sửa đổi)
@@ -2542,3 +2542,4 @@ Cuộn xuống
 Nhấp để chuyển sang hồ sơ tiếp theo bằng hiệu ứng cuộn xuống. Cuộn lên để về hồ sơ trước và cuộn xuống để tới hồ sơ tiếp theo; hiệu ứng chạy cùng chiều cuộn.
 Chuyển thủ công và luân phiên tự động dùng chung hàng đợi này. Chuyển thủ công vẫn hoạt động khi tắt luân phiên tự động và bắt đầu lại thời gian chờ.
 Có {0} hồ sơ trong hàng đợi; chuyển thủ công và luân phiên tự động dùng chung thứ tự này.
+Sao chép chi tiết lỗi

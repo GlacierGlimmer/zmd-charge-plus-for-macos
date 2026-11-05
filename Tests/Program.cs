@@ -54,6 +54,7 @@ internal static class Tests
     {
         FeatureRegressionChecks.Run(Check);
         StartupRemovalTests();
+        MacSettingsChecks.Storage(Check);
         var p=new MacVariableProvider(); var values=new Dictionary<string,object?>();
         using var first=JsonDocument.Parse("""{"__cpu_ticks":[4294967290,50,100,0],"__network_samples":{"en0":[1000,500]}}""");
         p.Consume(first.RootElement,values,100);
@@ -195,6 +196,8 @@ internal sealed class AuditApp : Application
         var window=new SettingsWindow(settings,hud,runtime); desktop.MainWindow=window; window.Show();
         await Task.Delay(600);
         ChromeGestureChecks.Run(window,Tests.Check);
+        await MacSettingsChecks.Resize(window,Tests.Check);
+        await SaveFailureChecks.Run(window,Tests.Check);
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
             await VerifyFreshHomeSave(window,hud,runtime,settings);
         if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }

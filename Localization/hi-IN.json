@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "पूरे Endfield Charge Plus (सेटिंग्स और सभी HUD) की निवासी RAM, साझा निवासी पृष्ठों सहित। मान: MiB/GiB; चाप: कुल भौतिक RAM में हिस्सा।",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "पूरे Endfield Charge Plus (सेटिंग्स और सभी HUD) की समर्पित VRAM, साझा GPU मेमोरी के बिना। मान: MiB/GiB; चाप: कुल समर्पित VRAM में हिस्सा।",
   "Author's BiliBili channel": "लेखक का BiliBili चैनल",
-  "Author's YouTube channel": "लेखक का YouTube चैनल"
+  "Author's YouTube channel": "लेखक का YouTube चैनल",
+  "Copy error details": "त्रुटि का विवरण कॉपी करें"
 }

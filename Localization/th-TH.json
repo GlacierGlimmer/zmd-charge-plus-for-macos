@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "RAM ที่อยู่ในหน่วยความจำของ Endfield Charge Plus ทั้งหมด (การตั้งค่าและ HUD ทั้งหมด) รวมหน้าหน่วยความจำร่วมที่อยู่ในหน่วยความจำ ค่า: MiB/GiB; ส่วนโค้ง: สัดส่วนของ RAM จริงทั้งหมด",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "VRAM เฉพาะของ Endfield Charge Plus ทั้งหมด (การตั้งค่าและ HUD ทั้งหมด) ไม่รวมหน่วยความจำ GPU ร่วม ค่า: MiB/GiB; ส่วนโค้ง: สัดส่วนของ VRAM เฉพาะทั้งหมด",
   "Author's BiliBili channel": "ช่อง BiliBili ของผู้พัฒนา",
-  "Author's YouTube channel": "ช่อง YouTube ของผู้พัฒนา"
+  "Author's YouTube channel": "ช่อง YouTube ของผู้พัฒนา",
+  "Copy error details": "คัดลอกรายละเอียดข้อผิดพลาด"
 }

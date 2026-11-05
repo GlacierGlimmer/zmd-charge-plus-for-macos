@@ -107,7 +107,7 @@ internal sealed class LanguageSelectionWindow : Window
         apply.Click+=async (_,_)=>{
             apply.IsEnabled=false;
             try{await _scale((double)(font.Value ?? 100)/100,(double)(ui.Value ?? 100)/100);dialog.Close();Refresh();}
-            catch(Exception ex){Diagnostics.AppLog.Error("Unable to save global appearance.",ex);apply.IsEnabled=true;}
+            catch(Exception ex){Diagnostics.AppLog.Error("Unable to save global appearance.",ex);apply.IsEnabled=true;await SaveErrorDialog.Show(dialog,ex);}
         };
         GlobalAppearance.Apply(dialog,settings.GlobalFontScale,settings.GlobalUiScale);
         await dialog.ShowDialog(this);

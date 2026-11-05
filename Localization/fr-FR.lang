@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (modifié)
@@ -2542,3 +2542,4 @@ Défilement vers le bas
 Un clic passe au profil suivant avec un défilement vers le bas. La molette vers le haut passe au précédent, et vers le bas au suivant, avec une animation dans le même sens.
 Le changement manuel et le défilement automatique utilisent cette liste. Le changement manuel fonctionne même si le défilement automatique est désactivé et réinitialise le délai.
 {0} profils sont dans la liste ; les changements manuels et automatiques suivent cet ordre.
+Copier les détails de l’erreur

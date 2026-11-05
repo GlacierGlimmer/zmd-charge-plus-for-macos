@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "설정 화면과 모든 HUD를 포함한 Endfield Charge Plus 전체의 상주 메모리입니다. 상주 공유 페이지를 포함합니다. 값은 MiB/GiB, 원호는 전체 물리 RAM 대비 비율입니다.",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "설정 화면과 모든 HUD를 포함한 Endfield Charge Plus 전체의 전용 VRAM입니다. 공유 GPU 메모리는 제외합니다. 값은 MiB/GiB, 원호는 전체 전용 VRAM 대비 비율입니다.",
   "Author's BiliBili channel": "제작자의 BiliBili 채널",
-  "Author's YouTube channel": "제작자의 YouTube 채널"
+  "Author's YouTube channel": "제작자의 YouTube 채널",
+  "Copy error details": "오류 세부 정보 복사"
 }

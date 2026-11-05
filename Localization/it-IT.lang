@@ -1,4 +1,4 @@
-#20261105$2543
+#20261105$2544
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (modificato)
@@ -2542,3 +2542,4 @@ Scorri verso il basso
 Un clic passa al profilo successivo con uno scorrimento verso il basso. Scorri verso l’alto per il precedente e verso il basso per il successivo; l’animazione segue la stessa direzione.
 Il cambio manuale e il ciclo automatico usano questa coda. Il cambio manuale funziona anche con il ciclo automatico disattivato e riavvia l’intervallo.
 Ci sono {0} profili in coda; il cambio manuale e il ciclo automatico seguono questo ordine.
+Copia dettagli dell’errore

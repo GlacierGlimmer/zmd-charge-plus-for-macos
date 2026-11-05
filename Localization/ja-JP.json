@@ -2347,5 +2347,6 @@
   "Resident RAM of the entire Endfield Charge Plus process (Settings and all HUDs), including shared resident pages. Value: MiB/GiB; arc: share of physical RAM.": "Endfield Charge Plus 全体（設定画面と全 HUD）の常駐メモリです。常駐共有ページを含みます。数値は MiB/GiB、円弧は物理メモリ総量に対する割合です。",
   "Dedicated VRAM of the entire Endfield Charge Plus process (Settings and all HUDs), excluding shared GPU memory. Value: MiB/GiB; arc: share of total dedicated VRAM.": "Endfield Charge Plus 全体（設定画面と全 HUD）の専用 VRAM です。共有 GPU メモリは含みません。数値は MiB/GiB、円弧は専用 VRAM 総量に対する割合です。",
   "Author's BiliBili channel": "作者の BiliBili チャンネル",
-  "Author's YouTube channel": "作者の YouTube チャンネル"
+  "Author's YouTube channel": "作者の YouTube チャンネル",
+  "Copy error details": "エラーの詳細をコピー"
 }
