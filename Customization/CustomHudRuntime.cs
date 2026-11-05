@@ -608,8 +608,8 @@ public sealed partial class CustomHudRuntime : IDisposable
             }
             else if (profileChanged || deepSeekPeriodChanged)
             {
-                if (profileChanged && !deepSeekPeriodChanged && (_manualRollDirection!=0 || (!_settingsProfileTransition && _settings.AutoCycle && _settings.CycleAnimationMode=="Roll")))
-                    await _hud.RollToPersistentAsync(data,refresh,_manualRollDirection==0?-1:_manualRollDirection);
+                if (profileChanged && !deepSeekPeriodChanged && (_manualRollDirection!=0 || (!_settingsProfileTransition && _settings.AutoCycle && _settings.CycleAnimationMode is "Roll" or "RollDown")))
+                    await _hud.RollToPersistentAsync(data,refresh,_manualRollDirection!=0?_manualRollDirection:(_settings.CycleAnimationMode=="RollDown"?1:-1));
                 else
                 {
                     await _hud.HideAnimatedAsync();
@@ -739,7 +739,7 @@ public sealed partial class CustomHudRuntime : IDisposable
         if(_appSettings.HudEnabled)SwitchProfile(delta);
         foreach(var child in _instances.Values)if(child.Runtime._appSettings.HudEnabled)child.Runtime.SwitchProfile(delta);
     }
-    private void OnHudClicked(){if(!IsUserHidden && _appSettings.HudEnabled && !EndfieldChargePlus.Interop.DesktopGlobalHotkey.ClaimsMouse(1) && _appSettings.AlwaysVisible && _appSettings.ClickToCycle)SwitchProfile(1);}
+    private void OnHudClicked(){if(!IsUserHidden && _appSettings.HudEnabled && !EndfieldChargePlus.Interop.DesktopGlobalHotkey.ClaimsMouse(1) && _appSettings.AlwaysVisible && _appSettings.ClickToCycle)SwitchProfile(1,true);}
     private void OnHudScrolled(int delta)
     {
         if(!IsUserHidden && _appSettings.HudEnabled && _appSettings.AlwaysVisible && _appSettings.ClickToCycle)SwitchProfile(delta,true);

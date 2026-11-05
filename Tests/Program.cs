@@ -194,6 +194,7 @@ internal sealed class AuditApp : Application
         using var runtime=new CustomHudRuntime(hud); runtime.ApplySettings(settings);
         var window=new SettingsWindow(settings,hud,runtime); desktop.MainWindow=window; window.Show();
         await Task.Delay(600);
+        ChromeGestureChecks.Run(window,Tests.Check);
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
             await VerifyFreshHomeSave(window,hud,runtime,settings);
         if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }

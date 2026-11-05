@@ -1,4 +1,4 @@
-#20261104$2539
+#20261105$2543
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Diubah)
@@ -2538,3 +2538,7 @@ Tekan tombol keyboard atau mouse. Esc menghapus penetapan ini.
 Konflik pintasan: {0}
 Pintasan tidak tersedia: {0}
 Tombol keyboard dan mouse didukung, termasuk kombinasi Ctrl, Alt, Shift, atau Win/Command. Tombol yang dicadangkan sistem mungkin tidak tersedia.
+Gulir ke bawah
+Klik untuk beralih ke profil berikutnya dengan animasi ke bawah. Gulir ke atas untuk profil sebelumnya dan ke bawah untuk profil berikutnya, dengan animasi searah guliran.
+Peralihan manual dan siklus otomatis memakai antrean ini. Peralihan manual tetap berfungsi saat siklus otomatis mati dan memulai ulang interval.
+Ada {0} profil dalam antrean; peralihan manual dan siklus otomatis mengikuti urutan ini.

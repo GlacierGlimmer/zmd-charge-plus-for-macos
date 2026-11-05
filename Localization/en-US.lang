@@ -1,4 +1,4 @@
-#20261104$2539
+#20261105$2543
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modified)
@@ -2538,3 +2538,7 @@ Press a key or mouse button. Esc clears the binding.
 Shortcut conflict: {0}
 Unavailable shortcut: {0}
 Keyboard and mouse buttons are supported, with optional Ctrl, Alt, Shift or Win/Command. System-reserved keys may be unavailable.
+Roll Down
+Click switches to the next profile with a downward roll. Scroll up for the previous profile and down for the next, using the same animation direction.
+Manual switching and auto cycle use this queue. Manual switching works while auto cycle is off and restarts the interval.
+{0} profiles are queued; manual switching and auto cycle share this order.

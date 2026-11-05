@@ -36,6 +36,7 @@ public partial class App : Application
             try { StartupManager.Apply(settings.StartWithWindows); }
             catch (Exception ex) { AppLog.Error("Could not refresh launch at login.", ex); }
             _hud = new HudWindow();
+            _hud.Closing += OnApplicationWindowClosing;
             _hud.ApplySettings(settings);
             _runtime = new CustomHudRuntime(_hud);
             _runtime.ApplySettings(settings);
@@ -52,14 +53,8 @@ public partial class App : Application
                 };
             StartActivationListener();
             _ = CheckUpdatesAsync();
-            desktop.Exit += (_, _) =>
-            {
-                _exiting = true;
-                LocalizationManager.LanguageChanged -= SetupMenu;
-                _activation.Cancel();
-                _updateReminder.Close();
-                _quickHotkeys?.Dispose();_tray?.Dispose(); _runtime?.Dispose(); _hud?.Close();
-            };
+            desktop.ShutdownRequested += OnShutdownRequested;
+            desktop.Exit += OnDesktopExit;
         }
         base.OnFrameworkInitializationCompleted();
     }
@@ -67,13 +62,14 @@ public partial class App : Application
     {
         var window = new SettingsWindow(settings, _hud!, _runtime!);
         window.AttachQuickHotkeys(_quickHotkeys);
+        window.Closing += OnApplicationWindowClosing;
         _settingsWindow = window;
         window.Closed += (_, _) => { if (ReferenceEquals(_settingsWindow, window)) _settingsWindow = null; };
         return window;
     }
     internal void OpenSettings()
     {
-        if (_desktop is null) return;
+        if (_exiting || _desktop is null || _hud is null || _runtime is null) return;
         if (_settingsWindow is not { IsVisible: true })
         {
             _desktop.MainWindow = CreateSettings(SettingsManager.Load());

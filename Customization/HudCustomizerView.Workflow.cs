@@ -82,7 +82,6 @@ public partial class HudCustomizerView
         // a newly measured lower editor field into view.
         editor.AddHandler(Control.RequestBringIntoViewEvent,(_,e)=>{if(e.Source is not Control {IsKeyboardFocusWithin:true})e.Handled=true;});
         PersistentClickSwitch.Content=WorkflowText("点击或滚轮切换方案","Click or scroll to switch profiles");
-        if(PersistentClickSwitch.Parent is StackPanel clickPanel)clickPanel.Children.Add(WorkflowText("向上滚动切换上一项，向下滚动切换下一项。","Scroll up for previous; scroll down for next.",12));
         InitializeCycleWorkspace();RefreshWorkflowProfiles();
     }
     internal bool SelectRuntimeProfile(string id)
@@ -124,12 +123,15 @@ public partial class HudCustomizerView
         foreach(var c in new Control[]{AutoCycleSwitch,CycleSecondsBox,CycleAnimationModeCombo,CycleProfileList,CycleProfileSourceCombo,CycleAddBtn,CycleRemoveBtn,CycleMoveUpBtn,CycleMoveDownBtn,CycleQueueStatusText})RemoveFromParent(c);
         var intro=new Grid{ColumnDefinitions=new("*,Auto")};intro.Children.Add(WorkflowText("自动轮播","Auto Cycle",16));Grid.SetColumn(AutoCycleSwitch,1);intro.Children.Add(AutoCycleSwitch);
         var time=new Grid{ColumnDefinitions=new("*,*")};var interval=new StackPanel{Spacing=6,Margin=new(0,0,8,0),Children={WorkflowText("轮播间隔 / 秒","Cycle Interval / sec"),CycleSecondsBox}};time.Children.Add(interval);var animation=new StackPanel{Spacing=6,Margin=new(8,0,0,0),Children={WorkflowText("轮播动画","Cycle Animation"),CycleAnimationModeCombo}};Grid.SetColumn(animation,1);time.Children.Add(animation);
-        _cycleClickSwitch=new CheckBox{Name="CycleClickSwitch",IsChecked=PersistentClickSwitch.IsChecked};
-        bool syncing=false;void Sync(CheckBox from,CheckBox to){if(syncing)return;syncing=true;to.IsChecked=from.IsChecked;syncing=false;}
-        PersistentClickSwitch.IsCheckedChanged+=(_,_)=>Sync(PersistentClickSwitch,_cycleClickSwitch);_cycleClickSwitch.IsCheckedChanged+=(_,_)=>Sync(_cycleClickSwitch,PersistentClickSwitch);
-        _cycleClickSwitch.Bind(IsEnabledProperty,PersistentClickSwitch.GetObservable(IsEnabledProperty));
+        // Move the original model-backed control rather than mirroring a second
+        // checkbox in another page. All instances retain the existing shared flag.
+        DetachClickAction();RemoveFromParent(PersistentClickSwitch);
+        _cycleClickSwitch=PersistentClickSwitch;
         _cycleClickSwitch.Content=WorkflowText("点击或滚轮切换方案","Click or scroll to switch profiles");
-        var options=new StackPanel{Spacing=14,Children={intro,time,_cycleClickSwitch,WorkflowText("向上滚动切换上一项，向下滚动切换下一项。","Scroll up for previous; scroll down for next.",12)}};
+        var manual=new StackPanel{Spacing=10,Children={_cycleClickSwitch,
+            WorkflowText("点击向下切换下一方案；向上滚动向上切换上一方案，向下滚动向下切换下一方案。","Click switches to the next profile with a downward roll. Scroll up for the previous profile and down for the next, using the same animation direction.",12),
+            WorkflowText("手动切换和自动轮播共用下方队列；无需开启自动轮播，手动操作后重新计时。","Manual switching and auto cycle use this queue. Manual switching works while auto cycle is off and restarts the interval.",12)}};
+        var options=new StackPanel{Spacing=14,Children={intro,time}};
         var search=new TextBox{Name="CycleWorkspaceSearch",Watermark=LocalizationManager.Text("搜索方案","Search profiles")};var available=new StackPanel{Spacing=6};
         var queue=new StackPanel{Spacing=10,Children={WorkflowText("轮播队列","Cycle Queue",16),CycleProfileList,new WrapPanel{Orientation=Orientation.Horizontal,Children={CycleMoveUpBtn,CycleMoveDownBtn,CycleRemoveBtn}},CycleQueueStatusText}};
         foreach(var b in new[]{CycleMoveUpBtn,CycleMoveDownBtn,CycleRemoveBtn})b.Margin=new(0,0,6,4);
@@ -149,7 +151,7 @@ public partial class HudCustomizerView
         }
         search.TextChanged+=(_,_)=>Populate();_refreshCycleWorkspace=Populate;
         var columns=new Grid{Name="CycleWorkspaceColumns",ColumnDefinitions=new("*,*"),Margin=new(0,0,0,4)};var queued=WorkflowCard(queue);queued.Margin=new(0,0,10,0);columns.Children.Add(queued);var source=WorkflowCard(pool);Grid.SetColumn(source,1);columns.Children.Add(source);
-        var body=new StackPanel{Spacing=12,Margin=new(4,12,4,4),Children={WorkflowCard(options),columns}};CycleOptionsPanel.Child=body;CycleOptionsPanel.Padding=new(0);CycleOptionsPanel.BorderThickness=new(0);oldScroll.Content=CycleOptionsPanel;
+        var body=new StackPanel{Spacing=12,Margin=new(4,12,4,4),Children={WorkflowCard(options),WorkflowCard(manual),columns}};CycleOptionsPanel.Child=body;CycleOptionsPanel.Padding=new(0);CycleOptionsPanel.BorderThickness=new(0);oldScroll.Content=CycleOptionsPanel;
         Populate();
     }
 }

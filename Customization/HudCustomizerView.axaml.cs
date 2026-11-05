@@ -261,9 +261,10 @@ public partial class HudCustomizerView : UserControl
         AnimationModeCombo.Items.Add(LocalizationManager.Text("完整", "Full"));
 
         CycleAnimationModeCombo.Items.Clear();
-        CycleAnimationModeCombo.Items.Add(LocalizationManager.Text("简洁", "Simple"));
         CycleAnimationModeCombo.Items.Add(LocalizationManager.Text("完整", "Full"));
+        CycleAnimationModeCombo.Items.Add(LocalizationManager.Text("简洁", "Simple"));
         CycleAnimationModeCombo.Items.Add(LocalizationManager.Text("向上翻滚", "Roll Up"));
+        CycleAnimationModeCombo.Items.Add(LocalizationManager.Text("向下翻滚", "Roll Down"));
 
         NetworkDisplayUnitCombo.Items.Clear();
         NetworkDisplayUnitCombo.Items.Add("Mbps");
@@ -385,7 +386,7 @@ public partial class HudCustomizerView : UserControl
         LoadTriggerRules(_loaded.Triggers);
         AutoCycleSwitch.IsChecked = _loaded.AutoCycle;
         CycleSecondsBox.Value = _loaded.CycleSeconds;
-        CycleAnimationModeCombo.SelectedIndex = _loaded.CycleAnimationMode switch { "Simple"=>0,"Full"=>1,_=>2 };
+        CycleAnimationModeCombo.SelectedIndex = _loaded.CycleAnimationMode switch { "Full"=>0,"Roll"=>2,"RollDown"=>3,_=>1 };
         DeepSeekKeyBox.Text = SecretStore.Unprotect(_loaded.DeepSeekApiKeyProtected);
         DeepSeekWindowsBox.Text = DeepSeekPeriodCalendar.OfficialWindows;
 
@@ -429,7 +430,7 @@ public partial class HudCustomizerView : UserControl
             CycleSeconds = (int)Math.Clamp(CycleSecondsBox.Value ?? 10, 3, 3600),
             CycleProfileIds = GetSanitizedCycleProfileIds(),
             RadialProfileIds = _radialProfileIds?.Where(id => _profiles.Any(p => p.Id == id)).ToList(),
-            CycleAnimationMode = CycleAnimationModeCombo.SelectedIndex switch { 0=>"Simple",1=>"Full",_=>"Roll" },
+            CycleAnimationMode = CycleAnimationModeCombo.SelectedIndex switch { 0=>"Full",2=>"Roll",3=>"RollDown",_=>"Simple" },
             ActiveProfileId = _selectedIndex >= 0 && _selectedIndex < _profiles.Count
                 ? _profiles[_selectedIndex].Id
                 : (_profiles.FirstOrDefault(p => string.Equals(p.Id, _loaded.ActiveProfileId, StringComparison.OrdinalIgnoreCase))?.Id
@@ -982,7 +983,7 @@ public partial class HudCustomizerView : UserControl
                 : LocalizationManager.Text("已配置 1 个轮播方案。", "1 profile is in the cycle queue."),
             _ => enabled
                 ? LocalizationManager.Formatted($"已启用自动轮播，将按上方顺序循环 {_cycleProfileIds.Count} 个方案。", (System.FormattableString)$"Auto cycle is on; {_cycleProfileIds.Count} profiles will rotate in order.")
-                : LocalizationManager.Formatted($"已配置 {_cycleProfileIds.Count} 个轮播方案；开启自动轮播后生效。", (System.FormattableString)$"{_cycleProfileIds.Count} profiles are queued; enable auto cycle to use them.")
+                : LocalizationManager.Formatted($"队列中有 {_cycleProfileIds.Count} 个方案；手动切换和自动轮播共用此顺序。", (System.FormattableString)$"{_cycleProfileIds.Count} profiles are queued; manual switching and auto cycle share this order.")
         };
         UpdateCycleButtons();
         _refreshCycleWorkspace?.Invoke();
@@ -1117,7 +1118,7 @@ public partial class HudCustomizerView : UserControl
                 CycleSeconds = (int)Math.Clamp(CycleSecondsBox.Value ?? 10, 3, 3600),
                 CycleProfileIds = GetSanitizedCycleProfileIds(),
             RadialProfileIds = _radialProfileIds?.Where(id => _profiles.Any(p => p.Id == id)).ToList(),
-                CycleAnimationMode = CycleAnimationModeCombo.SelectedIndex switch { 0=>"Simple",1=>"Full",_=>"Roll" },
+                CycleAnimationMode = CycleAnimationModeCombo.SelectedIndex switch { 0=>"Full",2=>"Roll",3=>"RollDown",_=>"Simple" },
                 ActiveProfileId = _profiles[_selectedIndex].Id,
                 DeepSeekApiKeyProtected = SecretStore.Protect(DeepSeekKeyBox.Text),
                 DeepSeekPeakWindows = DeepSeekPeriodCalendar.OfficialWindows,

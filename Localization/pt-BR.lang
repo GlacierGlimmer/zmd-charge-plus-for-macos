@@ -1,4 +1,4 @@
-#20261104$2539
+#20261105$2543
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Modificado)
@@ -2538,3 +2538,7 @@ Pressione uma tecla ou um botão do mouse. Esc remove esta atribuição.
 Conflito de atalhos: {0}
 Atalho indisponível: {0}
 São aceitas teclas e botões do mouse, também com Ctrl, Alt, Shift ou Win/Command. Teclas reservadas pelo sistema podem estar indisponíveis.
+Rolar para baixo
+Um clique passa ao próximo perfil com uma animação para baixo. Role para cima para o perfil anterior e para baixo para o próximo, com a animação na mesma direção.
+A troca manual e a alternância automática usam esta fila. A troca manual funciona mesmo com a alternância automática desativada e reinicia o intervalo.
+Há {0} perfis na fila; a troca manual e a alternância automática seguem esta ordem.

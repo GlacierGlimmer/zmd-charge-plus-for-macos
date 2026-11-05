@@ -1,4 +1,4 @@
-#20261104$2539
+#20261105$2543
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Đã sửa đổi)
@@ -2538,3 +2538,7 @@ Nhấn một phím hoặc nút chuột. Esc xóa gán phím này.
 Xung đột phím tắt: {0}
 Phím tắt không khả dụng: {0}
 Hỗ trợ các phím và nút chuột, có thể kết hợp với Ctrl, Alt, Shift hoặc Win/Command. Các phím dành riêng cho hệ thống có thể không dùng được.
+Cuộn xuống
+Nhấp để chuyển sang hồ sơ tiếp theo bằng hiệu ứng cuộn xuống. Cuộn lên để về hồ sơ trước và cuộn xuống để tới hồ sơ tiếp theo; hiệu ứng chạy cùng chiều cuộn.
+Chuyển thủ công và luân phiên tự động dùng chung hàng đợi này. Chuyển thủ công vẫn hoạt động khi tắt luân phiên tự động và bắt đầu lại thời gian chờ.
+Có {0} hồ sơ trong hàng đợi; chuyển thủ công và luân phiên tự động dùng chung thứ tự này.

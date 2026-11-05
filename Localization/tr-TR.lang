@@ -1,4 +1,4 @@
-#20261104$2539
+#20261105$2543
   {deepseek.period.remaining_text}
   ↑ {network.display_upload}
  (Değiştirildi)
@@ -2538,3 +2538,7 @@ Bir klavye tuşuna veya fare düğmesine basın. Esc bu atamayı temizler.
 Kısayol çakışması: {0}
 Kısayol kullanılamıyor: {0}
 Klavye tuşları ve fare düğmeleri, isteğe bağlı Ctrl, Alt, Shift veya Win/Command ile desteklenir. Sisteme ayrılmış tuşlar kullanılamayabilir.
+Aşağı kaydır
+Tıklama, aşağı kaydırma animasyonuyla sonraki profile geçer. Önceki profil için yukarı, sonraki için aşağı kaydırın; animasyon da aynı yönde ilerler.
+Elle geçiş ve otomatik döngü bu kuyruğu kullanır. Elle geçiş, otomatik döngü kapalıyken de çalışır ve bekleme süresini yeniden başlatır.
+Kuyrukta {0} profil var; elle geçiş ve otomatik döngü bu sırayı kullanır.
