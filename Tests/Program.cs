@@ -172,9 +172,9 @@ internal static class Tests
     }
 }
 
-internal sealed class AuditApp : Application
+internal sealed class AuditApp : App
 {
-    public override void Initialize() { Styles.Add(new FluentTheme()); RequestedThemeVariant=Avalonia.Styling.ThemeVariant.Dark; }
+    public override void Initialize() => base.Initialize();
     public override void OnFrameworkInitializationCompleted()
     {
         var desktop=(IClassicDesktopStyleApplicationLifetime)ApplicationLifetime!;
@@ -185,7 +185,7 @@ internal sealed class AuditApp : Application
             catch(Exception ex) { Console.Error.WriteLine(ex); Environment.ExitCode=1; }
             finally { desktop.Shutdown(Environment.ExitCode); }
         });
-        base.OnFrameworkInitializationCompleted();
+        // Deliberately skip App startup: this isolated audit owns its runtime and configuration.
     }
     private static async Task Audit(IClassicDesktopStyleApplicationLifetime desktop)
     {
