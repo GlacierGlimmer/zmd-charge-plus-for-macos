@@ -60,6 +60,7 @@ internal sealed class UpdateReminderWindow : Window
         later.Click += (_, _) => Close();
         buttons.Children.Add(view); Grid.SetColumn(later, 1); buttons.Children.Add(later);
         panel.Children.Add(buttons); PromptStyle.Apply(this,panel);
+        ShowInTaskbar=true;ShowActivated=false;
         RefreshLanguage();
         LocalizationManager.LanguageChanged += RefreshLanguage;
         Closed += (_, _) => LocalizationManager.LanguageChanged -= RefreshLanguage;

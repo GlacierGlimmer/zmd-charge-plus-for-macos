@@ -122,6 +122,7 @@ public partial class SettingsWindow : Window
         AlwaysVisibleSwitch.IsCheckedChanged += (_, _) => UpdateModeUi();
         PositionModeCombo.SelectionChanged += (_, _) => UpdateModeUi();
         PositionCombo.SelectionChanged += OnPositionPresetChanged;
+        PersistentLayerCombo.SelectionChanged+=(_,_)=>RefreshLayerDescription();
         SaveBtn.Click += OnSave;
         OpenSettingsFolderBtn.Click += OnOpenSettingsFolder;
         ResetSizeAnimationBtn.Click += OnResetSizeAnimation;
@@ -182,8 +183,10 @@ public partial class SettingsWindow : Window
             int positionIndex = PositionCombo.SelectedIndex;
 
             PersistentLayerCombo.Items.Clear();
-            PersistentLayerCombo.Items.Add(LocalizationManager.Text("始终置顶", "Always on Top"));
             PersistentLayerCombo.Items.Add(LocalizationManager.Text("桌面层（不置顶）", "Desktop Layer"));
+            PersistentLayerCombo.Items.Add(LocalizationManager.Text("始终置顶", "Always on Top"));
+            PersistentLayerCombo.Items.Add(LocalizationManager.Text("超级置顶（实验性）", "Super Topmost (Experimental)"));
+            RefreshLayerDescription();
 
             PositionModeCombo.Items.Clear();
             PositionModeCombo.Items.Add(LocalizationManager.Text("预设位置 + 微调", "Preset + Offset"));
@@ -405,7 +408,7 @@ public partial class SettingsWindow : Window
             HudEnabledSwitch.IsChecked = settings.HudEnabled;
             StartupSwitch.IsChecked = settings.StartWithWindows;
             AlwaysVisibleSwitch.IsChecked = settings.AlwaysVisible;
-            PersistentLayerCombo.SelectedIndex = settings.PersistentLayer == PersistentHudLayer.Desktop ? 1 : 0;
+            PersistentLayerCombo.SelectedIndex = settings.PersistentLayer == PersistentHudLayer.Desktop ? 0 : settings.PersistentLayer == PersistentHudLayer.SuperTopmost ? 2 : 1;
             PositionModeCombo.SelectedIndex = settings.PositionMode == HudPositionMode.CustomCoordinates ? 1 : 0;
             PositionCombo.SelectedIndex = PositionToIndex(settings.HudPosition);
             OffsetXBox.Value = settings.HudOffsetX;
@@ -453,9 +456,7 @@ public partial class SettingsWindow : Window
             HotZoneWidth=(int)(HotZoneWidthBox.Value ?? 240),HotZoneHeight=(int)(HotZoneHeightBox.Value ?? 20),
             HotZoneOffsetX=(int)(HotZoneOffsetXBox.Value ?? 0),HotZoneOffsetY=(int)(HotZoneOffsetYBox.Value ?? 0),
             HotZoneDwellMilliseconds=(int)HotZoneDwellSlider.Value,HotZoneAdvanceQueue=HotZoneAdvanceCheck.IsChecked==true,
-            PersistentLayer = PersistentLayerCombo.SelectedIndex == 1
-                ? PersistentHudLayer.Desktop
-                : PersistentHudLayer.Topmost,
+            PersistentLayer = PersistentLayerCombo.SelectedIndex == 0 ? PersistentHudLayer.Desktop : PersistentLayerCombo.SelectedIndex == 2 ? PersistentHudLayer.SuperTopmost : PersistentHudLayer.Topmost,
 
             PositionMode = PositionModeCombo.SelectedIndex == 1
                 ? HudPositionMode.CustomCoordinates

@@ -225,7 +225,7 @@ API int ecp_hud_window(void *handle, int topmost) {
         window.ignoresMouseEvents=YES; window.hidesOnDeactivate=NO;
         window.opaque=NO; window.backgroundColor=NSColor.clearColor; window.hasShadow=NO;
         window.collectionBehavior=NSWindowCollectionBehaviorCanJoinAllSpaces | NSWindowCollectionBehaviorFullScreenAuxiliary | NSWindowCollectionBehaviorIgnoresCycle;
-        window.level=topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;
+        window.level=topmost==2 ? NSStatusWindowLevel : topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;
         return window.ignoresMouseEvents ? 1 : 0;
     }
 }
@@ -367,7 +367,7 @@ API int ecp_hud_input(void *handle,int enabled,double x,double y,double width,do
             panel.collectionBehavior=owner.collectionBehavior;
             [owner addChildWindow:panel ordered:NSWindowBelow];ecpHudInputs[key]=panel;
         }
-        panel.click=click;NSInteger level=topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;BOOL layerChanged=panel.level!=level;if(layerChanged) panel.level=level;
+        panel.click=click;NSInteger level=topmost==2 ? NSStatusWindowLevel : topmost ? NSFloatingWindowLevel : NSNormalWindowLevel;BOOL layerChanged=panel.level!=level;if(layerChanged) panel.level=level;
         double primaryHeight=NSMaxY(NSScreen.screens.firstObject.frame);
         NSRect frame=NSMakeRect(x,primaryHeight-y-height,width,height);
         BOOL moved=!NSEqualRects(panel.frame,frame);if(moved) [panel setFrame:frame display:NO];
@@ -401,4 +401,21 @@ API int ecp_hud_origin(void *handle,double x,double y) {
         double top=NSMaxY(NSScreen.screens.firstObject.frame);
         [window setFrameOrigin:NSMakePoint(x,top-y-window.frame.size.height)];return 1;
     }
+}
+
+API int ecp_hud_super_repair(void *handle,int mode) {
+    @autoreleasepool {
+        if(!NSThread.isMainThread || !handle) return 0;
+        id object=(__bridge id)handle;
+        NSWindow *window=[object isKindOfClass:NSWindow.class] ? object : ([object isKindOfClass:NSView.class] ? [object window] : nil);
+        if(!window) return 0;
+        NSInteger target=mode==2 ? NSStatusWindowLevel : mode ? NSFloatingWindowLevel : NSNormalWindowLevel;
+        if(window.level!=target) window.level=target;
+        if(mode==2 && window.visible && !(window.occlusionState&NSWindowOcclusionStateVisible)) [window orderFrontRegardless];
+        return (int)window.level;
+    }
+}
+
+API int ecp_hud_level(void *handle) {
+ @autoreleasepool {if(!NSThread.isMainThread || !handle) return -1;id object=(__bridge id)handle;NSWindow *window=[object isKindOfClass:NSWindow.class]?object:([object isKindOfClass:NSView.class]?[object window]:nil);return window?(int)window.level:-1;}
 }

@@ -28,11 +28,11 @@ internal sealed class LanguageSelectionWindow : Window
     public LanguageSelectionWindow(Func<AppSettings> settings,Action<string> choose,Func<double,double,Task> scale)
     {
         _settings=settings;_choose=choose;_scale=scale;
-        Width=900;Height=720;MinWidth=580;MinHeight=440;Background=Brush.Parse("#19191B");WindowStartupLocation=WindowStartupLocation.CenterOwner;
+        Width=900;Height=720;MinWidth=580;MinHeight=440;Background=Brush.Parse("#141414");WindowStartupLocation=WindowStartupLocation.CenterOwner;
         var root=new Grid {RowDefinitions=new RowDefinitions("Auto,Auto,*,Auto,Auto"),Margin=new Thickness(28,20),MinWidth=520,MinHeight=380};
         root.Children.Add(_heading);
         _search.MaxWidth=660;_search.HorizontalAlignment=HorizontalAlignment.Stretch;_search.Margin=new Thickness(0,18,0,14);Grid.SetRow(_search,1);root.Children.Add(_search);
-        var frame=new Border {MaxWidth=560,HorizontalAlignment=HorizontalAlignment.Stretch,BorderBrush=Brush.Parse("#454549"),BorderThickness=new Thickness(1),Child=_languages};Grid.SetRow(frame,2);root.Children.Add(frame);
+        var frame=new Border {MaxWidth=560,HorizontalAlignment=HorizontalAlignment.Stretch,Background=Brush.Parse("#171717"),BorderBrush=Brush.Parse("#3B3B3B"),BorderThickness=new Thickness(1),Child=_languages};Grid.SetRow(frame,2);root.Children.Add(frame);
         _languages.ItemTemplate=new FuncDataTemplate<Choice>((c,_)=>c is null ? new TextBlock() : new TextBlock {
             Text=c.Label,TextAlignment=TextAlignment.Center,TextWrapping=TextWrapping.Wrap,Margin=new Thickness(12,5),FontSize=16,
             FlowDirection=c.RightToLeft ? FlowDirection.RightToLeft : FlowDirection.LeftToRight });
@@ -45,8 +45,8 @@ internal sealed class LanguageSelectionWindow : Window
             new Setter(ListBoxItem.BorderThicknessProperty,new Thickness(1)),
             new Setter(ListBoxItem.BorderBrushProperty,Brushes.Transparent)}});
         _languages.Styles.Add(new Avalonia.Styling.Style(s=>s.OfType<ListBoxItem>().Class(":selected")) {Setters={
-            new Setter(ListBoxItem.BorderBrushProperty,Brushes.White),
-            new Setter(ListBoxItem.BackgroundProperty,Brushes.Transparent)}});
+            new Setter(ListBoxItem.BorderBrushProperty,Brush.Parse("#FFFA00")),
+            new Setter(ListBoxItem.BackgroundProperty,Brush.Parse("#343400"))}});
         var footer=new Grid {ColumnDefinitions=new ColumnDefinitions("*,*"),Margin=new Thickness(0,18,0,0)};
         _appearance.Margin=new Thickness(0,0,7,0);_done.Margin=new Thickness(7,0,0,0);
         Grid.SetRow(_translationNotice,3);root.Children.Add(_translationNotice);
@@ -59,6 +59,8 @@ internal sealed class LanguageSelectionWindow : Window
         _done.Click+=(_,_)=>Close();
         _appearance.Click+=async (_,_)=>await OpenAppearanceAsync();
         KeyDown+=(_,e)=>{if(e.Key==Key.Escape){Close();e.Handled=true;}};
+        _heading.IsVisible=false;Content=null;PromptStyle.Apply(this,root);
+        CanResize=true;SizeToContent=SizeToContent.Manual;
         Refresh();
     }
     private static string T(string zh,string en)=>LocalizationManager.Text(zh,en);

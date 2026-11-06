@@ -101,7 +101,7 @@ internal static class GlobalAppearance
                 if(!double.IsFinite(height) || height<=0)height=window.ClientSize.Height;
                 state.Root.Width=Math.Max(state.MinWidth*Math.Max(1,state.FontScale),
                     width/state.UiScale-state.Root.Margin.Left-state.Root.Margin.Right);
-                state.Root.Height=state.Root is StackPanel || state.Root is Border {Child:StackPanel}
+                state.Root.Height=window.SizeToContent!=SizeToContent.Manual || state.Root is StackPanel || state.Root is Border {Child:StackPanel}
                     ? double.NaN : Math.Max(state.MinHeight,
                         height/state.UiScale-state.Root.Margin.Top-state.Root.Margin.Bottom);
             }

@@ -42,6 +42,7 @@ public partial class HudWindow : Window
     private bool CanCycleOnClick => !_closed && IsVisible && _settings.AlwaysVisible && _settings.ClickToCycle ;
 
     private HudRenderData? _lastRenderData;
+    private SuperTopmostController? _superTopmost;
     private bool _closed;
     private bool _pointerPressedInside;
     public bool IsClosed => _closed;
@@ -103,6 +104,7 @@ public partial class HudWindow : Window
         Closed += (_, _) =>
         {
             if(_macInputOwner!=IntPtr.Zero) { MacNative.ecp_hud_input_close(_macInputOwner);_macInputOwner=IntPtr.Zero; }
+            _superTopmost?.Dispose();_superTopmost=null;
             _closed=true;
             DisposeRadialInput();
             CancelPresentation();
@@ -166,7 +168,9 @@ public partial class HudWindow : Window
     {
         // 临时 HUD 保持原行为：始终置顶。
         // 常驻 HUD 可以选择置顶，或作为普通非置顶窗口留在桌面层。
-        Topmost = !persistent || _settings.PersistentLayer == PersistentHudLayer.Topmost;
+        Topmost = !persistent || _settings.PersistentLayer != PersistentHudLayer.Desktop;
+        _superTopmost ??= new SuperTopmostController(this,()=>{var a=Pill.PointToScreen(default);var b=Pill.PointToScreen(new Point(Pill.Bounds.Width,Pill.Bounds.Height));return new PixelRect(Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y));},()=>Pill.Opacity>.02);
+        _superTopmost.SetEnabled(persistent && _settings.PersistentLayer==PersistentHudLayer.SuperTopmost);
         // Avalonia can update native window styles after a layer change. Keep the HUD
         // mouse-through in both persistent (topmost/normal) and transient modes.
         if (IsVisible)
@@ -770,14 +774,15 @@ public partial class HudWindow : Window
         _macInputOwner=native.Handle;
         var a=Pill.PointToScreen(new Point(0,0));var b=Pill.PointToScreen(new Point(Pill.Bounds.Width,Pill.Bounds.Height));
         MacNative.ecp_hud_input(native.Handle,CanCycleOnClick && _persistent && Pill.Opacity>.02 ? 1 : 0,
-            Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y),Topmost ? 1 : 0,_nativeClick);
+            Math.Min(a.X,b.X),Math.Min(a.Y,b.Y),Math.Abs(b.X-a.X),Math.Abs(b.Y-a.Y),_superTopmost?.IsEffective==true ? 2 : Topmost ? 1 : 0,_nativeClick);
         MacNative.ecp_hud_scroll_bind(native.Handle,_nativeScroll);
     }
     private void EnsureInputHitTest()
     {
+        _superTopmost?.Repair();
         var handle = this.TryGetPlatformHandle();
         if (handle?.HandleDescriptor is "NSWindow" or "NSView") {
-            MacNative.SetHudWindow(handle.Handle, Topmost);
+            MacNative.SetHudWindow(handle.Handle, Topmost,_superTopmost?.IsEffective==true);
             RefreshMacInput();
             if (_persistent && CanCycleOnClick) _inputTimer.Start(); else _inputTimer.Stop();
         }

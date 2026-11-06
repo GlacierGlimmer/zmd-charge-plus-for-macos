@@ -107,7 +107,7 @@ public static class ProfileDataWarnings
         var footer = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto"),FlowDirection=Avalonia.Media.FlowDirection.LeftToRight };
         footer.Children.Add(ignore); Grid.SetColumn(close, 1); footer.Children.Add(close);
         panel.Children.Add(footer); panel.Children.Add(error);
-        var dialog = new Window { Title = LocalizationManager.Text("HUD 数据提示", "HUD data warning"), Width = 620, SizeToContent = SizeToContent.Height, MaxHeight = 720, CanResize = false, Topmost = true, WindowStartupLocation = WindowStartupLocation.CenterScreen };
+        var dialog = new Window { Title = LocalizationManager.Text("HUD 数据提示", "HUD data warning"), Width = 620, SizeToContent = SizeToContent.Height, MaxHeight = 720, CanResize = false, ShowInTaskbar = true, ShowActivated = false, WindowStartupLocation = WindowStartupLocation.CenterScreen };
         EndfieldChargePlus.Settings.PromptStyle.Apply(dialog,panel);
         void UpdateLanguage()
         {

@@ -18,6 +18,7 @@ internal static class SaveErrorDialog
     {
         Diagnostics.ApplicationErrors.MarkShown(error);
         var dialog=Create(error,startup,title);
+        dialog.ShowActivated=owner?.IsActive==true;
         if(owner?.IsVisible==true)return dialog.ShowDialog(owner);
         dialog.WindowStartupLocation=WindowStartupLocation.CenterScreen;dialog.ShowInTaskbar=true;
         var done=new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

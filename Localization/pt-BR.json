@@ -2349,5 +2349,12 @@
   "Author's BiliBili channel": "Canal do autor no BiliBili",
   "Author's YouTube channel": "Canal do autor no YouTube",
   "Copy error details": "Copiar detalhes do erro",
-  "The previous run ended unexpectedly.": "A execução anterior terminou inesperadamente."
+  "The previous run ended unexpectedly.": "A execução anterior terminou inesperadamente.",
+  "Super Topmost (Experimental)": "Primeiro plano reforçado (experimental)",
+  "Desktop: behind ordinary windows. Always on Top: the normal topmost layer.": "Área de trabalho: atrás das janelas comuns. Sempre no topo: usa a camada superior normal.",
+  "Super Topmost restores the HUD above other topmost windows without taking focus. It yields while ECP settings, menus or dialogs are open.": "O primeiro plano reforçado recoloca o HUD acima de outras janelas prioritárias sem tomar o foco. Ele cede espaço enquanto configurações, menus ou diálogos do ECP estiverem abertos.",
+  "Windows: attempts to stay above topmost windows such as Task Manager. Protected system layers and exclusive fullscreen may still cover the HUD.": "Windows: tenta ficar acima de janelas prioritárias, como o Gerenciador de Tarefas. Camadas protegidas do sistema e tela cheia exclusiva ainda podem cobrir o HUD.",
+  "macOS: uses the system status-window level. Protected system screens may remain above it.": "macOS: usa o nível das janelas de status do sistema. Telas protegidas do sistema podem continuar acima.",
+  "Linux: enhanced X11 stacking. Under Wayland, behavior depends on the compositor.": "Linux: reforça a ordem das janelas X11. No Wayland, o comportamento depende do compositor.",
+  "Android: uses the highest overlay layer allowed for this app. System bars, the keyboard and protected screens remain above it.": "Android: usa a camada de sobreposição mais alta permitida para este aplicativo. Barras do sistema, teclado e telas protegidas continuam acima."
 }
