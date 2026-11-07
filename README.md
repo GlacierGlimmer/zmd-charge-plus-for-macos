@@ -1,68 +1,61 @@
-# Endfield Charge Plus For MacOS
+# Endfield Charge Plus For macOS
 
-下载与每版更新说明请查看本仓库 [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases)。README 保留通用安装和使用说明。
+**v0.2.0 · 2026.11.07** · macOS 13+ · Apple Silicon / Intel
 
-多实例 HUD、自定义字体与采样间隔、常驻点击轮播、实际 FPS、世界时钟及按类别排列的内置方案；详见软件设置与 [更新说明](docs/release-notes.md)。
+**简体中文** · [English](README.en.md)
 
-**简体中文** · [English](README.en.md) | macOS 13+ | Apple Silicon / Intel
+终末地风格的灵动状态 HUD。把系统、网络、时间和自定义数据放在视线之内。
 
-终末地风格菜单栏与桌面悬浮 HUD。保留 ECP 的自定义方案、动画、时间、系统监控、网络探测、DeepSeek API 和 HTTP/JSON 数据源，使用 macOS 原生接口采集数据。
+## v0.2.0 功能
 
-## 其他平台下载
+- 重新设计的深色设置界面：左侧导航、荧光黄强调色和黄/绿/粉三色细节，区分当前系统与软件整体占用。
+- 方案管理、自定义模板、变量库、HTTP / JSON 数据源与按章节定位的使用手册。
+- 20 种随软件打包的离线语言，默认跟随系统语言；可手动选择并设置全局字体及 UI 缩放。
+- 统一的异常与数据提示，保留具体原因、复制详情、日志入口及逐变量“不再提示”。
+- 在 HUD 上长按鼠标中键，指向环形栏中的方案，松开切换；长按时间、拖动距离和圆盘大小可配置。
+- 自动轮播与手动切换共用队列：点击向下切换；滚轮向上/向下切换上一/下一方案，配合对应方向动画。
+- 轮播可选简洁、完整、向上翻滚、向下翻滚四种动画；快捷键可控制显示/隐藏、前后方案、暂停/继续、预览和设置。
+- 多实例 HUD 保留各自的方案、队列、位置、字体、显示器与层级；共享的全局设置统一管理。
 
-各平台由独立仓库维护和发布。请前往对应的 Releases 页面查看可用版本、安装包和校验文件。
+保留 macOS 原生采集器、菜单栏、窗口层级和多空间行为。全局输入等功能受系统权限与窗口管理规则限制；超级置顶属于实验性能力，不绕过受保护的系统界面。
 
-| 平台 | 仓库 | 发布页面 |
+## 下载与更新
+
+从 [v0.2.0 Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases/tag/v0.2.0) 下载 Apple Silicon（ARM64）或 Intel（x64）DMG，将 `Endfield Charge Plus For MacOS.app` 拖入 **Applications** 后启动。包内包含 .NET 运行时。
+
+应用在菜单栏驻留。关闭设置窗口后 HUD 继续运行，可从菜单栏退出；要启用登录启动，请先把应用放在 Applications 中。
+
+本次 DMG 使用 ad-hoc 签名，尚未进行 Apple 公证。原生构建、采集、界面、DMG 挂载与包内启动已在 macOS CI 检查，具体机型、屏幕和权限仍可能影响功能。
+
+Releases 内提供 SHA-256 校验文件。软件在“关于”中按本平台独立仓库检查更新；商店安装版本由商店管理更新。
+
+## 支持语言
+
+共 **20 种**：简体中文、English、繁體中文、日本語、한국어、Deutsch、Français、Español、Português、Русский、العربية、हिंदी、বাংলা、اردو、Bahasa Indonesia、Tiếng Việt、ไทย、Türkçe、Italiano、فارسی。
+
+语言包采用离线 `.lang` 格式。首次启动跟随系统界面语言；手动选择会持久保存；未支持的语言回退 English。语言名称不限制使用地区。产品名称 **Endfield Charge Plus** 不翻译。
+
+## 使用起步
+
+1. 打开设置，选择内置方案并预览。
+2. 按需调整显示位置、内容、动画与数据来源。
+3. 点击“保存并应用”；遇到不可用数据时查看提示中的原因和硬件/权限说明。
+4. 完整的配置、变量、规则、权限与排错说明见软件内“使用手册”。
+
+## 各平台仓库
+
+| 平台 | 源码 | 发行包 |
 | --- | --- | --- |
-| Windows | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus/releases) |
-| Linux | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux/releases) |
-| Android | [项目仓库](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android/releases) |
+| Windows | [GitHub](https://github.com/GlacierGlimmer/zmd-charge-plus) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus/releases) |
+| Linux | [GitHub](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux/releases) |
+| macOS | [GitHub](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases) |
+| Android | [GitHub](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android) | [Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-android/releases) |
 
-Android 仓库已建立；可下载版本以其 Releases 页面为准。
+## 项目与反馈
 
-## 下载
+- 作者：**GlacierGlimmer冰川雪貓**
+- [官网](https://zmd-bar.x-neko.com/) · [问题追踪](https://ecp-bugs.x-neko.com/) · [本次更新说明](docs/release-notes.md)
+- [作者 BiliBili](https://space.bilibili.com/354548348) · [作者 YouTube](https://www.youtube.com/@glacierglimmer925)
+- MIT 许可；基于 [QinAnze/zmd-charge](https://github.com/QinAnze/zmd-charge)，第三方许可见仓库与发行包。
 
-从[本仓库 Releases](https://github.com/GlacierGlimmer/zmd-charge-plus-for-macos/releases)下载：
-
-请按设备选择 Apple Silicon 或 Intel；资源名称、校验文件与逐版更新说明以 Releases 为准。
-
-打开 DMG，把 **Endfield Charge Plus For MacOS.app** 拖到 **Applications** 后启动。包内自带 .NET 运行时。应用在菜单栏驻留，关闭设置窗口后继续运行，通过菜单栏退出。
-
-默认发布使用 ad-hoc 签名，**未经 Apple Developer ID 签名和公证**。核实官方下载来源及 SHA-256 后，如系统阻止打开，在“系统设置 → 隐私与安全性”中为此应用选择“仍要打开”。无需关闭 Gatekeeper / SIP。校验命令：`shasum -a 256 -c SHA256SUMS-MacOS.txt`。
-
-## macOS 适配
-
-- CPU 使用率：Mach CPU tick 差分，包含用户、内核和空闲比例；核心数与型号来自 sysctl。
-- 内存：Mach VM 与 vm.swapusage。已用 = active + wired + compressed，可用 = 总内存 − 已用。这是明确的内存统计口径，不等于 Activity Monitor 的内存压力。
-- 电池：IOPowerSources。无内置电池的 Mac 不显示电池方案；时间估计只在系统实际返回时列出。不把容量百分比当成 mWh。
-- 磁盘：APFS Data 卷 statfs，正确读取可写数据卷，不拿只读系统快照作为用户磁盘。
-- 网络：en* 物理接口 64 位收发计数器差分，排除 loopback / VPN 虚拟接口，避免重复计算；接口新增、断开及计数器重置不产生突增。
-- GPU：Metal 型号、数量、统一内存标记、低功耗/可移除状态和建议工作集预算。**工作集预算不是显存容量**。
-- 显示器、剪贴板、20 种语言界面、全局鼠标顶部唤出、HUD 点击穿透、菜单栏、登录启动和单实例均有 macOS 实现。
-- API Key 保存到 macOS 登录钥匙串。配置和日志位于 `~/Library/Application Support/EndfieldChargePlusForMacOS`。导出设置只带钥匙串引用，换 Mac 后需重新输入 Key。
-- 登录启动使用当前用户 `~/Library/LaunchAgents/com.glacierglimmer.endfieldchargeplus.macos.plist`。必须先安装到本机，不能从 DMG 临时路径注册。
-
-变量库在启动及“重新检测 macOS 变量”时按本机实际数据筛选，内置方案及导入方案同步清理不可用引用。外部服务失败时显示真实错误状态，不伪造测量值。Windows 专用的 WMI / 注册表 / Defender / BitLocker / Hyper-V / TPM 等变量已移除；无可靠公共接口的实时 CPU 频率、温度、风扇、全局 GPU 使用率和显存占用也不显示。
-
-更新检查仅访问本仓库正式 Releases，且必须包含当前运行架构对应的 DMG；不会跳到 Windows 或 Linux 仓库。
-
-## 构建与检查
-
-在 Mac 上安装 .NET 8 SDK 和 Xcode Command Line Tools 后：
-
-```bash
-dotnet run --project Tests/EndfieldChargePlus.PlatformTests.csproj -c Release
-bash scripts/package-macos.sh osx-arm64
-# Intel Mac 使用 osx-x64
-bash scripts/verify-dmg.sh osx-arm64
-```
-
-GitHub Actions 分别在 `macos-15`（ARM64）和 `macos-15-intel` 验证原生采集、逐个本地变量、内置方案、GUI、DMG 签名结构、挂载运行和单实例。检查报告和截图保存在工作流 artifacts；参阅[验证范围](docs/validation.md)。它们不等于所有机型、系统版本、刘海屏、混合缩放多显示器及电池状态的完整实机认证。
-
-开发者可设置 `MACOS_SIGNING_IDENTITY` 和已配置的 `MACOS_NOTARY_PROFILE`，让打包脚本使用 Developer ID 签名并公证。没有这两项时，发布说明明确标注 ad-hoc 状态。
-
-## 来源与许可
-
-基于 [QinAnze/zmd-charge](https://github.com/QinAnze/zmd-charge) 及 [Endfield Charge Plus](https://github.com/GlacierGlimmer/zmd-charge-plus)，复用 [Linux 版](https://github.com/GlacierGlimmer/zmd-charge-plus-for-linux)的跨平台界面基础。参阅 [LICENSE](LICENSE)、[NOTICE.md](NOTICE.md) 和 [PRIVACY.md](PRIVACY.md)。
-
-本项目为非官方社区作品，与《明日方舟：终末地》开发方及发行方无隶属、授权或背书关系。
+本项目为非官方社区作品，与《明日方舟：终末地》开发方及发行方无隶属或背书关系。
