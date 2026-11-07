@@ -1,14 +1,16 @@
 using System.Xml.Linq;
 namespace EndfieldChargePlus.Settings;
-public sealed record StartupApplyResult(bool Succeeded,bool IsEnabled,bool IsPackaged=false,string State="Native");
+public sealed record StartupApplyResult(bool Succeeded,bool IsEnabled,bool IsPackaged=false,string State="Native",Exception? Error=null);
 public static class StartupManager
 {
     public static bool IsPackaged=>false;
-    public static Task<StartupApplyResult> ReadStatusAsync()=>Task.FromResult(new StartupApplyResult(true,File.Exists(AutostartPath)));
+    public static Task<StartupApplyResult> ReadStatusAsync()=>Task.FromResult(ReadRegistration(AutostartPath));
     public static Task<StartupApplyResult> ApplyAsync(bool enabled)
     {
         Apply(enabled);
-        return Task.FromResult(new StartupApplyResult(File.Exists(AutostartPath)==enabled,File.Exists(AutostartPath)));
+        var state=ReadRegistration(AutostartPath);
+        if(!state.Succeeded)throw state.Error ?? new IOException(LocalizationManager.Text("保存失败","Save failed"));
+        return Task.FromResult(state with {Succeeded=state.IsEnabled==enabled});
     }
 
     internal const string Label = "com.glacierglimmer.endfieldchargeplus.macos";
@@ -25,15 +27,42 @@ public static class StartupManager
     {
         if (!OperatingSystem.IsMacOS()) return;
         if (!enabled) { RemoveRegistration(AutostartPath); return; }
-        string executable = Environment.ProcessPath ?? throw new InvalidOperationException("Application executable path is unavailable.");
-        if (executable.StartsWith("/Volumes/", StringComparison.Ordinal) || executable.Contains("/AppTranslocation/", StringComparison.Ordinal))
+        WriteRegistration(AutostartPath,Environment.ProcessPath ?? "");
+    }
+
+    internal static void WriteRegistration(string path,string executable)
+    {
+        if(string.IsNullOrWhiteSpace(executable) || executable.StartsWith("/Volumes/",StringComparison.Ordinal) ||
+            executable.Contains("/AppTranslocation/",StringComparison.Ordinal) ||
+            !executable.Replace('\\','/').Contains(".app/Contents/MacOS/",StringComparison.Ordinal))
             throw new InvalidOperationException(LocalizationManager.Text("请先把应用拖到 Applications 文件夹，再开启登录启动。", "Move the app into Applications before enabling launch at login."));
-        if (!executable.Contains(".app/Contents/MacOS/", StringComparison.Ordinal))
-            throw new InvalidOperationException("Launch at login requires the installed .app bundle.");
-        Directory.CreateDirectory(Path.GetDirectoryName(AutostartPath)!);
-        File.WriteAllText(AutostartPath + ".tmp", BuildPlist(executable));
-        File.SetUnixFileMode(AutostartPath + ".tmp", UnixFileMode.UserRead | UnixFileMode.UserWrite);
-        File.Move(AutostartPath + ".tmp", AutostartPath, overwrite:true);
+        if(!File.Exists(executable))throw new FileNotFoundException(LocalizationManager.Text("请先把应用拖到 Applications 文件夹，再开启登录启动。", "Move the app into Applications before enabling launch at login."),executable);
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        string temp=path+"."+Guid.NewGuid().ToString("N")+".tmp";
+        try
+        {
+            File.WriteAllText(temp,BuildPlist(executable));
+            if(OperatingSystem.IsMacOS())File.SetUnixFileMode(temp,UnixFileMode.UserRead|UnixFileMode.UserWrite);
+            File.Move(temp,path,overwrite:true);
+        }
+        finally {if(File.Exists(temp))File.Delete(temp);}
+    }
+
+    internal static StartupApplyResult ReadRegistration(string path)
+    {
+        if(!File.Exists(path))return new(true,false);
+        try
+        {
+            using var reader=System.Xml.XmlReader.Create(path,new System.Xml.XmlReaderSettings{DtdProcessing=System.Xml.DtdProcessing.Ignore,XmlResolver=null});
+            var document=XDocument.Load(reader);var dict=document.Root?.Element("dict")??throw new IOException("Invalid LaunchAgent plist: "+path);
+            XElement? Value(string key)=>dict.Elements("key").FirstOrDefault(x=>x.Value==key)?.ElementsAfterSelf().FirstOrDefault();
+            bool valid=Value("Label")?.Value==Label && Value("RunAtLoad")?.Name.LocalName=="true";
+            var args=Value("ProgramArguments")?.Elements("string").Select(x=>x.Value).ToArray()??Array.Empty<string>();
+            valid &= args.Length==2 && args[1]=="--autostart";
+            if(!valid)throw new IOException("Invalid LaunchAgent plist: "+path);
+            return new(true,File.Exists(args[0]),State:File.Exists(args[0])?"Native":"MissingExecutable");
+        }
+        catch(Exception ex){return new(false,false,State:"ReadError",Error:ex);}
     }
 
     internal static void RemoveRegistration(string path)

@@ -54,6 +54,7 @@ internal static class Tests
     {
         FeatureRegressionChecks.Run(Check);
         StartupRemovalTests();
+        MacSettingsChecks.Storage(Check);
         var p=new MacVariableProvider(); var values=new Dictionary<string,object?>();
         using var first=JsonDocument.Parse("""{"__cpu_ticks":[4294967290,50,100,0],"__network_samples":{"en0":[1000,500]}}""");
         p.Consume(first.RootElement,values,100);
@@ -171,9 +172,9 @@ internal static class Tests
     }
 }
 
-internal sealed class AuditApp : Application
+internal sealed class AuditApp : App
 {
-    public override void Initialize() { Styles.Add(new FluentTheme()); RequestedThemeVariant=Avalonia.Styling.ThemeVariant.Dark; }
+    public override void Initialize() => base.Initialize();
     public override void OnFrameworkInitializationCompleted()
     {
         var desktop=(IClassicDesktopStyleApplicationLifetime)ApplicationLifetime!;
@@ -184,7 +185,7 @@ internal sealed class AuditApp : Application
             catch(Exception ex) { Console.Error.WriteLine(ex); Environment.ExitCode=1; }
             finally { desktop.Shutdown(Environment.ExitCode); }
         });
-        base.OnFrameworkInitializationCompleted();
+        // Deliberately skip App startup: this isolated audit owns its runtime and configuration.
     }
     private static async Task Audit(IClassicDesktopStyleApplicationLifetime desktop)
     {
@@ -194,8 +195,14 @@ internal sealed class AuditApp : Application
         using var runtime=new CustomHudRuntime(hud); runtime.ApplySettings(settings);
         var window=new SettingsWindow(settings,hud,runtime); desktop.MainWindow=window; window.Show();
         await Task.Delay(600);
+        ChromeGestureChecks.Run(window,Tests.Check);
+        await MacSettingsChecks.Resize(window,Tests.Check);
+        await LayerPromptChecks.Run(window,Tests.Check,"artifacts/audit/layer-prompts");await SaveFailureChecks.Run(window,Tests.Check);await UnifiedPromptChecks.Run(window,Tests.Check,"artifacts/audit/prompts");await SuperLayerChecks.Run(window,Tests.Check,"artifacts/audit/super-layer");
         if(!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("ECP_TEST_HOME")))
+        {
             await VerifyFreshHomeSave(window,hud,runtime,settings);
+            await MacSettingsChecks.StartupSaveFailure(window,Tests.Check);
+        }
         if(Tests.SettingsSaveOnly) { window.Close(); hud.Close(); return; }
         await window.Clipboard!.SetTextAsync("ECP macOS variable audit");
         using var hub=new VariableHub();
