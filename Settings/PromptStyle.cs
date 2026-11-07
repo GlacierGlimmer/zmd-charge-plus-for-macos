@@ -22,26 +22,19 @@ internal static class PromptStyle
         var heading=title??Heading(window.Title??"");
         if(title is null)window.PropertyChanged+=(_,e)=>{if(e.Property==Window.TitleProperty)heading.Text=window.Title;};
         var drag=new Border{Name="PromptDragHandle",Background=Brushes.Transparent,Child=heading};
-        var close=new Button{Name="PromptWindowClose",Content="×",Width=32,Height=30,Padding=new Thickness(0),HorizontalContentAlignment=HorizontalAlignment.Center};
+        var glyph=new Avalonia.Controls.Shapes.Path {Data=Geometry.Parse("M1,1 L9,9 M9,1 L1,9"),Width=10,Height=10,Stretch=Stretch.Uniform,Stroke=Brush.Parse("#F2F2F2"),StrokeThickness=1.4,HorizontalAlignment=HorizontalAlignment.Center,VerticalAlignment=VerticalAlignment.Center};
+        var close=new Button{Name="PromptWindowClose",Content=glyph,Width=32,Height=32,Padding=new Thickness(0),HorizontalContentAlignment=HorizontalAlignment.Center,VerticalContentAlignment=VerticalAlignment.Center};
         Avalonia.Automation.AutomationProperties.SetName(close,LocalizationManager.Text("关闭窗口","Close window"));
         close.Click+=(_,_)=>window.Close();
         var header=new Grid{ColumnDefinitions=new("*,Auto"),Margin=new Thickness(0,0,0,14)};
         header.Children.Add(drag);Grid.SetColumn(close,1);header.Children.Add(close);
-        PixelPoint? pressedAt=null;PixelPoint original=default;
+        PromptWindowChrome.Attach(window,drag,close);
+        drag.MinHeight=36;
         drag.PointerPressed+=(_,e)=>
         {
-            if(!e.GetCurrentPoint(drag).Properties.IsLeftButtonPressed)return;
-            pressedAt=window.PointToScreen(e.GetPosition(window));original=window.Position;
-            e.Pointer.Capture(drag);e.Handled=true;
+            if(!e.GetCurrentPoint(window).Properties.IsLeftButtonPressed)return;
+            window.BeginMoveDrag(e);e.Handled=true;
         };
-        drag.PointerMoved+=(_,e)=>
-        {
-            if(pressedAt is not {} start || e.Pointer.Captured!=drag)return;
-            var current=window.PointToScreen(e.GetPosition(window));
-            window.Position=new PixelPoint(original.X+current.X-start.X,original.Y+current.Y-start.Y);e.Handled=true;
-        };
-        drag.PointerReleased+=(_,e)=>{pressedAt=null;e.Pointer.Capture(null);};
-        drag.PointerCaptureLost+=(_,_)=>pressedAt=null;
         var panel=new Grid{RowDefinitions=new RowDefinitions("Auto,*")};
         panel.Children.Add(header);Grid.SetRow(body,1);panel.Children.Add(body);
         window.Content=new Border{Name="EcpPromptFrame",Padding=new Thickness(22),CornerRadius=new CornerRadius(8),

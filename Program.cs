@@ -44,5 +44,5 @@ internal static class Program
     }
     public static AppBuilder BuildAvaloniaApp() => AppBuilder.Configure<App>().UsePlatformDetect()
         .With(new MacOSPlatformOptions { ShowInDock=false, DisableDefaultApplicationMenuItems=true })
-        .With(LocalizationManager.FontOptions).WithInterFont().LogToTrace();
+        .With(new SkiaOptions {MaxGpuResourceSizeBytes=24L*1024*1024}).With(LocalizationManager.FontOptions).WithInterFont().LogToTrace();
 }

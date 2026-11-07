@@ -184,8 +184,11 @@
       <Setter Property="Transitions"><Transitions><BrushTransition Property="Background" Duration="0:0:0.15" /></Transitions></Setter>
     </Style>
     <Style Selector="ListBoxItem">
-      <Setter Property="Transitions"><Transitions><BrushTransition Property="Background" Duration="0:0:0.18" /></Transitions></Setter>
+      <Setter Property="Transitions" Value="{x:Null}" />
     </Style>
+    <Style Selector="ListBoxItem /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Transitions" Value="{x:Null}" /></Style>
+    <Style Selector="ComboBoxItem /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Transitions" Value="{x:Null}" /></Style>
+    <Style Selector="Button"><Setter Property="VerticalContentAlignment" Value="Center" /></Style>
     <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="#303030" /><Setter Property="Foreground" Value="#F2F2F2" /></Style>
     <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="#343400" /><Setter Property="Foreground" Value="#F2F2F2" /></Style>
     <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter"><Setter Property="Background" Value="#454600" /><Setter Property="Foreground" Value="#F2F2F2" /></Style>

@@ -22,13 +22,14 @@ public partial class App : Application
     private bool _exiting;
     private IClassicDesktopStyleApplicationLifetime? _desktop;
     private readonly CancellationTokenSource _activation = new();
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    public override void Initialize(){PerformanceMaintenance.Configure();AvaloniaXamlLoader.Load(this);}
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             _desktop = desktop;
             ApplicationErrors.Attach(desktop);
+            desktop.Exit+=(_,_)=>PerformanceMaintenance.Stop();
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             var settings = SettingsManager.Load();
             LocalizationManager.Initialize(settings.UiLanguage);

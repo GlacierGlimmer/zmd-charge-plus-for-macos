@@ -34,7 +34,7 @@ internal static class UnifiedPromptChecks
             void Style(Window dialog,string name)
             {
                 var frame=dialog.GetLogicalDescendants().OfType<Border>().Single(b=>b.Name=="EcpPromptFrame");
-                check(dialog.SystemDecorations==SystemDecorations.None && !dialog.CanResize,name+" uses the unified frameless dialog");
+                check((dialog.SystemDecorations==SystemDecorations.None || OperatingSystem.IsMacOS() && dialog.ExtendClientAreaToDecorationsHint) && !dialog.CanResize,name+" uses the unified frameless dialog");
                 check(frame.CornerRadius.TopLeft==8 && (frame.Background as ISolidColorBrush)?.Color==Color.Parse("#202020"),name+" has the same rounded dark surface");
                 check(dialog.GetLogicalDescendants().OfType<TextBlock>().Any(t=>(t.Foreground as ISolidColorBrush)?.Color==Color.Parse("#FFFA00")),name+" uses a yellow heading");
             }

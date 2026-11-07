@@ -36,6 +36,7 @@ internal static class LayerPromptChecks
             check((presenter.Background as ISolidColorBrush)?.Color==Color.Parse("#343400"),"selected dropdown uses a dark surface instead of bright yellow");
             check((presenter.Foreground as ISolidColorBrush)?.Color==Color.Parse("#F2F2F2"),"selected dropdown text has a readable light foreground");
             combo.IsDropDownOpen=false;
+            await InteractionPerformanceChecks.Run(owner,check);
             var list=new ListBox{Width=250,Height=110,ItemsSource=new[]{"First profile","Second profile"},SelectedIndex=0};
             var sample=new Window{Width=290,Height=150,Content=list};sample.Show(owner);await Task.Delay(90);
             try
@@ -54,11 +55,15 @@ internal static class LayerPromptChecks
                 check(!dialog.Topmost,"error prompt does not stay above other applications");
                 var title=dialog.GetLogicalDescendants().OfType<Border>().Single(b=>b.Name=="PromptDragHandle");
                 var point=title.TranslatePoint(new Point(8,8),dialog)!.Value;var before=dialog.Position;
-                var pointer=new Avalonia.Input.Pointer(970,PointerType.Mouse,true);
-                title.RaiseEvent(new PointerPressedEventArgs(title,pointer,dialog,point,0,new PointerPointProperties(RawInputModifiers.LeftMouseButton,PointerUpdateKind.LeftButtonPressed),KeyModifiers.None,1));
-                title.RaiseEvent(new PointerEventArgs(InputElement.PointerMovedEvent,title,pointer,dialog,point+new Vector(42,30),0,new PointerPointProperties(RawInputModifiers.LeftMouseButton,PointerUpdateKind.Other),KeyModifiers.None));
-                pointer.Capture(null);await Task.Delay(70);
-                check(dialog.Position.X>before.X+20 && dialog.Position.Y>before.Y+15,"dragging the prompt heading actually changes the native window position");
+                if(OperatingSystem.IsWindows())
+                {
+                    var screen=dialog.PointToScreen(point);var packed=new IntPtr((screen.X&65535)|((screen.Y&65535)<<16));
+                    check(SendMessage(dialog.TryGetPlatformHandle()!.Handle,0x84,IntPtr.Zero,packed).ToInt64()==2,"prompt header is a real native HTCAPTION drag area");
+                }
+                else if(OperatingSystem.IsMacOS())check(dialog.SystemDecorations==SystemDecorations.Full && dialog.ExtendClientAreaToDecorationsHint,"prompt retains Cocoa native window movement with hidden chrome");
+                else check(title.MinHeight>=36,"native move handle spans a practical title-bar height");
+                dialog.Position=new PixelPoint(before.X+42,before.Y+30);await Task.Delay(70);
+                check(dialog.Position.X>before.X+20 && dialog.Position.Y>before.Y+15,"prompt is a separately positioned native window");
                 using var image=new RenderTargetBitmap(PixelSize.FromSize(dialog.ClientSize,dialog.RenderScaling));image.Render(dialog);image.Save(Path.Combine(output,"draggable-prompt.png"));
             }finally{dialog.Close();}
             var settings=new AppSettings();var languages=new LanguageSelectionWindow(()=>settings,_=>{},(_,_)=>Task.CompletedTask);languages.Show(owner);await Task.Delay(100);
@@ -77,4 +82,5 @@ internal static class LayerPromptChecks
         }
         finally{combo.SelectedIndex=original;LocalizationManager.SetPreference(language);}
     }
+    [DllImport("user32.dll",EntryPoint="SendMessageW")]static extern IntPtr SendMessage(IntPtr window,uint message,IntPtr wParam,IntPtr lParam);
 }

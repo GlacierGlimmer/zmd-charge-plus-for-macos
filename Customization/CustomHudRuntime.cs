@@ -222,7 +222,7 @@ public sealed partial class CustomHudRuntime : IDisposable
     {
         if (_disposed || _running) return;
         _running=true;
-        _observationTimer.Start();
+        RefreshObservationClock();
         RunSerializedAsync(RunStartupPresentationAsync,wait:true);
     }
     public void Stop() { _running=false; _timer.Stop();_observationTimer.Stop(); CancelRevision();ResetTriggerRules(); }
@@ -300,8 +300,14 @@ public sealed partial class CustomHudRuntime : IDisposable
             await PreviewAsync(profile);
     }
 
+    private void RefreshObservationClock()
+    {
+        bool needed=_running && !_disposed && !IsUserHidden && _appSettings.HudEnabled && !_appSettings.AlwaysVisible && !_editingPreview && (_appSettings.HotZoneEnabled || _settings.Triggers.Any(r=>r.Enabled));
+        if(needed)_observationTimer.Start();else _observationTimer.Stop();
+    }
     private async Task TickAsync()
     {
+        RefreshObservationClock();
         if (_disposed || IsUserHidden || _hud.IsRadialOpen) return;
         if (Volatile.Read(ref _settingsTransitionBusy) != 0) return;
         KeepFrameCaptureAlive();

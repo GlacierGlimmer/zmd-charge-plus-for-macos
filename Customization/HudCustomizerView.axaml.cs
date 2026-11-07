@@ -181,8 +181,13 @@ public partial class HudCustomizerView : UserControl
     private CustomHudSettings _loaded = CustomHudSettings.CreateDefault();
     private int _selectedIndex = -1;
     private bool _loading;
-    private readonly VariableHub _previewVariables = new();
-    public void SetSamplingInterval(double seconds) => _previewVariables.SamplingIntervalSeconds=seconds;
+    private readonly System.Threading.CancellationTokenSource _previewLifetime=new();
+    private bool _resourcesReleased;
+    private VariableHub? _previewVariables;
+    private double _previewSamplingSeconds=1;
+    private VariableHub PreviewVariables=>_previewVariables??=new VariableHub{SamplingIntervalSeconds=_previewSamplingSeconds};
+    public void SetSamplingInterval(double seconds){_previewSamplingSeconds=seconds;if(_previewVariables is {} preview)preview.SamplingIntervalSeconds=seconds;}
+    internal void ReleaseResources(){if(_resourcesReleased)return;_resourcesReleased=true;_previewLifetime.Cancel();_previewLifetime.Dispose();_triggerCheckCts?.Cancel();_triggerCheckCts?.Dispose();_triggerCheckCts=null;_previewVariables?.Dispose();_previewVariables=null;}
 
     public HudCustomizerView()
     {
@@ -1129,14 +1134,19 @@ public partial class HudCustomizerView : UserControl
             var profile = BuildEditedProfile(_profiles[_selectedIndex]);
             settings=settings with { Profiles=settings.Profiles.Select(p=>p.Id==profile.Id ? profile : p).ToList() };
             var required = HudProfileRenderer.GetRequiredVariables(profile);
-            var vars = await _previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort);
+            var previewVariables=PreviewVariables;
+            var previewLifetime=_previewLifetime.Token;
+            var vars = await previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort, previewLifetime);
+            previewLifetime.ThrowIfCancellationRequested();
             ProfileDataWarnings.Check(profile,vars,"preview");
             var data = HudProfileRenderer.Render(profile, vars);
             ProfileStatusText.Text = "";
 
             Func<System.Threading.CancellationToken, System.Threading.Tasks.Task<HudRenderData>> refresh = async ct =>
             {
-                var latest = await _previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort, ct);
+                using var linked=System.Threading.CancellationTokenSource.CreateLinkedTokenSource(ct,previewLifetime);
+                var latest = await previewVariables.SnapshotAsync(settings, required, profile.GpuAdapterId, profile.PingTarget, profile.ProbeProtocol, profile.ProbePort, linked.Token);
+                linked.Token.ThrowIfCancellationRequested();
                 ProfileDataWarnings.Check(profile,latest,"preview");
                 return HudProfileRenderer.Render(profile, latest);
             };
@@ -1146,6 +1156,7 @@ public partial class HudCustomizerView : UserControl
         }
         catch (Exception ex)
         {
+            if(_resourcesReleased && ex is OperationCanceledException)return;
             Diagnostics.AppLog.Error("HUD preview failed.",ex);
             ProfileStatusText.Text = LocalizationManager.Text("预览失败，请查看日志。","Preview failed. See logs.");
         }
@@ -1211,9 +1222,7 @@ public partial class HudCustomizerView : UserControl
             // Do not re-sort localized names alphabetically: that made Chinese/English lists inconsistent.
             .ToList();
 
-        VariableList.Items.Clear();
-        foreach (var item in filtered)
-            VariableList.Items.Add(item);
+        VariableList.ItemsSource=filtered;
 
         if (!string.IsNullOrWhiteSpace(selectedKey))
         {

@@ -1,7 +1,7 @@
 name: macOS DMG
 on:
   push:
-    branches: [main, 'build/v0.2.0-window-layers-20261106']
+    branches: [main, 'build/v0.2.0-interaction-perf-20261107']
     tags: ['v*']
   pull_request:
   workflow_dispatch:

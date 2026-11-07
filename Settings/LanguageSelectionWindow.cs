@@ -20,14 +20,15 @@ internal sealed class LanguageSelectionWindow : Window
     private readonly ListBox _languages=new() {Name="LanguageList"};
     private readonly TextBlock _heading=new() {FontSize=22,HorizontalAlignment=HorizontalAlignment.Center};
     private readonly TextBlock _translationNotice=new() {Name="LanguageTranslationNotice",TextWrapping=TextWrapping.Wrap,TextAlignment=TextAlignment.Center,HorizontalAlignment=HorizontalAlignment.Stretch,Foreground=Brush.Parse("#A4A4AA"),Margin=new Thickness(0,14,0,0)};
-    private readonly Button _appearance=new() {Name="GlobalAppearanceButton",MinHeight=42,HorizontalAlignment=HorizontalAlignment.Stretch,HorizontalContentAlignment=HorizontalAlignment.Center};
-    private readonly Button _done=new() {Name="LanguageDoneButton",MinHeight=42,HorizontalAlignment=HorizontalAlignment.Stretch,HorizontalContentAlignment=HorizontalAlignment.Center};
+    private readonly Button _appearance=new() {Name="GlobalAppearanceButton",MinHeight=42,HorizontalAlignment=HorizontalAlignment.Stretch,HorizontalContentAlignment=HorizontalAlignment.Center,VerticalContentAlignment=VerticalAlignment.Center};
+    private readonly Button _done=new() {Name="LanguageDoneButton",MinHeight=42,HorizontalAlignment=HorizontalAlignment.Stretch,HorizontalContentAlignment=HorizontalAlignment.Center,VerticalContentAlignment=VerticalAlignment.Center};
     private Choice[] _choices=Array.Empty<Choice>();
+    private readonly System.Collections.ObjectModel.ObservableCollection<Choice> _visibleChoices=new();
     private bool _refreshing;
 
     public LanguageSelectionWindow(Func<AppSettings> settings,Action<string> choose,Func<double,double,Task> scale)
     {
-        _settings=settings;_choose=choose;_scale=scale;
+        _settings=settings;_choose=choose;_scale=scale;_languages.ItemsSource=_visibleChoices;
         Width=900;Height=720;MinWidth=580;MinHeight=440;Background=Brush.Parse("#141414");WindowStartupLocation=WindowStartupLocation.CenterOwner;
         var root=new Grid {RowDefinitions=new RowDefinitions("Auto,Auto,*,Auto,Auto"),Margin=new Thickness(28,20),MinWidth=520,MinHeight=380};
         root.Children.Add(_heading);
@@ -53,7 +54,7 @@ internal sealed class LanguageSelectionWindow : Window
         footer.Children.Add(_appearance);Grid.SetColumn(_done,1);footer.Children.Add(_done);Grid.SetRow(footer,4);root.Children.Add(footer);Content=root;
         _search.TextChanged+=(_,_)=>Filter();
         _languages.SelectionChanged+=(_,_)=>{
-            if(_refreshing || _languages.SelectedItem is not Choice item)return;
+            if(_refreshing || _languages.SelectedItem is not Choice item || item.Code==LocalizationManager.Preference)return;
             _choose(item.Code);Refresh();
         };
         _done.Click+=(_,_)=>Close();
@@ -85,8 +86,10 @@ internal sealed class LanguageSelectionWindow : Window
         {
             string query=_search.Text?.Trim() ?? "";
             var matches=_choices.Where(c=>query.Length==0 || c.Search.Contains(query,StringComparison.OrdinalIgnoreCase)).ToArray();
-            _languages.ItemsSource=matches;
-            _languages.SelectedItem=matches.FirstOrDefault(c=>c.Code==LocalizationManager.Preference);
+            if(!_visibleChoices.Select(c=>c.Code).SequenceEqual(matches.Select(c=>c.Code)))
+            {_visibleChoices.Clear();foreach(var choice in matches)_visibleChoices.Add(choice);}
+            else for(int i=0;i<matches.Length;i++)if(_visibleChoices[i]!=matches[i])_visibleChoices[i]=matches[i];
+            _languages.SelectedItem=_visibleChoices.FirstOrDefault(c=>c.Code==LocalizationManager.Preference);
             if(_languages.SelectedItem is {} selected)_languages.ScrollIntoView(selected);
         }
         finally {_refreshing=false;}

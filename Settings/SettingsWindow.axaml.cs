@@ -473,10 +473,12 @@ public partial class SettingsWindow : Window
 
     private async void OnSave(object? sender, RoutedEventArgs e)
     {
+        if (!SaveBtn.IsEnabled) return;
         try
         {
-        if (!SaveBtn.IsEnabled) return;
         SaveBtn.IsEnabled=false;
+        SaveBtn.Content=LocalizationManager.Text("应用中…","Applying…");
+        LanguageButton.IsEnabled=false;
         var editorTabs=this.GetLogicalDescendants().OfType<TabControl>().FirstOrDefault();
         if(editorTabs is not null) editorTabs.IsEnabled=false;
         _settings = CollectSettingsFromUi();
@@ -509,7 +511,7 @@ public partial class SettingsWindow : Window
                         : "Could not change startup state. Check Windows Startup Apps and logs.");
             else SetStartupStatus(null, null);
         }
-        SaveSettingsWithHudHotkey(_settings);
+        await SaveSettingsWithHudHotkeyAsync(_settings);
         _persistedRootSettings=_settings;
         RefreshHudHotkeyRegistrationStatus();
 
@@ -547,6 +549,7 @@ public partial class SettingsWindow : Window
             _ = SaveErrorDialog.Show(this,ex,StartupStatusText.IsVisible);
             EndfieldChargePlus.Diagnostics.AppLog.Error("Unable to apply settings.", ex);
         }
+        finally {LanguageButton.IsEnabled=true;}
     }
 
     private async void OnExportSettings(object? sender, RoutedEventArgs e)
