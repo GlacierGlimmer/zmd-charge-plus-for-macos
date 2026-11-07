@@ -40,6 +40,15 @@ internal static class InteractionPerformanceChecks
         check(ReferenceEquals(first,VariableCatalog.AllBuiltIns),"sensor value changes do not rebuild metadata catalogue");
         HardwareTelemetryCatalog.Publish(new[]{sensor with{Name="Updated audit"}});
         check(!ReferenceEquals(first,VariableCatalog.AllBuiltIns) && VariableCatalog.Find(sensor.Key+".value")?.Name.Contains("Updated audit")==true,"sensor metadata changes invalidate catalogue and lookup index");
+        // The process continues with live-hardware completeness checks: remove only this synthetic fixture.
+        var metadata=typeof(HardwareTelemetryCatalog);
+        var gate=metadata.GetField("Gate",BindingFlags.Static|BindingFlags.NonPublic)!.GetValue(null)!;
+        lock(gate)
+        {
+            var known=(Dictionary<string,VariableDefinition>)metadata.GetField("Known",BindingFlags.Static|BindingFlags.NonPublic)!.GetValue(null)!;
+            foreach(var key in known.Keys.Where(k=>k.StartsWith(sensor.Key+".",StringComparison.Ordinal)).ToArray())known.Remove(key);
+            metadata.GetField("_snapshot",BindingFlags.Static|BindingFlags.NonPublic)!.SetValue(null,null);
+        }
         var translations=new Dictionary<string,string>();
         foreach(var code in new[]{"zh-CN","en-US","fr-FR","ja-JP","ar-SA","zh-TW"}){LocalizationManager.SetPreference(code);translations[code]=LocalizationManager.Text("保存并应用","Save & Apply");}
         LocalizationManager.TrimUnusedResources();
